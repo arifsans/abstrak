@@ -1,6 +1,7 @@
 import 'package:abstrak/cookie_policy.dart';
 import 'package:abstrak/do_not_sell.dart';
 import 'package:abstrak/homepage.dart';
+import 'package:abstrak/navigation_page.dart';
 import 'package:abstrak/privacy.dart';
 import 'package:abstrak/support.dart';
 import 'package:abstrak/terms.dart';
@@ -14,50 +15,74 @@ void main() {
   runApp(const MyApp());
 }
 
-final mainNavigatorKey = GlobalKey<NavigatorState>();
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _sectionNavigatorKey = GlobalKey<NavigatorState>();
 
 // GoRouter configuration
 final _router = GoRouter(
-  initialLocation: "/main",
+  navigatorKey: _rootNavigatorKey,
+  initialLocation: "/",
   routes: [
-    ShellRoute(
-      navigatorKey: mainNavigatorKey,
-      builder: (context, state, child) {
-        return const HomePage();
+    StatefulShellRoute.indexedStack(
+      builder: (context, state, navigationShell) {
+        return NavigationPage(navigationShell: navigationShell);
       },
-      routes: [
-        GoRoute(
-          name: "main",
-          path: "/main",
-          builder: (context, state) => const HomePage(),
+      branches: [
+        StatefulShellBranch(
+          navigatorKey: _sectionNavigatorKey,
           routes: [
             GoRoute(
-              name: "support",
-              path: "support",
-              builder: (context, state) => const Support(),
-            ),
-            GoRoute(
-              name: "terms",
-              path: "terms",
-              builder: (context, state) => const Terms(),
-            ),
-            GoRoute(
-              name: "privacy",
-              path: "privacy",
-              builder: (context, state) => const Privacy(),
-            ),
-            GoRoute(
-              name: "cookie-policy",
-              path: "cookie-policy",
-              builder: (context, state) => const CookiePolicy(),
-            ),
-            GoRoute(
-              name: "do-not-sell-my-personal-information",
-              path: "do-not-sell-my-personal-information",
-              builder: (context, state) => const DoNotSell(),
+              name: "home",
+              path: "/",
+              builder: (context, state) => const HomePage(),
             ),
           ],
         ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: "support",
+              path: "/support",
+              builder: (context, state) => const Support(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: "terms",
+              path: "/terms",
+              builder: (context, state) => const Terms(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: "privacy",
+              path: "/privacy",
+              builder: (context, state) => const Privacy(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: "cookie-policy",
+              path: "/cookie-policy",
+              builder: (context, state) => const CookiePolicy(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: "do-not-sell-my-personal-information",
+              path: "/do-not-sell-my-personal-information",
+              builder: (context, state) => const DoNotSell(),
+            ),
+          ],
+        )
       ],
     ),
   ],
@@ -140,7 +165,7 @@ class MyApp extends StatelessWidget {
       title: 'Abstract',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
         useMaterial3: true,
         textTheme: customTextTheme,
       ),

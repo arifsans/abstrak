@@ -1,6 +1,7 @@
+import 'package:abstrak/x_button.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:responsive_framework/responsive_framework.dart';
 
 class FooterSite extends StatelessWidget {
   FooterSite({super.key});
@@ -37,17 +38,10 @@ class FooterSite extends StatelessWidget {
         alignment: WrapAlignment.center,
         spacing: 40,
         children: footers
-            .map(
-              (item) => GestureDetector(
-                onTap: () => context.goNamed(item.route),
-                child: Text(
-                  item.text,
-                  style: ResponsiveBreakpoints.of(context).isDesktop
-                      ? Theme.of(context).textTheme.titleMedium
-                      : Theme.of(context).textTheme.titleSmall,
-                ),
-              ),
-            )
+            .mapIndexed((index, item) => XButton(
+                  onPressed: () => context.goNamed(item.route),
+                  text: item.text,
+                ))
             .toList(),
       ),
     );
