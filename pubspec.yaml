@@ -41,6 +41,7 @@ dependencies:
   hovering: 
   flutter_svg: 
   collection: 
+  url_strategy: ^0.3.0
 
 dev_dependencies:
   flutter_test:
