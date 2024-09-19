@@ -1,6 +1,7 @@
 import 'package:abstrak/footer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hovering/hovering.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:video_player/video_player.dart';
@@ -228,11 +229,14 @@ class _HomePageState extends State<HomePage>
                             child: child,
                           );
                         },
-                        child: SvgPicture.asset(
-                          'assets/images/logo.svg',
-                          width: 60,
-                          height: 60,
-                          color: Colors.white,
+                        child: GestureDetector(
+                          onTap: () => context.goNamed('main'),
+                          child: SvgPicture.asset(
+                            'assets/images/logo.svg',
+                            width: 60,
+                            height: 60,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                       GestureDetector(
