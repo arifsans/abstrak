@@ -20,13 +20,17 @@ class _HomePageState extends State<HomePage> {
         children: [
           HoverWidget(
             hoverChild: Image.network(
-                'https://hips.hearstapps.com/hmg-prod/images/baby-kangaroo-65f9ba7bcf12e.jpg?crop=0.8777056277056277xw:1xh;center,top&resize=980:*'),
+              'http://arifsani.xyz/src/hoodie-blck-back.png',
+            ),
             child: Image.network(
-                'https://hips.hearstapps.com/hmg-prod/images/baby-animals-goat-65f8b2c23aa1f.jpg?crop=0.668xw:1.00xh;0.0629xw,0&resize=980:*'),
+              'http://arifsani.xyz/src/hoodie-blck-front.png',
+            ),
             onHover: (event) {},
           ),
           const SizedBox(height: 8),
-          const Text('IMAGE 1'),
+          const Text('Hoodie Black Captive'),
+          const SizedBox(height: 3),
+          const Text('IDR 666.000,00'),
         ],
       ),
     ),
@@ -36,13 +40,17 @@ class _HomePageState extends State<HomePage> {
         children: [
           HoverWidget(
             hoverChild: Image.network(
-                'https://hips.hearstapps.com/hmg-prod/images/baby-animals-cow-65f8b2938fcfe.jpg?crop=0.668xw:1.00xh;0.0442xw,0&resize=980:*'),
+              'http://arifsani.xyz/src/hoodie-blue-back.png',
+            ),
             child: Image.network(
-                'https://hips.hearstapps.com/hmg-prod/images/baby-animals-sheep-65f8b2d3f388d.jpg?crop=0.672xw:1.00xh;0.129xw,0&resize=980:*'),
+              'http://arifsani.xyz/src/hoodie-blue-front.png',
+            ),
             onHover: (event) {},
           ),
           const SizedBox(height: 8),
-          const Text('IMAGE 2'),
+          const Text('Hoodie Blue Captive'),
+          const SizedBox(height: 3),
+          const Text('IDR 666.000,00'),
         ],
       ),
     ),
@@ -52,13 +60,17 @@ class _HomePageState extends State<HomePage> {
         children: [
           HoverWidget(
             hoverChild: Image.network(
-                'https://hips.hearstapps.com/hmg-prod/images/baby-animals-kitten-puppy-65f9ba498b3e3.jpg?crop=0.668xw:1.00xh;0.0952xw,0&resize=980:*'),
+              'http://arifsani.xyz/src/hoodie-brwn-back.png',
+            ),
             child: Image.network(
-                'https://hips.hearstapps.com/hmg-prod/images/baby-animals-moose-65f8afd2e415f.jpg?crop=0.7954662545079856xw:1xh;center,top&resize=980:*'),
+              'http://arifsani.xyz/src/hoodie-brwn-front.png',
+            ),
             onHover: (event) {},
           ),
           const SizedBox(height: 8),
-          const Text('IMAGE 3'),
+          const Text('Hoodie Brown Captive'),
+          const SizedBox(height: 3),
+          const Text('IDR 666.000,00'),
         ],
       ),
     ),
@@ -66,15 +78,13 @@ class _HomePageState extends State<HomePage> {
       width: 250,
       child: Column(
         children: [
-          HoverWidget(
-            hoverChild: Image.network(
-                'https://hips.hearstapps.com/hmg-prod/images/baby-animals-squirrel-65f8af699911d.jpg?crop=0.5619834710743802xw:1xh;center,top&resize=980:*'),
-            child: Image.network(
-                'https://hips.hearstapps.com/hmg-prod/images/baby-animals-hedgehog-65f8af918f516.jpg?crop=0.6643126177024482xw:1xh;center,top&resize=980:*'),
-            onHover: (event) {},
+          Image.network(
+            'http://arifsani.xyz/src/album-warrior-img.png',
           ),
           const SizedBox(height: 8),
-          const Text('IMAGE 4'),
+          const Text('WARRIOR ALBUM - DELUXE VINYL RECORD'),
+          const SizedBox(height: 3),
+          const Text('IDR 123.000,00'),
         ],
       ),
     ),
@@ -82,15 +92,13 @@ class _HomePageState extends State<HomePage> {
       width: 250,
       child: Column(
         children: [
-          HoverWidget(
-            hoverChild: Image.network(
-                'https://hips.hearstapps.com/hmg-prod/images/baby-animals-alpaca-65f9ba20d1c74.jpg?crop=0.6629055007052186xw:1xh;center,top&resize=980:*'),
-            child: Image.network(
-                'https://hips.hearstapps.com/hmg-prod/images/baby-tiger-65f9ba5e78676.jpg?crop=0.6643126177024482xw:1xh;center,top&resize=980:*'),
-            onHover: (event) {},
+          Image.network(
+            'http://arifsani.xyz/src/album-rise-img.png',
           ),
           const SizedBox(height: 8),
-          const Text('IMAGE 5'),
+          const Text('RISE ALBUM - DELUXE VINYL RECORD'),
+          const SizedBox(height: 3),
+          const Text('IDR 123.000,00'),
         ],
       ),
     ),
@@ -98,15 +106,13 @@ class _HomePageState extends State<HomePage> {
       width: 250,
       child: Column(
         children: [
-          HoverWidget(
-            hoverChild: Image.network(
-                'https://hips.hearstapps.com/hmg-prod/images/baby-animals-fox-65f8b30255c8f.jpg?crop=0.668xw:1.00xh;0.160xw,0&resize=980:*'),
-            child: Image.network(
-                'https://hips.hearstapps.com/hmg-prod/images/baby-animals-possums-65f8b314db21b.jpg?crop=0.7337951509153884xw:1xh;center,top&resize=980:*'),
-            onHover: (event) {},
+          Image.network(
+            'http://arifsani.xyz/src/album-rise-img.png',
           ),
           const SizedBox(height: 8),
-          const Text('IMAGE 6'),
+          const Text('CAPTIVE KINGS - DELUXE POSTER ALBUM'),
+          const SizedBox(height: 3),
+          const Text('IDR 65.000,00'),
         ],
       ),
     ),
