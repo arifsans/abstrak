@@ -20,10 +20,10 @@ class _HomePageState extends State<HomePage> {
         children: [
           HoverWidget(
             hoverChild: Image.network(
-              'http://arifsani.xyz/src/hoodie-blck-back.png',
+              'https://arifsani.xyz/src/hoodie-blck-back.png',
             ),
             child: Image.network(
-              'http://arifsani.xyz/src/hoodie-blck-front.png',
+              'https://arifsani.xyz/src/hoodie-blck-front.png',
             ),
             onHover: (event) {},
           ),
@@ -40,10 +40,10 @@ class _HomePageState extends State<HomePage> {
         children: [
           HoverWidget(
             hoverChild: Image.network(
-              'http://arifsani.xyz/src/hoodie-blue-back.png',
+              'https://arifsani.xyz/src/hoodie-blue-back.png',
             ),
             child: Image.network(
-              'http://arifsani.xyz/src/hoodie-blue-front.png',
+              'https://arifsani.xyz/src/hoodie-blue-front.png',
             ),
             onHover: (event) {},
           ),
@@ -60,10 +60,10 @@ class _HomePageState extends State<HomePage> {
         children: [
           HoverWidget(
             hoverChild: Image.network(
-              'http://arifsani.xyz/src/hoodie-brwn-back.png',
+              'https://arifsani.xyz/src/hoodie-brwn-back.png',
             ),
             child: Image.network(
-              'http://arifsani.xyz/src/hoodie-brwn-front.png',
+              'https://arifsani.xyz/src/hoodie-brwn-front.png',
             ),
             onHover: (event) {},
           ),
@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         children: [
           Image.network(
-            'http://arifsani.xyz/src/album-warrior-img.png',
+            'https://arifsani.xyz/src/album-warrior-img.jpeg',
           ),
           const SizedBox(height: 8),
           const Text('WARRIOR ALBUM - DELUXE VINYL RECORD'),
@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         children: [
           Image.network(
-            'http://arifsani.xyz/src/album-rise-img.png',
+            'https://arifsani.xyz/src/album-rise-img.jpeg',
           ),
           const SizedBox(height: 8),
           const Text('RISE ALBUM - DELUXE VINYL RECORD'),
@@ -107,7 +107,7 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         children: [
           Image.network(
-            'http://arifsani.xyz/src/album-rise-img.png',
+            'https://arifsani.xyz/src/captive-kings-img.png',
           ),
           const SizedBox(height: 8),
           const Text('CAPTIVE KINGS - DELUXE POSTER ALBUM'),

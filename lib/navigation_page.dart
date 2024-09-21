@@ -1,9 +1,12 @@
 import 'package:abstrak/footer.dart';
+import 'package:abstrak/warp_indicator.dart';
 import 'package:abstrak/x_button.dart';
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:universal_html/html.dart' as html;
 
 class NavigationPage extends StatefulWidget {
   const NavigationPage({super.key, required this.navigationShell});
@@ -19,6 +22,7 @@ class _NavigationPageState extends State<NavigationPage>
   late AnimationController _controller;
   late ScrollController _scrollController;
   var scaffoldKey = GlobalKey<ScaffoldState>();
+  final _refreshController = IndicatorController();
 
   @override
   void initState() {
@@ -98,52 +102,28 @@ class _NavigationPageState extends State<NavigationPage>
         ),
       ),
       body: SafeArea(
-        child: CustomScrollView(
-          controller: _scrollController,
-          shrinkWrap: true,
-          slivers: [
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: PinnedHeader(
-                widget: Container(
-                  height: 80,
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'CART 0',
-                        style: ResponsiveBreakpoints.of(context).isDesktop
-                            ? Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.transparent,
-                                )
-                            : Theme.of(context).textTheme.titleSmall?.copyWith(
-                                  fontWeight: FontWeight.w400,
-                                  color: Colors.transparent,
-                                ),
-                      ),
-                      AnimatedBuilder(
-                        animation: _controller,
-                        builder: (context, child) {
-                          return Transform.rotate(
-                            angle: _controller.value * 2.0 * 3.1415926535897932,
-                            child: child,
-                          );
-                        },
-                        child: GestureDetector(
-                          onTap: () => context.goNamed('home'),
-                          child: SvgPicture.asset(
-                            'assets/images/logo.svg',
-                            width: 60,
-                            height: 60,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () => scaffoldKey.currentState!.openEndDrawer(),
-                        child: Text(
+        child: WarpIndicator(
+          controller: _refreshController,
+          onRefresh: () async {
+            html.window.location.reload();
+          },
+          child: CustomScrollView(
+            controller: _scrollController,
+            shrinkWrap: true,
+            physics: AlwaysScrollableScrollPhysics(
+              parent: ClampingWithOverscrollPhysics(state: _refreshController),
+            ),
+            slivers: [
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: PinnedHeader(
+                  widget: Container(
+                    height: 80,
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
                           'CART 0',
                           style: ResponsiveBreakpoints.of(context).isDesktop
                               ? Theme.of(context)
@@ -151,31 +131,72 @@ class _NavigationPageState extends State<NavigationPage>
                                   .titleMedium
                                   ?.copyWith(
                                     fontWeight: FontWeight.w400,
+                                    color: Colors.transparent,
                                   )
                               : Theme.of(context)
                                   .textTheme
                                   .titleSmall
                                   ?.copyWith(
                                     fontWeight: FontWeight.w400,
+                                    color: Colors.transparent,
                                   ),
                         ),
-                      ),
-                    ],
+                        AnimatedBuilder(
+                          animation: _controller,
+                          builder: (context, child) {
+                            return Transform.rotate(
+                              angle:
+                                  _controller.value * 2.0 * 3.1415926535897932,
+                              child: child,
+                            );
+                          },
+                          child: GestureDetector(
+                            onTap: () => context.goNamed('home'),
+                            child: SvgPicture.asset(
+                              'assets/images/logo.svg',
+                              width: 60,
+                              height: 60,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () =>
+                              scaffoldKey.currentState!.openEndDrawer(),
+                          child: Text(
+                            'CART 0',
+                            style: ResponsiveBreakpoints.of(context).isDesktop
+                                ? Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.w400,
+                                    )
+                                : Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.w400,
+                                    ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            SliverFillRemaining(
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-                child: widget.navigationShell,
+              SliverFillRemaining(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                  child: widget.navigationShell,
+                ),
+                hasScrollBody: false,
               ),
-              hasScrollBody: false,
-            ),
-            SliverToBoxAdapter(
-              child: FooterSite(),
-            ),
-          ],
+              SliverToBoxAdapter(
+                child: FooterSite(),
+              ),
+            ],
+          ),
         ),
       ),
     );
