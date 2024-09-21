@@ -157,7 +157,7 @@ class _HomePageState extends State<HomePage> {
                     visible: !_vidController.value.isPlaying,
                     child: const Icon(
                       Icons.play_arrow_rounded,
-                      size: 80,
+                      size: 85,
                       color: Colors.white,
                     ),
                   ),
