@@ -24,7 +24,7 @@ class ArtWerk extends StatelessWidget {
             crossAxisCellCount: 2,
             mainAxisCellCount: 2,
             child: CachedNetworkImage(
-              imageUrl: 'https://arifsani.xyz/src/art-1.png',
+              imageUrl: 'https://captive.my.id/src/art-1.png',
               fit: BoxFit.cover,
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(
@@ -48,7 +48,7 @@ class ArtWerk extends StatelessWidget {
             crossAxisCellCount: 2,
             mainAxisCellCount: 1,
             child: CachedNetworkImage(
-              imageUrl: 'https://arifsani.xyz/src/art-2.png',
+              imageUrl: 'https://captive.my.id/src/art-2.png',
               fit: BoxFit.cover,
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(
@@ -72,7 +72,7 @@ class ArtWerk extends StatelessWidget {
             crossAxisCellCount: 1,
             mainAxisCellCount: 1,
             child: CachedNetworkImage(
-              imageUrl: 'https://arifsani.xyz/src/art-3.png',
+              imageUrl: 'https://captive.my.id/src/art-3.png',
               fit: BoxFit.cover,
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(
@@ -96,7 +96,7 @@ class ArtWerk extends StatelessWidget {
             crossAxisCellCount: 1,
             mainAxisCellCount: 1,
             child: CachedNetworkImage(
-              imageUrl: 'https://arifsani.xyz/src/art-4.png',
+              imageUrl: 'https://captive.my.id/src/art-4.png',
               fit: BoxFit.cover,
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(
@@ -120,7 +120,7 @@ class ArtWerk extends StatelessWidget {
             crossAxisCellCount: 4,
             mainAxisCellCount: 2,
             child: CachedNetworkImage(
-              imageUrl: 'https://arifsani.xyz/src/art-5.JPG',
+              imageUrl: 'https://captive.my.id/src/art-5.JPG',
               fit: BoxFit.cover,
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(
@@ -144,7 +144,7 @@ class ArtWerk extends StatelessWidget {
             crossAxisCellCount: 2,
             mainAxisCellCount: 2,
             child: CachedNetworkImage(
-              imageUrl: 'https://arifsani.xyz/src/art-6.JPG',
+              imageUrl: 'https://captive.my.id/src/art-6.JPG',
               fit: BoxFit.cover,
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(
@@ -168,7 +168,7 @@ class ArtWerk extends StatelessWidget {
             crossAxisCellCount: 2,
             mainAxisCellCount: 2,
             child: CachedNetworkImage(
-              imageUrl: 'https://arifsani.xyz/src/art-7.JPG',
+              imageUrl: 'https://captive.my.id/src/art-7.JPG',
               fit: BoxFit.cover,
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(
@@ -192,7 +192,7 @@ class ArtWerk extends StatelessWidget {
             crossAxisCellCount: 4,
             mainAxisCellCount: 2,
             child: CachedNetworkImage(
-              imageUrl: 'https://arifsani.xyz/src/art-8.png',
+              imageUrl: 'https://captive.my.id/src/art-8.png',
               fit: BoxFit.cover,
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(

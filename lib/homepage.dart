@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           HoverWidget(
             hoverChild: CachedNetworkImage(
-              imageUrl: 'https://arifsani.xyz/src/hoodie-blck-back.png',
+              imageUrl: 'https://captive.my.id/src/hoodie-blck-back.png',
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             child: CachedNetworkImage(
-              imageUrl: 'https://arifsani.xyz/src/hoodie-blck-front.png',
+              imageUrl: 'https://captive.my.id/src/hoodie-blck-front.png',
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           HoverWidget(
             hoverChild: CachedNetworkImage(
-              imageUrl: 'https://arifsani.xyz/src/hoodie-blue-back.png',
+              imageUrl: 'https://captive.my.id/src/hoodie-blue-back.png',
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -93,7 +93,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             child: CachedNetworkImage(
-              imageUrl: 'https://arifsani.xyz/src/hoodie-blue-front.png',
+              imageUrl: 'https://captive.my.id/src/hoodie-blue-front.png',
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -126,7 +126,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           HoverWidget(
             hoverChild: CachedNetworkImage(
-              imageUrl: 'https://arifsani.xyz/src/hoodie-brwn-back.png',
+              imageUrl: 'https://captive.my.id/src/hoodie-brwn-back.png',
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -145,7 +145,7 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             child: CachedNetworkImage(
-              imageUrl: 'https://arifsani.xyz/src/hoodie-brwn-front.png',
+              imageUrl: 'https://captive.my.id/src/hoodie-brwn-front.png',
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -177,7 +177,7 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         children: [
           CachedNetworkImage(
-            imageUrl: 'https://arifsani.xyz/src/album-warrior-img.jpeg',
+            imageUrl: 'https://captive.my.id/src/album-warrior-img.jpeg',
             progressIndicatorBuilder: (context, url, progress) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -207,7 +207,7 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         children: [
           CachedNetworkImage(
-            imageUrl: 'https://arifsani.xyz/src/album-rise-img.jpeg',
+            imageUrl: 'https://captive.my.id/src/album-rise-img.jpeg',
             progressIndicatorBuilder: (context, url, progress) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -237,7 +237,7 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         children: [
           CachedNetworkImage(
-            imageUrl: 'https://arifsani.xyz/src/captive-kings-img.png',
+            imageUrl: 'https://captive.my.id/src/captive-kings-img.png',
             progressIndicatorBuilder: (context, url, progress) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -267,7 +267,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     _vidController = VideoPlayerController.networkUrl(
-      Uri.parse('https://arifsani.xyz/home_vid.mp4'),
+      Uri.parse('https://captive.my.id/home_vid.mp4'),
     );
     _vidController.setLooping(true);
     _vidController.initialize();
