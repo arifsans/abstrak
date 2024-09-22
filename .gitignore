@@ -10,6 +10,7 @@
 .svn/
 migrate_working_dir/
 owner@arifsani.xyz.duck
+captive@captive.my.id.duck
 
 # IntelliJ related
 *.iml
