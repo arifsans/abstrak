@@ -1,10 +1,11 @@
 import 'package:abstrak/x_button.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class FooterSite extends StatelessWidget {
-  FooterSite({super.key});
+  FooterSite({super.key, required this.onPressed});
+
+  final Function(String route) onPressed;
 
   final List<FooterObject> footers = [
     FooterObject(
@@ -39,7 +40,7 @@ class FooterSite extends StatelessWidget {
         spacing: 40,
         children: footers
             .mapIndexed((index, item) => XButton(
-                  onPressed: () => context.goNamed(item.route),
+                  onPressed: () => onPressed(item.route),
                   text: item.text,
                 ))
             .toList(),

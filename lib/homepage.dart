@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:hovering/hovering.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:video_player/video_player.dart';
@@ -19,11 +21,41 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         children: [
           HoverWidget(
-            hoverChild: Image.network(
-              'https://arifsani.xyz/src/hoodie-blck-back.png',
+            hoverChild: CachedNetworkImage(
+              imageUrl: 'https://arifsani.xyz/src/hoodie-blck-back.png',
+              progressIndicatorBuilder: (context, url, progress) {
+                return Column(
+                  children: [
+                    SpinKitFoldingCube(
+                      color: Colors.white,
+                    ),
+                    SizedBox(height: 12),
+                    LinearProgressIndicator(
+                      value: progress.progress,
+                      backgroundColor: Colors.grey.withOpacity(.2),
+                      color: Colors.white,
+                    ),
+                  ],
+                );
+              },
             ),
-            child: Image.network(
-              'https://arifsani.xyz/src/hoodie-blck-front.png',
+            child: CachedNetworkImage(
+              imageUrl: 'https://arifsani.xyz/src/hoodie-blck-front.png',
+              progressIndicatorBuilder: (context, url, progress) {
+                return Column(
+                  children: [
+                    SpinKitFoldingCube(
+                      color: Colors.white,
+                    ),
+                    SizedBox(height: 12),
+                    LinearProgressIndicator(
+                      value: progress.progress,
+                      backgroundColor: Colors.grey.withOpacity(.2),
+                      color: Colors.white,
+                    ),
+                  ],
+                );
+              },
             ),
             onHover: (event) {},
           ),
@@ -39,11 +71,41 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         children: [
           HoverWidget(
-            hoverChild: Image.network(
-              'https://arifsani.xyz/src/hoodie-blue-back.png',
+            hoverChild: CachedNetworkImage(
+              imageUrl: 'https://arifsani.xyz/src/hoodie-blue-back.png',
+              progressIndicatorBuilder: (context, url, progress) {
+                return Column(
+                  children: [
+                    SpinKitFoldingCube(
+                      color: Colors.white,
+                    ),
+                    SizedBox(height: 12),
+                    LinearProgressIndicator(
+                      value: progress.progress,
+                      backgroundColor: Colors.grey.withOpacity(.2),
+                      color: Colors.white,
+                    ),
+                  ],
+                );
+              },
             ),
-            child: Image.network(
-              'https://arifsani.xyz/src/hoodie-blue-front.png',
+            child: CachedNetworkImage(
+              imageUrl: 'https://arifsani.xyz/src/hoodie-blue-front.png',
+              progressIndicatorBuilder: (context, url, progress) {
+                return Column(
+                  children: [
+                    SpinKitFoldingCube(
+                      color: Colors.white,
+                    ),
+                    SizedBox(height: 12),
+                    LinearProgressIndicator(
+                      value: progress.progress,
+                      backgroundColor: Colors.grey.withOpacity(.2),
+                      color: Colors.white,
+                    ),
+                  ],
+                );
+              },
             ),
             onHover: (event) {},
           ),
@@ -59,11 +121,41 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         children: [
           HoverWidget(
-            hoverChild: Image.network(
-              'https://arifsani.xyz/src/hoodie-brwn-back.png',
+            hoverChild: CachedNetworkImage(
+              imageUrl: 'https://arifsani.xyz/src/hoodie-brwn-back.png',
+              progressIndicatorBuilder: (context, url, progress) {
+                return Column(
+                  children: [
+                    SpinKitFoldingCube(
+                      color: Colors.white,
+                    ),
+                    SizedBox(height: 12),
+                    LinearProgressIndicator(
+                      value: progress.progress,
+                      backgroundColor: Colors.grey.withOpacity(.2),
+                      color: Colors.white,
+                    ),
+                  ],
+                );
+              },
             ),
-            child: Image.network(
-              'https://arifsani.xyz/src/hoodie-brwn-front.png',
+            child: CachedNetworkImage(
+              imageUrl: 'https://arifsani.xyz/src/hoodie-brwn-front.png',
+              progressIndicatorBuilder: (context, url, progress) {
+                return Column(
+                  children: [
+                    SpinKitFoldingCube(
+                      color: Colors.white,
+                    ),
+                    SizedBox(height: 12),
+                    LinearProgressIndicator(
+                      value: progress.progress,
+                      backgroundColor: Colors.grey.withOpacity(.2),
+                      color: Colors.white,
+                    ),
+                  ],
+                );
+              },
             ),
             onHover: (event) {},
           ),
@@ -78,8 +170,23 @@ class _HomePageState extends State<HomePage> {
       width: 250,
       child: Column(
         children: [
-          Image.network(
-            'https://arifsani.xyz/src/album-warrior-img.jpeg',
+          CachedNetworkImage(
+            imageUrl: 'https://arifsani.xyz/src/album-warrior-img.jpeg',
+            progressIndicatorBuilder: (context, url, progress) {
+              return Column(
+                children: [
+                  SpinKitFoldingCube(
+                    color: Colors.white,
+                  ),
+                  SizedBox(height: 12),
+                  LinearProgressIndicator(
+                    value: progress.progress,
+                    backgroundColor: Colors.grey.withOpacity(.2),
+                    color: Colors.white,
+                  ),
+                ],
+              );
+            },
           ),
           const SizedBox(height: 8),
           const Text('WARRIOR ALBUM - DELUXE VINYL RECORD'),
@@ -92,8 +199,23 @@ class _HomePageState extends State<HomePage> {
       width: 250,
       child: Column(
         children: [
-          Image.network(
-            'https://arifsani.xyz/src/album-rise-img.jpeg',
+          CachedNetworkImage(
+            imageUrl: 'https://arifsani.xyz/src/album-rise-img.jpeg',
+            progressIndicatorBuilder: (context, url, progress) {
+              return Column(
+                children: [
+                  SpinKitFoldingCube(
+                    color: Colors.white,
+                  ),
+                  SizedBox(height: 12),
+                  LinearProgressIndicator(
+                    value: progress.progress,
+                    backgroundColor: Colors.grey.withOpacity(.2),
+                    color: Colors.white,
+                  ),
+                ],
+              );
+            },
           ),
           const SizedBox(height: 8),
           const Text('RISE ALBUM - DELUXE VINYL RECORD'),
@@ -106,8 +228,23 @@ class _HomePageState extends State<HomePage> {
       width: 250,
       child: Column(
         children: [
-          Image.network(
-            'https://arifsani.xyz/src/captive-kings-img.png',
+          CachedNetworkImage(
+            imageUrl: 'https://arifsani.xyz/src/captive-kings-img.png',
+            progressIndicatorBuilder: (context, url, progress) {
+              return Column(
+                children: [
+                  SpinKitFoldingCube(
+                    color: Colors.white,
+                  ),
+                  SizedBox(height: 12),
+                  LinearProgressIndicator(
+                    value: progress.progress,
+                    backgroundColor: Colors.grey.withOpacity(.2),
+                    color: Colors.white,
+                  ),
+                ],
+              );
+            },
           ),
           const SizedBox(height: 8),
           const Text('CAPTIVE KINGS - DELUXE POSTER ALBUM'),

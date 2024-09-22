@@ -8,56 +8,74 @@ class Terms extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+      padding: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
           ? const EdgeInsets.all(0)
           : EdgeInsets.symmetric(
-              horizontal: MediaQuery.sizeOf(context).width * .2,
+              horizontal: MediaQuery.sizeOf(context).width * .3,
             ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'TERMS OF SERVICE',
-            style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+          Align(
+            child: Text(
+              'TERMS OF SERVICE',
+              style: Theme.of(context).textTheme.bodyLarge,
+              textAlign: TextAlign.justify,
+            ),
+            alignment: Alignment.center,
           ),
           SizedBox(height: 20),
-          Text(
-            'Last Updated: September 21, 2024.',
-            style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+          Align(
+            child: Text(
+              'Last Updated: September 21, 2024.',
+              style: Theme.of(context).textTheme.bodyLarge,
+              textAlign: TextAlign.justify,
+            ),
+            alignment: Alignment.center,
           ),
           SizedBox(height: 20),
-          Text(
-            'ALL SALES FINAL. NO RETURNS, EXCHANGES, OR MODIFICATIONS TO YOUR ORDER AFTER PLACED.',
-            style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+          Align(
+            child: Text(
+              'ALL SALES FINAL. NO RETURNS, EXCHANGES, OR MODIFICATIONS TO YOUR ORDER AFTER PLACED.',
+              style: Theme.of(context).textTheme.bodyLarge,
+              textAlign: TextAlign.justify,
+            ),
+            alignment: Alignment.center,
           ),
           SizedBox(height: 40),
-          Text(
-            'FOR CUSTOMER SERVICE PLEASE CLICK BELOW:',
-            style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
-          ),
-          SizedBox(height: 20),
-          XButton(
-            text: 'CONTACT CUSTOMER SERVICE',
-            borderColor: Colors.white,
-            textStyle: Theme.of(context).textTheme.bodyLarge,
-            paddingButton: EdgeInsets.fromLTRB(
-              MediaQuery.sizeOf(context).width * .1,
-              12,
-              MediaQuery.sizeOf(context).width * .1,
-              10,
+          Align(
+            child: Text(
+              'FOR CUSTOMER SERVICE PLEASE CLICK BELOW:',
+              style: Theme.of(context).textTheme.bodyLarge,
+              textAlign: TextAlign.justify,
             ),
+            alignment: Alignment.center,
           ),
           SizedBox(height: 20),
-          Text(
-            'You will receive order shipment and tracking once your order ships.',
-            style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+          Align(
+            child: XButton(
+              text: 'CONTACT CUSTOMER SERVICE',
+              borderColor: Colors.white,
+              textStyle: Theme.of(context).textTheme.bodyLarge,
+              paddingButton: EdgeInsets.fromLTRB(
+                MediaQuery.sizeOf(context).width * .1,
+                12,
+                MediaQuery.sizeOf(context).width * .1,
+                10,
+              ),
+            ),
+            alignment: Alignment.center,
+          ),
+          SizedBox(height: 20),
+          Align(
+            child: Text(
+              'You will receive order shipment and tracking once your order ships.',
+              style: Theme.of(context).textTheme.bodyLarge,
+              textAlign: TextAlign.justify,
+            ),
+            alignment: Alignment.center,
           ),
           SizedBox(height: 20),
           Text(
@@ -97,7 +115,7 @@ class Terms extends StatelessWidget {
           ),
           SizedBox(height: 20),
           Text(
-            'THESE TERMS OF USE, AND ANY DOCUMENTS REFERRED TO HEREIN, SET OUT THE TERMS AND CONDITIONS ON WHICH YOU ARE PERMITTED TO USE OUR WEBSITE, HTTPS://SHOP.TRAVISSCOTT.COM (“WEBSITE”). BY USING OUR WEBSITE, YOU AGREE TO BE BOUND BY, AND TO COMPLY WITH, THESE TERMS OF USE. THESE TERMS OF USE ARE EFFECTIVE FROM MAY 24, 2018. PLEASE READ THESE TERMS OF USE CAREFULLY. WE RECOMMEND THAT YOU PRINT OFF A COPY OF THESE TERMS OF USE FOR YOUR RECORDS, AS WELL AS ANY FUTURE VERSIONS OF THEM, AS WE MAY UPDATE THEM FROM TIME TO TIME. YOU CAN DETERMINE WHEN WE LAST CHANGED THIS AGREEMENT BY REFERRING TO THE “LAST UPDATED” LEGEND ABOVE. YOUR ATTENTION IS PARTICULARLY DRAWN TO CLAUSES 11 (EXCLUSIONS AND LIMITATIONS OF LIABILITY), 12 (INDEMNIFICATION), AND 13 (DISCLAIMERS). BY ACCESSING AND USING OUR WEBSITE, YOU AGREE TO BE BOUND BY THE TERMS AND CONDITIONS CONTAINED IN THESE TERMS OF USE, YOU ACKNOWLEDGE THAT WE WILL PROCESS YOUR INFORMATION IN ACCORDANCE WITH OUR PRIVACY POLICY, AND OUR USE OF COOKIES AND SIMILAR TECHNOLOGIES IN ACCORDANCE WITH OUR COOKIES POLICY. IF YOU DO NOT AGREE TO THE TERMS SET OUT IN THESE TERMS OF USE, YOU MUST NOT USE OUR WEBSITE.',
+            'THESE TERMS OF USE, AND ANY DOCUMENTS REFERRED TO HEREIN, SET OUT THE TERMS AND CONDITIONS ON WHICH YOU ARE PERMITTED TO USE OUR WEBSITE, https://arifsani.xyz (“WEBSITE”). BY USING OUR WEBSITE, YOU AGREE TO BE BOUND BY, AND TO COMPLY WITH, THESE TERMS OF USE. THESE TERMS OF USE ARE EFFECTIVE FROM MAY 24, 2018. PLEASE READ THESE TERMS OF USE CAREFULLY. WE RECOMMEND THAT YOU PRINT OFF A COPY OF THESE TERMS OF USE FOR YOUR RECORDS, AS WELL AS ANY FUTURE VERSIONS OF THEM, AS WE MAY UPDATE THEM FROM TIME TO TIME. YOU CAN DETERMINE WHEN WE LAST CHANGED THIS AGREEMENT BY REFERRING TO THE “LAST UPDATED” LEGEND ABOVE. YOUR ATTENTION IS PARTICULARLY DRAWN TO CLAUSES 11 (EXCLUSIONS AND LIMITATIONS OF LIABILITY), 12 (INDEMNIFICATION), AND 13 (DISCLAIMERS). BY ACCESSING AND USING OUR WEBSITE, YOU AGREE TO BE BOUND BY THE TERMS AND CONDITIONS CONTAINED IN THESE TERMS OF USE, YOU ACKNOWLEDGE THAT WE WILL PROCESS YOUR INFORMATION IN ACCORDANCE WITH OUR PRIVACY POLICY, AND OUR USE OF COOKIES AND SIMILAR TECHNOLOGIES IN ACCORDANCE WITH OUR COOKIES POLICY. IF YOU DO NOT AGREE TO THE TERMS SET OUT IN THESE TERMS OF USE, YOU MUST NOT USE OUR WEBSITE.',
             style: Theme.of(context).textTheme.bodyLarge,
             textAlign: TextAlign.justify,
           ),
@@ -115,7 +133,7 @@ class Terms extends StatelessWidget {
           ),
           SizedBox(height: 20),
           Text(
-            'Our privacy policy, which is available at https://shop.travisscott.com/pages/privacy-policy. Our privacy policy governs our use of your information. It sets out the types of information we collect, the reasons we collect it, how we use it, where we may pass it on to any third parties, in what circumstances and for what reasons, and any other relevant information relating to our use and/or processing of your information and your rights in relation to your information. Our cookies policy, which is available at https://shop.travisscott.com/pages/cookie-policy. Our cookies policy governs our use of cookies [which are small files placed on the hard drive of a computer] and similar technologies on our website. It sets out the types of cookies we use, the purposes for which we use them, the circumstances in which we may place cookies on your computer, device or browser, and other relevant information relating to cookies, such as how to change your browser preferences and settings to accept or reject cookies',
+            'Our privacy policy, which is available at https://arifsani.xyz/pages/cookie-policy. Our privacy policy governs our use of your information. It sets out the types of information we collect, the reasons we collect it, how we use it, where we may pass it on to any third parties, in what circumstances and for what reasons, and any other relevant information relating to our use and/or processing of your information and your rights in relation to your information. Our cookies policy, which is available at https://arifsani.xyz/pages/cookie-policy. Our cookies policy governs our use of cookies [which are small files placed on the hard drive of a computer] and similar technologies on our website. It sets out the types of cookies we use, the purposes for which we use them, the circumstances in which we may place cookies on your computer, device or browser, and other relevant information relating to cookies, such as how to change your browser preferences and settings to accept or reject cookies',
             style: Theme.of(context).textTheme.bodyLarge,
             textAlign: TextAlign.justify,
           ),
@@ -129,7 +147,7 @@ class Terms extends StatelessWidget {
           Text(
             '1. Availability of our website',
             style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.start,
           ),
           SizedBox(height: 20),
           Text(
@@ -153,7 +171,7 @@ class Terms extends StatelessWidget {
           Text(
             '2. Changes we may make to these Terms of Use and other documentation',
             style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.start,
           ),
           SizedBox(height: 20),
           Text(
@@ -177,11 +195,11 @@ class Terms extends StatelessWidget {
           Text(
             '3. Your account details',
             style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.start,
           ),
           SizedBox(height: 20),
           Text(
-            'If we provide you with account information such as a user name, identification number, account code and/or password, you must keep such information confidential and secret and not disclose it to anyone. All account information is provided for use of the named account holder only, and not for any other person. You are responsible for any consequences of unauthorised access to your account due to any disclosure of your account information to any third party. Where we provide you with the option to select your own login information, including a password, we recommend that you supply login information unique to your own use of this website, and do not use information from other accounts you may hold with other websites or any easily discoverable information about you. You are responsible for any consequences of unauthorised access to your account due to any disclosure of your login information to any third party. You must never use another user’s account without permission. When creating your account, you must provide accurate and complete information. You agree that you will not solicit, collect or use the login credentials of other individuals. We prohibit the creation of, and you agree that you will not create, an account for anyone other than yourself. You also represent that all information you provide to us upon registration and at all other times will be true, accurate, current, and complete. You agree to update your information as necessary to maintain its truth and accuracy. We reserve the right to withdraw access to your account without notice for any actual or suspected breach of these Terms of Use or any other documentation referred to in them, including, without limitation, where we suspect that there has been unauthorised access to your account, or any unauthorised disclosure of your login information. If you know or suspect that the confidentiality of your login information has been compromised, for example, by the disclosure of such information to any third party, you must immediately change your password. If you are unable to change your password, you must immediately notify us by email, at store@travisscott.com',
+            'If we provide you with account information such as a user name, identification number, account code and/or password, you must keep such information confidential and secret and not disclose it to anyone. All account information is provided for use of the named account holder only, and not for any other person. You are responsible for any consequences of unauthorised access to your account due to any disclosure of your account information to any third party. Where we provide you with the option to select your own login information, including a password, we recommend that you supply login information unique to your own use of this website, and do not use information from other accounts you may hold with other websites or any easily discoverable information about you. You are responsible for any consequences of unauthorised access to your account due to any disclosure of your login information to any third party. You must never use another user’s account without permission. When creating your account, you must provide accurate and complete information. You agree that you will not solicit, collect or use the login credentials of other individuals. We prohibit the creation of, and you agree that you will not create, an account for anyone other than yourself. You also represent that all information you provide to us upon registration and at all other times will be true, accurate, current, and complete. You agree to update your information as necessary to maintain its truth and accuracy. We reserve the right to withdraw access to your account without notice for any actual or suspected breach of these Terms of Use or any other documentation referred to in them, including, without limitation, where we suspect that there has been unauthorised access to your account, or any unauthorised disclosure of your login information. If you know or suspect that the confidentiality of your login information has been compromised, for example, by the disclosure of such information to any third party, you must immediately change your password. If you are unable to change your password, you must immediately notify us by email, at arifsanix@gmail.com',
             style: Theme.of(context).textTheme.bodyLarge,
             textAlign: TextAlign.justify,
           ),
@@ -189,7 +207,7 @@ class Terms extends StatelessWidget {
           Text(
             '4. Ownership of material on our website',
             style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.start,
           ),
           SizedBox(height: 20),
           Text(
@@ -201,7 +219,7 @@ class Terms extends StatelessWidget {
           Text(
             '5. Information and content on our website provided on non-reliance basis',
             style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.start,
           ),
           SizedBox(height: 20),
           Text(
@@ -213,7 +231,7 @@ class Terms extends StatelessWidget {
           Text(
             '6. Permitted use of materials on our website',
             style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.start,
           ),
           SizedBox(height: 20),
           Text(
@@ -225,7 +243,7 @@ class Terms extends StatelessWidget {
           Text(
             '7. Prohibited uses of our website',
             style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.start,
           ),
           SizedBox(height: 20),
           Text(
@@ -261,7 +279,7 @@ class Terms extends StatelessWidget {
           Text(
             '8. Viruses and other harmful content',
             style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.start,
           ),
           SizedBox(height: 20),
           Text(
@@ -273,7 +291,7 @@ class Terms extends StatelessWidget {
           Text(
             '9. Links to other websites',
             style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.start,
           ),
           SizedBox(height: 20),
           Text(
@@ -285,7 +303,7 @@ class Terms extends StatelessWidget {
           Text(
             '10. Links to our website',
             style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.start,
           ),
           SizedBox(height: 20),
           Text(
@@ -309,7 +327,7 @@ class Terms extends StatelessWidget {
           Text(
             '11. EXCLUSIONS AND LIMITATIONS OF LIABILITY',
             style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.start,
           ),
           SizedBox(height: 20),
           Text(
@@ -351,7 +369,7 @@ class Terms extends StatelessWidget {
           Text(
             '12. INDEMNIFICATION',
             style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.start,
           ),
           SizedBox(height: 20),
           Text(
@@ -368,7 +386,7 @@ class Terms extends StatelessWidget {
           Text(
             '13. DISCLAIMERS',
             style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.start,
           ),
           SizedBox(height: 20),
           Text(
@@ -398,7 +416,7 @@ class Terms extends StatelessWidget {
           Text(
             '14. AGE RESTRICTIONS ON USE OF OUR WEBSITE',
             style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.start,
           ),
           SizedBox(height: 20),
           Text(
@@ -410,7 +428,7 @@ class Terms extends StatelessWidget {
           Text(
             '15. Governing law and jurisdiction',
             style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.start,
           ),
           SizedBox(height: 20),
           Text(
@@ -422,7 +440,7 @@ class Terms extends StatelessWidget {
           Text(
             '16. Copyright, credit and logo',
             style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.start,
           ),
           SizedBox(height: 20),
           Text(
@@ -434,7 +452,7 @@ class Terms extends StatelessWidget {
           Text(
             '17. GDPR REGULATION',
             style: Theme.of(context).textTheme.bodyLarge,
-            textAlign: TextAlign.justify,
+            textAlign: TextAlign.start,
           ),
           SizedBox(height: 20),
           Text(

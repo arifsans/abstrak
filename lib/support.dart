@@ -8,10 +8,10 @@ class Support extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: ResponsiveBreakpoints.of(context).smallerThan(TABLET)
+      padding: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
           ? const EdgeInsets.all(0)
           : EdgeInsets.symmetric(
-              horizontal: MediaQuery.sizeOf(context).width * .2,
+              horizontal: MediaQuery.sizeOf(context).width * .3,
             ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
