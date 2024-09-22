@@ -1,3 +1,4 @@
+import 'package:abstrak/artwerk.dart';
 import 'package:abstrak/cookie_policy.dart';
 import 'package:abstrak/do_not_sell.dart';
 import 'package:abstrak/homepage.dart';
@@ -80,6 +81,15 @@ final _router = GoRouter(
               name: "do-not-sell-my-personal-information",
               path: "/do-not-sell-my-personal-information",
               builder: (context, state) => const DoNotSell(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: "artwerk",
+              path: "/artwerk",
+              builder: (context, state) => const ArtWerk(),
             ),
           ],
         )

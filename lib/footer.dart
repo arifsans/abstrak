@@ -9,6 +9,10 @@ class FooterSite extends StatelessWidget {
 
   final List<FooterObject> footers = [
     FooterObject(
+      text: 'ARTWERK',
+      route: 'artwerk',
+    ),
+    FooterObject(
       text: 'CONTACT CUSTOMER SERVICE',
       route: 'support',
     ),
@@ -23,10 +27,6 @@ class FooterSite extends StatelessWidget {
     FooterObject(
       text: 'COOKIE POLICY',
       route: 'cookie-policy',
-    ),
-    FooterObject(
-      text: 'DO NOT SELL MY PERSONAL INFORMATION',
-      route: 'do-not-sell-my-personal-information',
     ),
   ];
 

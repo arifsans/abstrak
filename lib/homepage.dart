@@ -25,6 +25,7 @@ class _HomePageState extends State<HomePage> {
               imageUrl: 'https://arifsani.xyz/src/hoodie-blck-back.png',
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SpinKitFoldingCube(
                       color: Colors.white,
@@ -43,6 +44,7 @@ class _HomePageState extends State<HomePage> {
               imageUrl: 'https://arifsani.xyz/src/hoodie-blck-front.png',
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SpinKitFoldingCube(
                       color: Colors.white,
@@ -75,6 +77,7 @@ class _HomePageState extends State<HomePage> {
               imageUrl: 'https://arifsani.xyz/src/hoodie-blue-back.png',
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SpinKitFoldingCube(
                       color: Colors.white,
@@ -93,6 +96,7 @@ class _HomePageState extends State<HomePage> {
               imageUrl: 'https://arifsani.xyz/src/hoodie-blue-front.png',
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SpinKitFoldingCube(
                       color: Colors.white,
@@ -125,6 +129,7 @@ class _HomePageState extends State<HomePage> {
               imageUrl: 'https://arifsani.xyz/src/hoodie-brwn-back.png',
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SpinKitFoldingCube(
                       color: Colors.white,
@@ -143,6 +148,7 @@ class _HomePageState extends State<HomePage> {
               imageUrl: 'https://arifsani.xyz/src/hoodie-brwn-front.png',
               progressIndicatorBuilder: (context, url, progress) {
                 return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SpinKitFoldingCube(
                       color: Colors.white,
@@ -174,6 +180,7 @@ class _HomePageState extends State<HomePage> {
             imageUrl: 'https://arifsani.xyz/src/album-warrior-img.jpeg',
             progressIndicatorBuilder: (context, url, progress) {
               return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SpinKitFoldingCube(
                     color: Colors.white,
@@ -203,6 +210,7 @@ class _HomePageState extends State<HomePage> {
             imageUrl: 'https://arifsani.xyz/src/album-rise-img.jpeg',
             progressIndicatorBuilder: (context, url, progress) {
               return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SpinKitFoldingCube(
                     color: Colors.white,
@@ -232,6 +240,7 @@ class _HomePageState extends State<HomePage> {
             imageUrl: 'https://arifsani.xyz/src/captive-kings-img.png',
             progressIndicatorBuilder: (context, url, progress) {
               return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SpinKitFoldingCube(
                     color: Colors.white,
