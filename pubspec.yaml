@@ -47,6 +47,9 @@ dependencies:
   cached_network_image: ^3.3.1
   flutter_spinkit: ^5.2.1
   flutter_staggered_grid_view: ^0.7.0
+  http: ^1.2.0
+  typewritertext:
+  intl: 
 
 dev_dependencies:
   flutter_test:
@@ -111,6 +114,11 @@ flutter:
       fonts:
         - asset: assets/fonts/Kenzo/Kenzo-Regular-Italic.otf
         - asset: assets/fonts/Kenzo/Kenzo-Regular.otf
+
+    - family: Courier
+      fonts:
+        - asset: assets/fonts/Courier/CourierPrime-Regular.ttf
+        - asset: assets/fonts/Courier/CourierPrime-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:

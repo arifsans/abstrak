@@ -6,6 +6,7 @@ import 'package:abstrak/navigation_page.dart';
 import 'package:abstrak/privacy.dart';
 import 'package:abstrak/support.dart';
 import 'package:abstrak/terms.dart';
+import 'package:abstrak/tp_calculator.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -92,6 +93,15 @@ final _router = GoRouter(
               builder: (context, state) => const ArtWerk(),
             ),
           ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: "tp-calculator",
+              path: "/tp-calculator",
+              builder: (context, state) => const TpCalculator(),
+            ),
+          ],
         )
       ],
     ),
@@ -161,6 +171,74 @@ TextTheme customTextTheme = const TextTheme(
   ),
   labelSmall: TextStyle(
     fontFamily: 'Kenzo',
+    fontSize: 10,
+    color: Colors.white,
+  ),
+);
+
+TextTheme courierText = const TextTheme(
+  displayLarge: TextStyle(
+    fontFamily: 'Courier',
+    fontSize: 96,
+    color: Colors.white,
+  ),
+  displayMedium: TextStyle(
+    fontFamily: 'Courier',
+    fontSize: 60,
+    color: Colors.white,
+  ),
+  displaySmall: TextStyle(
+    fontFamily: 'Courier',
+    fontSize: 48,
+    color: Colors.white,
+  ),
+  headlineMedium: TextStyle(
+    fontFamily: 'Courier',
+    fontSize: 34,
+    color: Colors.white,
+  ),
+  headlineSmall: TextStyle(
+    fontFamily: 'Courier',
+    fontSize: 24,
+    color: Colors.white,
+  ),
+  titleLarge: TextStyle(
+    fontFamily: 'Courier',
+    fontSize: 20,
+    color: Colors.white,
+  ),
+  bodyLarge: TextStyle(
+    fontFamily: 'Courier',
+    fontSize: 16,
+    color: Colors.white,
+  ),
+  bodyMedium: TextStyle(
+    fontFamily: 'Courier',
+    fontSize: 14,
+    color: Colors.white,
+  ),
+  titleMedium: TextStyle(
+    fontFamily: 'Courier',
+    fontSize: 16,
+    color: Colors.white,
+  ),
+  titleSmall: TextStyle(
+    fontFamily: 'Courier',
+    fontSize: 14,
+    color: Colors.white,
+  ),
+  labelLarge: TextStyle(
+    fontFamily: 'Courier',
+    fontSize: 14,
+    color: Colors.white,
+  ),
+  bodySmall: TextStyle(
+    fontFamily: 'Courier',
+    fontSize: 12,
+    color: Colors.white,
+  ),
+  labelSmall: TextStyle(
+    fontFamily: 'Courier',
     fontSize: 10,
     color: Colors.white,
   ),

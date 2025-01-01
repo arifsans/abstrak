@@ -112,13 +112,13 @@ class _NavigationPageState extends State<NavigationPage>
           },
           child: ScrollbarTheme(
             data: ScrollbarThemeData(
-              thumbColor: WidgetStateProperty.resolveWith(
+              thumbColor: MaterialStateProperty.resolveWith(
                 (states) => Colors.white,
               ),
-              trackColor: WidgetStateProperty.resolveWith(
+              trackColor: MaterialStateProperty.resolveWith(
                 (states) => Colors.grey.withOpacity(.2),
               ),
-              trackVisibility: WidgetStateProperty.resolveWith(
+              trackVisibility: MaterialStateProperty.resolveWith(
                 (states) => true,
               ),
             ),

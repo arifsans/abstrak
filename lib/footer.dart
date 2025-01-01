@@ -28,6 +28,10 @@ class FooterSite extends StatelessWidget {
       text: 'COOKIE POLICY',
       route: 'cookie-policy',
     ),
+    FooterObject(
+      text: 'TP CALCULATOR',
+      route: 'tp-calculator',
+    ),
   ];
 
   @override
