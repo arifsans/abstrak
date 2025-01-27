@@ -1,3 +1,4 @@
+import 'package:abstrak/main.dart';
 import 'package:abstrak/widgets/footer.dart';
 import 'package:abstrak/widgets/warp_indicator.dart';
 import 'package:collection/collection.dart';
@@ -164,18 +165,25 @@ class _NavigationPageState extends State<NavigationPage>
                   ),
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    right: MediaQuery.sizeOf(context).width * .5,
-                    bottom: MediaQuery.sizeOf(context).width * .5,
-                  ),
-                  child: Text(
-                    '© 2020 - ${DateTime.now().year} Captive, Inc',
-                  ),
-                ),
-              )
+              Builder(builder: (context) {
+                var r = GoRouter.of(context).routeInformationProvider.value.uri;
+                if (r.toString() == '/') {
+                  return Positioned(
+                    right: ResponsiveBreakpoints.of(context).largerThan(TABLET)
+                        ? MediaQuery.sizeOf(context).width * .05
+                        : null,
+                    left: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
+                        ? MediaQuery.sizeOf(context).width * .05
+                        : null,
+                    bottom: MediaQuery.sizeOf(context).height * .02,
+                    child: Text(
+                      '© 2020 - ${DateTime.now().year} Captive, Inc',
+                      style: customTextTheme.titleMedium,
+                    ),
+                  );
+                }
+                return Container();
+              }),
             ],
           ),
         ),
