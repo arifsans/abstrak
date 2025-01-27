@@ -42,7 +42,7 @@ class _TpCalculatorState extends State<TpCalculator> {
         child: Column(
           children: [
             Text(
-              'Masukkan Username AQW Kamu',
+              'Input Your AQW Username',
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             const SizedBox(height: 16),
@@ -51,7 +51,7 @@ class _TpCalculatorState extends State<TpCalculator> {
               autovalidateMode: AutovalidateMode.always,
               validator: (val) {
                 if (val!.isEmpty) {
-                  return 'Username Tidak Boleh Kosong';
+                  return 'Please Insert Your AQW Username';
                 }
 
                 return null;
@@ -74,7 +74,7 @@ class _TpCalculatorState extends State<TpCalculator> {
                       }
                     },
                     child: Text(
-                      'Hitung Treasure Points',
+                      'Calculate Treasure Points',
                     ),
                   );
                 } else {
@@ -167,7 +167,7 @@ class _TpCalculatorState extends State<TpCalculator> {
                         ),
                         overflow: TextOverflow.clip,
                         maintainSize: false,
-                        softWrap: false,
+                        softWrap: true,
                       ),
                       const SizedBox(height: 16),
                       value.additionalMessage != null
@@ -182,7 +182,7 @@ class _TpCalculatorState extends State<TpCalculator> {
                                   ),
                                   overflow: TextOverflow.clip,
                                   maintainSize: false,
-                                  softWrap: false,
+                                  softWrap: true,
                                 ),
                                 const SizedBox(height: 16),
                               ],
@@ -203,7 +203,7 @@ class _TpCalculatorState extends State<TpCalculator> {
                                 ),
                                 overflow: TextOverflow.clip,
                                 maintainSize: false,
-                                softWrap: false,
+                                softWrap: true,
                               ),
                             );
                           },
@@ -218,7 +218,7 @@ class _TpCalculatorState extends State<TpCalculator> {
                         ),
                         overflow: TextOverflow.clip,
                         maintainSize: false,
-                        softWrap: false,
+                        softWrap: true,
                       ),
                     ],
                   ),
