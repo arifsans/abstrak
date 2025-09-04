@@ -1,5 +1,6 @@
 import 'package:abstrak/main.dart';
 import 'package:abstrak/widgets/circle_widget.dart';
+import 'package:abstrak/widgets/text_scrambler.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
@@ -96,9 +97,28 @@ class HomePage extends StatelessWidget {
                             height: 42,
                           ),
                         ),
-                        child: Text(
-                          'Find us @YORUMI\nHACHIKO-6666',
-                          style: customTextTheme.bodyLarge,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Find us @YORUMI',
+                              style: customTextTheme.bodyLarge,
+                            ),
+                            TextScrambler(
+                              text: 'HACHIKO-6666',
+                              speed: const Duration(milliseconds: 100),
+                              chars: '!<>-_\\/[]{}—=+*^?#________',
+                              correctCharProbability: .1,
+                              scrambleCycles: 4,
+                              builder: (context, scrambledText) {
+                                return Text(
+                                  scrambledText,
+                                  textAlign: TextAlign.center,
+                                  style: customTextTheme.bodyLarge,
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -140,9 +160,28 @@ class HomePage extends StatelessWidget {
                       height: 42,
                     ),
                   ),
-                  child: Text(
-                    'Find us @YORUMI\nHACHIKO-6666',
-                    style: customTextTheme.bodyLarge,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Find us @YORUMI',
+                        style: customTextTheme.bodyLarge,
+                      ),
+                      TextScrambler(
+                        text: 'HACHIKO-6666',
+                        speed: const Duration(milliseconds: 100),
+                        chars: '!<>-_\\/[]{}—=+*^?#________',
+                        correctCharProbability: .1,
+                        scrambleCycles: 4,
+                        builder: (context, scrambledText) {
+                          return Text(
+                            scrambledText,
+                            textAlign: TextAlign.center,
+                            style: customTextTheme.bodyLarge,
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
                 const Spacer(),
@@ -182,34 +221,57 @@ class HomePage extends StatelessWidget {
   }
 
   Widget _buildHello(BuildContext context, {required double fontSize}) {
-    return RichText(
-      text: TextSpan(
-        text: 'WELCOME',
-        style: TextStyle(
-          fontFamily: 'Kenzo',
-          fontSize: fontSize,
-          color: Colors.white,
-        ),
-        children: <TextSpan>[
-          TextSpan(
-            text: '.\n',
-            style: TextStyle(
-              fontFamily: 'Kenzo',
-              fontSize: fontSize,
-              color: Color(0xFFff5353),
-            ),
-          ),
-          TextSpan(
-            text: 'TO\nCAPTIVE',
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        RichText(
+          text: TextSpan(
+            text: 'WELCOME',
             style: TextStyle(
               fontFamily: 'Kenzo',
               fontSize: fontSize,
               color: Colors.white,
             ),
-          )
-        ],
-      ),
-      overflow: TextOverflow.clip,
+            children: <TextSpan>[
+              TextSpan(
+                text: '.\n',
+                style: TextStyle(
+                  fontFamily: 'Kenzo',
+                  fontSize: fontSize,
+                  color: Color(0xFFff5353),
+                ),
+              ),
+              TextSpan(
+                text: 'TO',
+                style: TextStyle(
+                  fontFamily: 'Kenzo',
+                  fontSize: fontSize,
+                  color: Colors.white,
+                ),
+              )
+            ],
+          ),
+          overflow: TextOverflow.clip,
+        ),
+        TextScrambler(
+          text: 'CAPTIVE',
+          speed: const Duration(milliseconds: 50),
+          chars: '!<>-_\\/[]{}—=+*^?#________',
+          correctCharProbability: 0.1,
+          scrambleCycles: 4,
+          builder: (context, scrambledText) {
+            return Text(
+              scrambledText,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontFamily: 'Kenzo',
+                fontSize: fontSize,
+                color: Colors.white,
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 }

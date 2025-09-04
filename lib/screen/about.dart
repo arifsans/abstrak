@@ -1,7 +1,7 @@
 import 'package:abstrak/main.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:universal_html/html.dart' as html;
+import 'package:web/web.dart' as html;
 
 class About extends StatelessWidget {
   const About({super.key});
@@ -51,10 +51,12 @@ class About extends StatelessWidget {
           ),
           const SizedBox(height: 24),
           GestureDetector(
-            onTap: () => html.window.open(
-              'https://account.aq.com/CharPage?id=ves',
-              'Charpage',
-            ),
+            onTap: () {
+              html.window.open(
+                'https://account.aq.com/CharPage?id=ves',
+                'Charpage',
+              );
+            },
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -85,10 +87,12 @@ class About extends StatelessWidget {
             children: _officer
                 .map(
                   (name) => GestureDetector(
-                    onTap: () => html.window.open(
-                      'https://account.aq.com/CharPage?id=${name.replaceAll('-', ' ')}',
-                      'Charpage',
-                    ),
+                    onTap: () {
+                      html.window.open(
+                        'https://account.aq.com/CharPage?id=${name.replaceAll('-', ' ')}',
+                        'Charpage',
+                      );
+                    },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -125,10 +129,12 @@ class About extends StatelessWidget {
             children: _shareHolder
                 .map(
                   (name) => GestureDetector(
-                    onTap: () => html.window.open(
-                      'https://account.aq.com/CharPage?id=${name.replaceAll('-', ' ')}',
-                      'Charpage',
-                    ),
+                    onTap: () {
+                      html.window.open(
+                        'https://account.aq.com/CharPage?id=${name.replaceAll('-', ' ')}',
+                        'Charpage',
+                      );
+                    },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [

@@ -93,7 +93,8 @@ class _TpCalculatorState extends State<TpCalculator> {
               valueListenable: _tpData.data,
               builder: (context, value, child) {
                 final dFormatter = DateFormat('dd MMMM yyyy');
-                var data = value?.data ?? [];
+                final calc = value?.data?.calculations ?? [];
+                final adtMessage = value?.data?.additionalMessage ?? '';
                 if (value == null) {
                   return Container();
                 }
@@ -170,12 +171,12 @@ class _TpCalculatorState extends State<TpCalculator> {
                         softWrap: true,
                       ),
                       const SizedBox(height: 16),
-                      value.additionalMessage != null
+                      adtMessage.isNotEmpty
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 TypeWriter.text(
-                                  value.additionalMessage ?? '',
+                                  adtMessage,
                                   style: courierText.bodyMedium,
                                   duration: Duration(
                                     milliseconds: 30,
@@ -191,12 +192,12 @@ class _TpCalculatorState extends State<TpCalculator> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
-                        children: data.map(
+                        children: calc.map(
                           (e) {
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 4),
                               child: TypeWriter.text(
-                                '${e.dailyGain}X/Spin\nLegend = ${e.legend?.days} days (${dFormatter.format(DateTime.parse(e.legend?.date ?? ''))})\nNon-Legend = ${e.nonLegend?.days} days (${dFormatter.format(DateTime.parse(e.nonLegend?.date ?? ''))})',
+                                '${e.dailyGain}X/Spin\n> Spin Total = ${e.spinNeeded}\n> Legend = ${e.legend?.days} days (${dFormatter.format(DateTime.parse(e.legend?.date ?? ''))})\n> Non-Legend = ${e.nonLegend?.days} days (${dFormatter.format(DateTime.parse(e.nonLegend?.date ?? ''))})\n> ACs = ${e.acsNeeded}',
                                 style: courierText.bodyMedium,
                                 duration: Duration(
                                   milliseconds: 30,

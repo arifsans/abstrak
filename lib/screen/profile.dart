@@ -1,0 +1,311 @@
+import 'package:abstrak/main.dart';
+import 'package:abstrak/widgets/x_button.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:responsive_framework/responsive_framework.dart';
+
+class Profile extends StatelessWidget {
+  const Profile({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
+          ? const EdgeInsets.all(16)
+          : EdgeInsets.symmetric(
+              horizontal: MediaQuery.sizeOf(context).width * .2,
+              vertical: 32,
+            ),
+      child: Center(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 600),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Profile Header
+              Container(
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  border: Border.all(color: const Color(0xFF00bcd5)),
+                  borderRadius: BorderRadius.circular(12),
+                  color: Colors.black.withOpacity(0.3),
+                ),
+                child: Column(
+                  children: [
+                    // Avatar
+                    Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: const Color(0xFF00bcd5), width: 2),
+                        color: Colors.black,
+                      ),
+                      child: const Icon(
+                        Icons.person,
+                        size: 50,
+                        color: Color(0xFF00bcd5),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    // Welcome Message
+                    Text(
+                      'PROFILE',
+                      style: customTextTheme.displayMedium?.copyWith(
+                        fontSize: ResponsiveBreakpoints.of(context).isDesktop 
+                            ? 48 
+                            : 36,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Welcome to CAPTIVE',
+                      style: customTextTheme.bodyLarge?.copyWith(
+                        color: const Color(0xFF00bcd5),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              
+              const SizedBox(height: 32),
+              
+              // Profile Information
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.black,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'ACCOUNT INFORMATION',
+                      style: customTextTheme.titleLarge?.copyWith(
+                        fontFamily: 'Kenzo',
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    _buildInfoRow('STATUS', 'ACTIVE MEMBER'),
+                    const SizedBox(height: 12),
+                    _buildInfoRow('RANK', 'CAPTIVE MEMBER'),
+                    const SizedBox(height: 12),
+                    _buildInfoRow('JOINED', 'DECEMBER 2024'),
+                    const SizedBox(height: 12),
+                    _buildInfoRow('GUILD POINTS', '1,337'),
+                  ],
+                ),
+              ),
+              
+              const SizedBox(height: 32),
+              
+              // Quick Actions
+              Text(
+                'QUICK ACTIONS',
+                style: customTextTheme.titleLarge?.copyWith(
+                  fontFamily: 'Kenzo',
+                  letterSpacing: 1.2,
+                ),
+              ),
+              const SizedBox(height: 16),
+              
+              Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                alignment: WrapAlignment.center,
+                children: [
+                  XButton(
+                    text: 'EDIT PROFILE',
+                    textStyle: customTextTheme.titleSmall?.copyWith(
+                      fontFamily: 'Kenzo',
+                    ),
+                    borderColor: const Color(0xFF00bcd5),
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Edit profile functionality coming soon!'),
+                          backgroundColor: Color(0xFF00bcd5),
+                        ),
+                      );
+                    },
+                  ),
+                  XButton(
+                    text: 'SETTINGS',
+                    textStyle: customTextTheme.titleSmall?.copyWith(
+                      fontFamily: 'Kenzo',
+                    ),
+                    borderColor: Colors.grey,
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Settings functionality coming soon!'),
+                          backgroundColor: Colors.grey,
+                        ),
+                      );
+                    },
+                  ),
+                  XButton(
+                    text: 'SIGN OUT',
+                    textStyle: customTextTheme.titleSmall?.copyWith(
+                      fontFamily: 'Kenzo',
+                    ),
+                    borderColor: Colors.red,
+                    onPressed: () {
+                      _showSignOutDialog(context);
+                    },
+                  ),
+                ],
+              ),
+              
+              const SizedBox(height: 32),
+              
+              // Guild Activities
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.white),
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.black,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'RECENT ACTIVITIES',
+                      style: customTextTheme.titleLarge?.copyWith(
+                        fontFamily: 'Kenzo',
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    _buildActivityItem('Participated in guild war', '2 hours ago'),
+                    _buildActivityItem('Completed TP calculation', '1 day ago'),
+                    _buildActivityItem('Viewed artwork gallery', '3 days ago'),
+                    _buildActivityItem('Joined CAPTIVE guild', '1 week ago'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  
+  Widget _buildInfoRow(String label, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: courierText.bodyMedium?.copyWith(
+            color: Colors.grey[400],
+          ),
+        ),
+        Text(
+          value,
+          style: courierText.bodyMedium?.copyWith(
+            color: const Color(0xFF00bcd5),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+  
+  Widget _buildActivityItem(String activity, String time) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          Container(
+            width: 8,
+            height: 8,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color(0xFF00bcd5),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              activity,
+              style: courierText.bodyMedium,
+            ),
+          ),
+          Text(
+            time,
+            style: courierText.bodySmall?.copyWith(
+              color: Colors.grey[400],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+  
+  void _showSignOutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.black,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+            side: const BorderSide(color: Colors.white),
+          ),
+          title: Text(
+            'SIGN OUT',
+            style: customTextTheme.titleLarge?.copyWith(
+              fontFamily: 'Kenzo',
+            ),
+          ),
+          content: Text(
+            'Are you sure you want to sign out?',
+            style: courierText.bodyMedium,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'CANCEL',
+                style: customTextTheme.bodyMedium?.copyWith(
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                context.goNamed('home');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Successfully signed out'),
+                    backgroundColor: Color(0xFF00bcd5),
+                  ),
+                );
+              },
+              child: Text(
+                'SIGN OUT',
+                style: customTextTheme.bodyMedium?.copyWith(
+                  color: Colors.red,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}

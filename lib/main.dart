@@ -2,6 +2,9 @@ import 'package:abstrak/navigation_page.dart';
 import 'package:abstrak/screen/about.dart';
 import 'package:abstrak/screen/artwerk.dart';
 import 'package:abstrak/screen/homepage.dart';
+import 'package:abstrak/screen/profile.dart';
+import 'package:abstrak/screen/sign_up.dart';
+import 'package:abstrak/screen/sign_in.dart';
 import 'package:abstrak/screen/tp_calculator.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -62,8 +65,35 @@ final _router = GoRouter(
               builder: (context, state) => const TpCalculator(),
             ),
           ],
-        )
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: "profile",
+              path: "/profile",
+              builder: (context, state) => const Profile(),
+            ),
+          ],
+        ),
       ],
+    ),
+    // Standalone route for sign-in (not part of the shell)
+    GoRoute(
+      name: "sign-in",
+      path: "/sign-in",
+      builder: (context, state) => Scaffold(
+        backgroundColor: const Color(0xFF1a1a1a),
+        body: const SignIn(),
+      ),
+    ),
+    // Standalone route for register (not part of the shell)
+    GoRoute(
+      name: "sign-up",
+      path: "/sign-up",
+      builder: (context, state) => Scaffold(
+        backgroundColor: const Color(0xFF1a1a1a),
+        body: const SignUp(),
+      ),
     ),
   ],
 );

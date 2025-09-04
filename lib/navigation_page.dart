@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:universal_html/html.dart' as html;
+import 'package:web/web.dart' as html;
 
 class NavigationPage extends StatefulWidget {
   const NavigationPage({super.key, required this.navigationShell});
@@ -20,6 +20,8 @@ class NavigationPage extends StatefulWidget {
 
 class _NavigationPageState extends State<NavigationPage>
     with TickerProviderStateMixin {
+  final GlobalKey<FabCircularMenuPlusState> fabKey = GlobalKey();
+
   late AnimationController _controller;
   late ScrollController _scrollController;
   late AnimationController _swordController;
@@ -59,6 +61,7 @@ class _NavigationPageState extends State<NavigationPage>
       floatingActionButton:
           ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
               ? FabCircularMenuPlus(
+                  key: fabKey,
                   fabColor: Colors.white,
                   ringColor: Colors.black,
                   ringDiameterLimitFactor: 1,
@@ -67,6 +70,9 @@ class _NavigationPageState extends State<NavigationPage>
                       .mapIndexed(
                         (index, element) => GestureDetector(
                           onTap: () {
+                            if (fabKey.currentState?.isOpen == true) {
+                              fabKey.currentState?.close();
+                            }
                             context.goNamed(element.route);
                             _scrollController.jumpTo(0);
                           },
@@ -269,10 +275,12 @@ class _NavigationPageState extends State<NavigationPage>
           ),
           const Spacer(),
           IconButton(
-            onPressed: () => html.window.open(
-              'https://discord.gg/g3wvaQHqMD',
-              'Discord',
-            ),
+            onPressed: () {
+              html.window.open(
+                'https://discord.gg/g3wvaQHqMD',
+                'Discord',
+              );
+            },
             iconSize: MediaQuery.sizeOf(context).width * .05,
             icon: Image.asset(
               'assets/images/ic_discord.png',
@@ -280,13 +288,43 @@ class _NavigationPageState extends State<NavigationPage>
           ),
           const SizedBox(width: 12),
           IconButton(
-            onPressed: () => html.window.open(
-              'https://www.facebook.com/CaptiveG',
-              'Facebook',
-            ),
+            onPressed: () {
+              html.window.open(
+                'https://www.facebook.com/CaptiveG',
+                'Facebook',
+              );
+            },
             iconSize: MediaQuery.sizeOf(context).width * .05,
             icon: Image.asset(
               'assets/images/ic_facebook.png',
+            ),
+          ),
+          const SizedBox(width: 12),
+          IconButton(
+            onPressed: () {
+              context.goNamed('sign-in');
+            },
+            iconSize: MediaQuery.sizeOf(context).width * .05,
+            icon: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Row(
+                children: [
+                  Text(
+                    'Sign In',
+                    style: TextStyle(
+                      fontFamily: 'Kenzo',
+                      color: Colors.white,
+                      fontSize: MediaQuery.sizeOf(context).width * .015,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Icon(
+                    Icons.login,
+                    color: Colors.white,
+                    size: MediaQuery.sizeOf(context).width * .015,
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -320,10 +358,12 @@ class _NavigationPageState extends State<NavigationPage>
             mainAxisSize: MainAxisSize.min,
             children: [
               IconButton(
-                onPressed: () => html.window.open(
-                  'https://discord.gg/g3wvaQHqMD',
-                  'Discord',
-                ),
+                onPressed: () {
+                  html.window.open(
+                    'https://discord.gg/g3wvaQHqMD',
+                    'Discord',
+                  );
+                },
                 iconSize: MediaQuery.sizeOf(context).width * .05,
                 icon: Image.asset(
                   'assets/images/ic_discord.png',
@@ -331,13 +371,26 @@ class _NavigationPageState extends State<NavigationPage>
               ),
               const SizedBox(width: 12),
               IconButton(
-                onPressed: () => html.window.open(
-                  'https://www.facebook.com/CaptiveG',
-                  'Facebook',
-                ),
+                onPressed: () {
+                  html.window.open(
+                    'https://www.facebook.com/CaptiveG',
+                    'Facebook',
+                  );
+                },
                 iconSize: MediaQuery.sizeOf(context).width * .05,
                 icon: Image.asset(
                   'assets/images/ic_facebook.png',
+                ),
+              ),
+              const SizedBox(width: 12),
+              IconButton(
+                onPressed: () {
+                  context.goNamed('sign-in');
+                },
+                iconSize: MediaQuery.sizeOf(context).width * .05,
+                icon: Icon(
+                  Icons.login,
+                  color: Colors.white,
                 ),
               ),
             ],

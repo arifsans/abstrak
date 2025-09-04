@@ -9,7 +9,7 @@ class ApiConnection {
     required String path,
     Map<String, dynamic>? body,
   }) async {
-    const _baseUrl = "https://admin.captive.my.id/api/";
+    const _baseUrl = "https://api.captive.my.id/api/v1/";
     if (path.startsWith('/')) {
       path = path.replaceFirst('/', '');
     }
