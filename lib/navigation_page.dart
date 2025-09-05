@@ -300,32 +300,48 @@ class _NavigationPageState extends State<NavigationPage>
             ),
           ),
           const SizedBox(width: 12),
-          IconButton(
-            onPressed: () {
-              context.goNamed('sign-in');
+          ValueListenableBuilder(
+            valueListenable: authNotifier.auth,
+            builder: (context, value, child) {
+              return IconButton(
+                onPressed: () {
+                  if (value != null) {
+                    context.goNamed('profile');
+                    return;
+                  }
+                  context.goNamed('sign-in');
+                },
+                iconSize: MediaQuery.sizeOf(context).width * .05,
+                icon: Padding(
+                  padding: value == null ? const EdgeInsets.symmetric(horizontal: 8) : EdgeInsets.zero,
+                  child: value == null
+                      ? Row(
+                          children: [
+                            Text(
+                              'Sign In',
+                              style: TextStyle(
+                                fontFamily: 'Kenzo',
+                                color: Colors.white,
+                                fontSize:
+                                    MediaQuery.sizeOf(context).width * .015,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Icon(
+                              Icons.login,
+                              color: Colors.white,
+                              size: MediaQuery.sizeOf(context).width * .015,
+                            ),
+                          ],
+                        )
+                      : Icon(
+                          Icons.account_circle_rounded,
+                          color: Colors.white,
+                          size: MediaQuery.sizeOf(context).width * .015,
+                        ),
+                ),
+              );
             },
-            iconSize: MediaQuery.sizeOf(context).width * .05,
-            icon: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Row(
-                children: [
-                  Text(
-                    'Sign In',
-                    style: TextStyle(
-                      fontFamily: 'Kenzo',
-                      color: Colors.white,
-                      fontSize: MediaQuery.sizeOf(context).width * .015,
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  Icon(
-                    Icons.login,
-                    color: Colors.white,
-                    size: MediaQuery.sizeOf(context).width * .015,
-                  ),
-                ],
-              ),
-            ),
           ),
         ],
       );
@@ -383,15 +399,29 @@ class _NavigationPageState extends State<NavigationPage>
                 ),
               ),
               const SizedBox(width: 12),
-              IconButton(
-                onPressed: () {
-                  context.goNamed('sign-in');
+              ValueListenableBuilder(
+                valueListenable: authNotifier.auth,
+                builder: (context, value, child) {
+                  return IconButton(
+                    onPressed: () {
+                      if (value != null) {
+                        context.goNamed('profile');
+                        return;
+                      }
+                      context.goNamed('sign-in');
+                    },
+                    iconSize: MediaQuery.sizeOf(context).width * .05,
+                    icon: value == null
+                        ? Icon(
+                            Icons.login,
+                            color: Colors.white,
+                          )
+                        : Icon(
+                            Icons.account_circle_rounded,
+                            color: Colors.white,
+                          ),
+                  );
                 },
-                iconSize: MediaQuery.sizeOf(context).width * .05,
-                icon: Icon(
-                  Icons.login,
-                  color: Colors.white,
-                ),
               ),
             ],
           ),

@@ -1,11 +1,27 @@
+import 'package:abstrak/helper/date_formatter.dart';
 import 'package:abstrak/main.dart';
+import 'package:abstrak/notifier/user_notifier.dart';
 import 'package:abstrak/widgets/x_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   const Profile({super.key});
+
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  final UserNotifier _userNotifier = UserNotifier();
+
+  @override
+  void initState() {
+    super.initState();
+    _userNotifier.getUser();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,25 +55,59 @@ class Profile extends StatelessWidget {
                       height: 100,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: const Color(0xFF00bcd5), width: 2),
+                        border: Border.all(
+                            color: const Color(0xFF00bcd5), width: 2),
                         color: Colors.black,
                       ),
-                      child: const Icon(
-                        Icons.person,
-                        size: 50,
-                        color: Color(0xFF00bcd5),
+                      child: ValueListenableBuilder(
+                        valueListenable: _userNotifier.user,
+                        builder: (context, user, child) {
+                          print('AVATAR = ${user?.data?.avatar}');
+                          if ((user?.data?.avatar ?? '').isNotEmpty) {
+                            return ClipOval(
+                              child: Image.network(
+                                user?.data?.avatar ?? '',
+                                filterQuality: FilterQuality.high,
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
+                            );
+                          }
+
+                          return const Icon(
+                            Icons.person,
+                            size: 50,
+                            color: Color(0xFF00bcd5),
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Welcome Message
-                    Text(
-                      'PROFILE',
-                      style: customTextTheme.displayMedium?.copyWith(
-                        fontSize: ResponsiveBreakpoints.of(context).isDesktop 
-                            ? 48 
-                            : 36,
-                      ),
+                    ValueListenableBuilder(
+                      valueListenable: _userNotifier.user,
+                      builder: (context, value, child) {
+                        return Column(
+                          children: [
+                            Text(
+                              (value?.data?.name ?? 'User').toUpperCase(),
+                              style: customTextTheme.displayMedium?.copyWith(
+                                fontSize:
+                                    ResponsiveBreakpoints.of(context).isDesktop
+                                        ? 48
+                                        : 36,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              (value?.data?.email ?? 'User').toUpperCase(),
+                              style: courierText.bodyMedium,
+                            ),
+                          ],
+                        );
+                      },
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -69,9 +119,9 @@ class Profile extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Profile Information
               Container(
                 width: double.infinity,
@@ -92,20 +142,42 @@ class Profile extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
-                    _buildInfoRow('STATUS', 'ACTIVE MEMBER'),
+                    ValueListenableBuilder(
+                      valueListenable: _userNotifier.user,
+                      builder: (context, value, child) {
+                        return _buildInfoRow('RANK',
+                            (value?.data?.roles ?? 'USER').toUpperCase());
+                      },
+                    ),
                     const SizedBox(height: 12),
-                    _buildInfoRow('RANK', 'CAPTIVE MEMBER'),
+                    ValueListenableBuilder(
+                      valueListenable: _userNotifier.user,
+                      builder: (context, value, child) {
+                        String phone = value?.data?.phone ?? 'Unknown';
+                        if (phone.startsWith('0')) {
+                          phone = phone.replaceFirst('0', '');
+                        }
+                        return _buildInfoRow('PHONE', '+62' + phone);
+                      },
+                    ),
                     const SizedBox(height: 12),
-                    _buildInfoRow('JOINED', 'DECEMBER 2024'),
+                    ValueListenableBuilder(
+                      valueListenable: _userNotifier.user,
+                      builder: (context, value, child) {
+                        return _buildInfoRow(
+                            'JOINED',
+                            DateFormatterHelper.formatDate(
+                                value?.data?.createdAt ?? ''));
+                      },
+                    ),
                     const SizedBox(height: 12),
                     _buildInfoRow('GUILD POINTS', '1,337'),
                   ],
                 ),
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Quick Actions
               Text(
                 'QUICK ACTIONS',
@@ -115,7 +187,7 @@ class Profile extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               Wrap(
                 spacing: 16,
                 runSpacing: 16,
@@ -130,7 +202,8 @@ class Profile extends StatelessWidget {
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Edit profile functionality coming soon!'),
+                          content:
+                              Text('Edit profile functionality coming soon!'),
                           backgroundColor: Color(0xFF00bcd5),
                         ),
                       );
@@ -163,9 +236,9 @@ class Profile extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               // Guild Activities
               Container(
                 width: double.infinity,
@@ -186,8 +259,8 @@ class Profile extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
-                    _buildActivityItem('Participated in guild war', '2 hours ago'),
+                    _buildActivityItem(
+                        'Participated in guild war', '2 hours ago'),
                     _buildActivityItem('Completed TP calculation', '1 day ago'),
                     _buildActivityItem('Viewed artwork gallery', '3 days ago'),
                     _buildActivityItem('Joined CAPTIVE guild', '1 week ago'),
@@ -200,7 +273,7 @@ class Profile extends StatelessWidget {
       ),
     );
   }
-  
+
   Widget _buildInfoRow(String label, String value) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -221,7 +294,7 @@ class Profile extends StatelessWidget {
       ],
     );
   }
-  
+
   Widget _buildActivityItem(String activity, String time) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
@@ -252,7 +325,7 @@ class Profile extends StatelessWidget {
       ),
     );
   }
-  
+
   void _showSignOutDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -286,7 +359,10 @@ class Profile extends StatelessWidget {
               ),
             ),
             TextButton(
-              onPressed: () {
+              onPressed: () async {
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                await prefs.clear();
+                authNotifier.auth.value = null;
                 Navigator.of(context).pop();
                 context.goNamed('home');
                 ScaffoldMessenger.of(context).showSnackBar(

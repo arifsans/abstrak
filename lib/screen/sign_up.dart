@@ -1,5 +1,6 @@
 import 'package:abstrak/main.dart';
 import 'package:abstrak/widgets/x_button.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -21,7 +22,6 @@ class _SignUpState extends State<SignUp> {
   final _confirmPasswordController = TextEditingController();
   bool _isPasswordVisible = false;
   bool _isConfirmPasswordVisible = false;
-  bool _isLoading = false;
   bool _acceptTerms = false;
 
   @override
@@ -57,9 +57,8 @@ class _SignUpState extends State<SignUp> {
                   Text(
                     'SIGN UP',
                     style: customTextTheme.displayMedium?.copyWith(
-                      fontSize: ResponsiveBreakpoints.of(context).isDesktop 
-                          ? 48 
-                          : 36,
+                      fontSize:
+                          ResponsiveBreakpoints.of(context).isDesktop ? 48 : 36,
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -72,7 +71,7 @@ class _SignUpState extends State<SignUp> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 48),
-                  
+
                   // Name Field
                   Text(
                     'FULL NAME',
@@ -102,7 +101,8 @@ class _SignUpState extends State<SignUp> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Color(0xFF00bcd5), width: 2),
+                        borderSide: const BorderSide(
+                            color: Color(0xFF00bcd5), width: 2),
                       ),
                       errorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -110,10 +110,11 @@ class _SignUpState extends State<SignUp> {
                       ),
                       focusedErrorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Colors.red, width: 2),
+                        borderSide:
+                            const BorderSide(color: Colors.red, width: 2),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, 
+                        horizontal: 16,
                         vertical: 16,
                       ),
                     ),
@@ -128,7 +129,7 @@ class _SignUpState extends State<SignUp> {
                     },
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Email Field
                   Text(
                     'EMAIL',
@@ -159,7 +160,8 @@ class _SignUpState extends State<SignUp> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Color(0xFF00bcd5), width: 2),
+                        borderSide: const BorderSide(
+                            color: Color(0xFF00bcd5), width: 2),
                       ),
                       errorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -167,10 +169,11 @@ class _SignUpState extends State<SignUp> {
                       ),
                       focusedErrorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Colors.red, width: 2),
+                        borderSide:
+                            const BorderSide(color: Colors.red, width: 2),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, 
+                        horizontal: 16,
                         vertical: 16,
                       ),
                     ),
@@ -185,7 +188,7 @@ class _SignUpState extends State<SignUp> {
                     },
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Phone Number Field
                   Text(
                     'PHONE NUMBER',
@@ -216,7 +219,8 @@ class _SignUpState extends State<SignUp> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Color(0xFF00bcd5), width: 2),
+                        borderSide: const BorderSide(
+                            color: Color(0xFF00bcd5), width: 2),
                       ),
                       errorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -224,10 +228,11 @@ class _SignUpState extends State<SignUp> {
                       ),
                       focusedErrorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Colors.red, width: 2),
+                        borderSide:
+                            const BorderSide(color: Colors.red, width: 2),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, 
+                        horizontal: 16,
                         vertical: 16,
                       ),
                       prefixIcon: Padding(
@@ -260,7 +265,7 @@ class _SignUpState extends State<SignUp> {
                     },
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Password Field
                   Text(
                     'PASSWORD',
@@ -291,7 +296,8 @@ class _SignUpState extends State<SignUp> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Color(0xFF00bcd5), width: 2),
+                        borderSide: const BorderSide(
+                            color: Color(0xFF00bcd5), width: 2),
                       ),
                       errorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -299,10 +305,11 @@ class _SignUpState extends State<SignUp> {
                       ),
                       focusedErrorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Colors.red, width: 2),
+                        borderSide:
+                            const BorderSide(color: Colors.red, width: 2),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, 
+                        horizontal: 16,
                         vertical: 16,
                       ),
                       suffixIcon: IconButton(
@@ -312,7 +319,9 @@ class _SignUpState extends State<SignUp> {
                           });
                         },
                         icon: Icon(
-                          _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                          _isPasswordVisible
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                           color: Colors.grey[400],
                         ),
                       ),
@@ -337,7 +346,7 @@ class _SignUpState extends State<SignUp> {
                     },
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Confirm Password Field
                   Text(
                     'CONFIRM PASSWORD',
@@ -368,7 +377,8 @@ class _SignUpState extends State<SignUp> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Color(0xFF00bcd5), width: 2),
+                        borderSide: const BorderSide(
+                            color: Color(0xFF00bcd5), width: 2),
                       ),
                       errorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -376,20 +386,24 @@ class _SignUpState extends State<SignUp> {
                       ),
                       focusedErrorBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: const BorderSide(color: Colors.red, width: 2),
+                        borderSide:
+                            const BorderSide(color: Colors.red, width: 2),
                       ),
                       contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16, 
+                        horizontal: 16,
                         vertical: 16,
                       ),
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(() {
-                            _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
+                            _isConfirmPasswordVisible =
+                                !_isConfirmPasswordVisible;
                           });
                         },
                         icon: Icon(
-                          _isConfirmPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                          _isConfirmPasswordVisible
+                              ? Icons.visibility_off
+                              : Icons.visibility,
                           color: Colors.grey[400],
                         ),
                       ),
@@ -405,7 +419,7 @@ class _SignUpState extends State<SignUp> {
                     },
                   ),
                   const SizedBox(height: 24),
-                  
+
                   // Terms and Conditions Checkbox
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -440,6 +454,11 @@ class _SignUpState extends State<SignUp> {
                                     decoration: TextDecoration.underline,
                                     decorationColor: const Color(0xFF00bcd5),
                                   ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      // Handle tap
+                                      context.goNamed('terms-of-service');
+                                    },
                                 ),
                                 TextSpan(
                                   text: ' and ',
@@ -454,6 +473,11 @@ class _SignUpState extends State<SignUp> {
                                     decoration: TextDecoration.underline,
                                     decorationColor: const Color(0xFF00bcd5),
                                   ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      // Handle tap
+                                      context.goNamed('privacy-policy');
+                                    },
                                 ),
                               ],
                             ),
@@ -463,29 +487,35 @@ class _SignUpState extends State<SignUp> {
                     ],
                   ),
                   const SizedBox(height: 32),
-                  
+
                   // SignUp Button
-                  _isLoading
-                      ? const Center(
-                          child: CircularProgressIndicator(
-                            color: Color(0xFF00bcd5),
-                          ),
-                        )
-                      : XButton(
-                          text: 'CREATE ACCOUNT',
-                          textStyle: customTextTheme.titleMedium?.copyWith(
-                            fontFamily: 'Kenzo',
-                            letterSpacing: 1.2,
-                          ),
-                          borderColor: const Color(0xFF00bcd5),
-                          paddingButton: const EdgeInsets.symmetric(
-                            vertical: 16, 
-                            horizontal: 24,
-                          ),
-                          onPressed: _handleSignUp,
-                        ),
+                  ValueListenableBuilder(
+                    valueListenable: authNotifier.isLoading,
+                    builder: (context, isLoading, child) {
+                      return isLoading
+                          ? const Center(
+                              child: CircularProgressIndicator(
+                                color: Color(0xFF00bcd5),
+                              ),
+                            )
+                          : XButton(
+                              text: 'CREATE ACCOUNT',
+                              textStyle: customTextTheme.titleMedium?.copyWith(
+                                fontFamily: 'Kenzo',
+                                letterSpacing: 1.2,
+                              ),
+                              borderColor: const Color(0xFF00bcd5),
+                              paddingButton: const EdgeInsets.symmetric(
+                                vertical: 16,
+                                horizontal: 24,
+                              ),
+                              onPressed: _handleSignUp,
+                            );
+                    },
+                  ),
+
                   const SizedBox(height: 24),
-                  
+
                   // Sign In Link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -537,43 +567,34 @@ class _SignUpState extends State<SignUp> {
         return;
       }
 
-      setState(() {
-        _isLoading = true;
-      });
-
       try {
-        // Simulate registration API call
-        await Future.delayed(const Duration(seconds: 2));
+        final result = await authNotifier.signUp(
+          name: _nameController.text,
+          email: _emailController.text,
+          phone: _phoneController.text,
+          password: _passwordController.text,
+        );
 
-        // TODO: Implement actual registration logic here
-        // For now, we'll just show a success message and navigate
-
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-
-          // Show success message
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Account created successfully! Welcome to CAPTIVE, ${_nameController.text}!',
-                style: courierText.bodyMedium,
+        if (result != null) {
+          if (mounted) {
+            // Show success message
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  'Account created successfully! Welcome to CAPTIVE, ${_nameController.text}!',
+                  style: courierText.bodyMedium,
+                ),
+                backgroundColor: const Color(0xFF00bcd5),
+                duration: const Duration(seconds: 3),
               ),
-              backgroundColor: const Color(0xFF00bcd5),
-              duration: const Duration(seconds: 3),
-            ),
-          );
+            );
 
-          // Navigate to profile page
-          context.goNamed('profile');
+            // Navigate to profile page
+            context.goNamed('profile');
+          }
         }
       } catch (e) {
         if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(

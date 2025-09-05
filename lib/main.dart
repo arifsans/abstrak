@@ -1,10 +1,13 @@
 import 'package:abstrak/navigation_page.dart';
+import 'package:abstrak/notifier/auth_notifier.dart';
 import 'package:abstrak/screen/about.dart';
 import 'package:abstrak/screen/artwerk.dart';
 import 'package:abstrak/screen/homepage.dart';
+import 'package:abstrak/screen/privacy_policy.dart';
 import 'package:abstrak/screen/profile.dart';
 import 'package:abstrak/screen/sign_up.dart';
 import 'package:abstrak/screen/sign_in.dart';
+import 'package:abstrak/screen/terms_conditions.dart';
 import 'package:abstrak/screen/tp_calculator.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -18,6 +21,8 @@ void main() {
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _sectionNavigatorKey = GlobalKey<NavigatorState>();
+
+  final AuthNotifier authNotifier = AuthNotifier();
 
 // GoRouter configuration
 final _router = GoRouter(
@@ -94,6 +99,16 @@ final _router = GoRouter(
         backgroundColor: const Color(0xFF1a1a1a),
         body: const SignUp(),
       ),
+    ),
+    GoRoute(
+      name: "terms-of-service",
+      path: "/terms-of-service",
+      builder: (context, state) => TermsCondition(),
+    ),
+    GoRoute(
+      name: "privacy-policy",
+      path: "/privacy-policy",
+      builder: (context, state) => PrivacyPolicy(),
     ),
   ],
 );
@@ -234,8 +249,20 @@ TextTheme courierText = const TextTheme(
   ),
 );
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  @override
+  void initState() {
+    authNotifier.checkAuth();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

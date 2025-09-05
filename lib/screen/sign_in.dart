@@ -1,5 +1,4 @@
 import 'package:abstrak/main.dart';
-import 'package:abstrak/services/auth_service.dart';
 import 'package:abstrak/widgets/x_button.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -17,7 +16,6 @@ class _SignInState extends State<SignIn> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isPasswordVisible = false;
-  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -48,9 +46,8 @@ class _SignInState extends State<SignIn> {
                 Text(
                   'SIGN IN',
                   style: customTextTheme.displayMedium?.copyWith(
-                    fontSize: ResponsiveBreakpoints.of(context).isDesktop 
-                        ? 48 
-                        : 36,
+                    fontSize:
+                        ResponsiveBreakpoints.of(context).isDesktop ? 48 : 36,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -63,7 +60,7 @@ class _SignInState extends State<SignIn> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 48),
-                
+
                 // Email Field
                 Text(
                   'EMAIL',
@@ -94,7 +91,8 @@ class _SignInState extends State<SignIn> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(color: Color(0xFF00bcd5), width: 2),
+                      borderSide:
+                          const BorderSide(color: Color(0xFF00bcd5), width: 2),
                     ),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -105,7 +103,7 @@ class _SignInState extends State<SignIn> {
                       borderSide: const BorderSide(color: Colors.red, width: 2),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16, 
+                      horizontal: 16,
                       vertical: 16,
                     ),
                   ),
@@ -120,7 +118,7 @@ class _SignInState extends State<SignIn> {
                   },
                 ),
                 const SizedBox(height: 24),
-                
+
                 // Password Field
                 Text(
                   'PASSWORD',
@@ -151,7 +149,8 @@ class _SignInState extends State<SignIn> {
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(color: Color(0xFF00bcd5), width: 2),
+                      borderSide:
+                          const BorderSide(color: Color(0xFF00bcd5), width: 2),
                     ),
                     errorBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8),
@@ -162,7 +161,7 @@ class _SignInState extends State<SignIn> {
                       borderSide: const BorderSide(color: Colors.red, width: 2),
                     ),
                     contentPadding: const EdgeInsets.symmetric(
-                      horizontal: 16, 
+                      horizontal: 16,
                       vertical: 16,
                     ),
                     suffixIcon: IconButton(
@@ -172,7 +171,9 @@ class _SignInState extends State<SignIn> {
                         });
                       },
                       icon: Icon(
-                        _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                        _isPasswordVisible
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                         color: Colors.grey[400],
                       ),
                     ),
@@ -188,29 +189,34 @@ class _SignInState extends State<SignIn> {
                   },
                 ),
                 const SizedBox(height: 32),
-                
+
                 // Sign In Button
-                _isLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(
-                          color: Color(0xFF00bcd5),
-                        ),
-                      )
-                    : XButton(
-                        text: 'SIGN IN',
-                        textStyle: customTextTheme.titleMedium?.copyWith(
-                          fontFamily: 'Kenzo',
-                          letterSpacing: 1.2,
-                        ),
-                        borderColor: const Color(0xFF00bcd5),
-                        paddingButton: const EdgeInsets.symmetric(
-                          vertical: 16, 
-                          horizontal: 24,
-                        ),
-                        onPressed: _handleSignIn,
-                      ),
+                ValueListenableBuilder(
+                  valueListenable: authNotifier.isLoading,
+                  builder: (context, isLoading, child) {
+                    return isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              color: Color(0xFF00bcd5),
+                            ),
+                          )
+                        : XButton(
+                            text: 'SIGN IN',
+                            textStyle: customTextTheme.titleMedium?.copyWith(
+                              fontFamily: 'Kenzo',
+                              letterSpacing: 1.2,
+                            ),
+                            borderColor: const Color(0xFF00bcd5),
+                            paddingButton: const EdgeInsets.symmetric(
+                              vertical: 16,
+                              horizontal: 24,
+                            ),
+                            onPressed: _handleSignIn,
+                          );
+                  },
+                ),
                 const SizedBox(height: 24),
-                
+
                 // Forgot Password Link
                 Center(
                   child: TextButton(
@@ -218,7 +224,8 @@ class _SignInState extends State<SignIn> {
                       // TODO: Implement forgot password functionality
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                          content: Text('Forgot password functionality coming soon!'),
+                          content: Text(
+                              'Forgot password functionality coming soon!'),
                           backgroundColor: Color(0xFF00bcd5),
                         ),
                       );
@@ -234,7 +241,7 @@ class _SignInState extends State<SignIn> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Sign Up Link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -271,65 +278,27 @@ class _SignInState extends State<SignIn> {
 
   void _handleSignIn() async {
     if (_formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
-
-      try {
-        // Use the AuthService to authenticate
-        final result = await AuthService.signIn(
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
-        );
-
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-
-          if (result.success) {
-            // Show success message
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  'Welcome back, ${result.user?.name ?? _emailController.text}!',
-                  style: courierText.bodyMedium,
-                ),
-                backgroundColor: const Color(0xFF00bcd5),
-                duration: const Duration(seconds: 3),
-              ),
-            );
-
-            // Navigate to profile page
-            context.goNamed('profile');
-          } else {
-            // Show error message
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  result.message,
-                  style: courierText.bodyMedium,
-                ),
-                backgroundColor: Colors.red,
-                duration: const Duration(seconds: 3),
-              ),
-            );
-          }
-        }
-      } catch (e) {
-        if (mounted) {
-          setState(() {
-            _isLoading = false;
-          });
-
+      var result = await authNotifier.signIn(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+      if (result != null) {
+        if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'An unexpected error occurred: ${e.toString()}',
-                style: courierText.bodyMedium,
-              ),
+            const SnackBar(
+              content: Text('Welcome back! Your highness 👑'),
+              backgroundColor: const Color(0xFF00bcd5),
+            ),
+          );
+
+          context.goNamed('profile');
+        }
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Sign in failed. Please check your credentials.'),
               backgroundColor: Colors.red,
-              duration: const Duration(seconds: 3),
             ),
           );
         }
