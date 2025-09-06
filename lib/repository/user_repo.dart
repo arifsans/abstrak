@@ -1,7 +1,11 @@
 import 'dart:convert';
 
 import 'package:abstrak/base/api.dart';
+import 'package:abstrak/helper/convert_file_to_cast.dart';
+import 'package:abstrak/model/update_avatar_model.dart';
 import 'package:abstrak/model/user_model.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserRepo {
@@ -24,6 +28,38 @@ class UserRepo {
       }
     } catch (e) {
       print('Error signing in: $e');
+    }
+
+    return null;
+  }
+
+  Future<UpdateAvatarModel?> updateUserAvatar(PlatformFile file) async {
+    try {
+      var prefs = await SharedPreferences.getInstance();
+      String accessToken = prefs.getString('token') ?? '';
+      final avatar = ConvertFileToCast.convert(file.bytes!);
+
+      var res = await ApiConnection().apiCall(
+        method: ApiMethod.MULTIPART,
+        path: 'user/update-avatar',
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+        body: {
+          'avatar': await MultipartFile.fromBytes(
+            'avatar',
+            avatar,
+            filename: file.name,
+          ),
+        },
+      );
+
+      if (res != null) {
+        var data = res.body;
+        return UpdateAvatarModel.fromJson(jsonDecode(data));
+      }
+    } catch (e) {
+      print('Error updating avatar: $e');
     }
 
     return null;

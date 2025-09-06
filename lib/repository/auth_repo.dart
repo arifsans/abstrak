@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:abstrak/base/api.dart';
 import 'package:abstrak/model/auth_model.dart';
 import 'package:abstrak/model/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepo {
   Future<UserModel?> signUp({
@@ -54,6 +55,24 @@ class AuthRepo {
       }
     } catch (e) {
       print('Error signing in: $e');
+    }
+
+    return null;
+  }
+
+  Future<void> signOut() async {
+    try {
+      var prefs = await SharedPreferences.getInstance();
+      String accessToken = prefs.getString('token') ?? '';
+      await ApiConnection().apiCall(
+        method: ApiMethod.POST,
+        path: 'user/logout',
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+    } catch (e) {
+      print('Error signing out: $e');
     }
 
     return null;

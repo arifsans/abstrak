@@ -61,6 +61,15 @@ class AuthNotifier {
     return user.value;
   }
 
+  Future<void> signOut() async {
+    changeLoading(true);
+    await AuthRepo().signOut();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    auth.value = null;
+    changeLoading(false);
+  }
+
   void checkAuth() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String accessToken = prefs.getString('token') ?? '';

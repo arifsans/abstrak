@@ -221,7 +221,6 @@ class _SignInState extends State<SignIn> {
                 Center(
                   child: TextButton(
                     onPressed: () {
-                      // TODO: Implement forgot password functionality
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text(

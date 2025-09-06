@@ -2,10 +2,10 @@ import 'package:abstrak/helper/date_formatter.dart';
 import 'package:abstrak/main.dart';
 import 'package:abstrak/notifier/user_notifier.dart';
 import 'package:abstrak/widgets/x_button.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -50,37 +50,48 @@ class _ProfileState extends State<Profile> {
                 child: Column(
                   children: [
                     // Avatar
-                    Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                            color: const Color(0xFF00bcd5), width: 2),
-                        color: Colors.black,
-                      ),
-                      child: ValueListenableBuilder(
-                        valueListenable: _userNotifier.user,
-                        builder: (context, user, child) {
-                          print('AVATAR = ${user?.data?.avatar}');
-                          if ((user?.data?.avatar ?? '').isNotEmpty) {
-                            return ClipOval(
-                              child: Image.network(
-                                user?.data?.avatar ?? '',
-                                filterQuality: FilterQuality.high,
-                                width: 100,
-                                height: 100,
-                                fit: BoxFit.cover,
-                              ),
-                            );
-                          }
+                    GestureDetector(
+                      onTap: () => _handleChangeAvatar(),
+                      child: Badge(
+                        padding: const EdgeInsets.all(2),
+                        alignment: Alignment.topRight,
+                        backgroundColor: const Color(0xFF00bcd5),
+                        label: Icon(Icons.edit),
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: const Color(0xFF00bcd5),
+                              width: 2,
+                            ),
+                            color: Colors.black,
+                          ),
+                          child: ValueListenableBuilder(
+                            valueListenable: _userNotifier.user,
+                            builder: (context, user, child) {
+                              print('AVATAR = ${user?.data?.avatar}');
+                              if ((user?.data?.avatar ?? '').isNotEmpty) {
+                                return ClipOval(
+                                  child: Image.network(
+                                    user?.data?.avatar ?? '',
+                                    filterQuality: FilterQuality.high,
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.cover,
+                                  ),
+                                );
+                              }
 
-                          return const Icon(
-                            Icons.person,
-                            size: 50,
-                            color: Color(0xFF00bcd5),
-                          );
-                        },
+                              return const Icon(
+                                Icons.person,
+                                size: 50,
+                                color: Color(0xFF00bcd5),
+                              );
+                            },
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(height: 16),
@@ -360,9 +371,7 @@ class _ProfileState extends State<Profile> {
             ),
             TextButton(
               onPressed: () async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                await prefs.clear();
-                authNotifier.auth.value = null;
+                await authNotifier.signOut();
                 Navigator.of(context).pop();
                 context.goNamed('home');
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -383,5 +392,35 @@ class _ProfileState extends State<Profile> {
         );
       },
     );
+  }
+
+  void _handleChangeAvatar() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'png', 'jpeg'],
+    );
+
+    if (result != null) {
+      // Handle the selected file
+      PlatformFile file = result.files.first;
+      
+      var response = await _userNotifier.updateUserAvatar(file);
+      if (response != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Avatar updated successfully!'),
+            backgroundColor: Color(0xFF00bcd5),
+          ),
+        );
+        _userNotifier.getUser();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to update avatar. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }

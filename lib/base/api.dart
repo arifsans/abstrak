@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum ApiMethod { GET, POST }
+enum ApiMethod { GET, POST, MULTIPART }
 
 class ApiConnection {
   Future<Response?> apiCall({
@@ -58,6 +58,24 @@ class ApiConnection {
 
     if (method == ApiMethod.POST) {
       response = await http.post(uri, body: body, headers: headers);
+    }
+
+    if (method == ApiMethod.MULTIPART) {
+      var request = http.MultipartRequest('POST', uri);
+      if (headers != null) {
+        request.headers.addAll(headers);
+      }
+      if (body != null) {
+        body.forEach((key, value) {
+          if (value is http.MultipartFile) {
+            request.files.add(value);
+          } else if (value is String) {
+            request.fields[key] = value;
+          }
+        });
+      }
+      var streamedResponse = await request.send();
+      response = await http.Response.fromStream(streamedResponse);
     }
 
     if (response != null) {
