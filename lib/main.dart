@@ -80,6 +80,12 @@ final _router = GoRouter(
               name: "profile",
               path: "/profile",
               builder: (context, state) => const Profile(),
+              redirect: (context, state) {
+                if (authNotifier.auth.value == null) {
+                  return '/sign-in';
+                }
+                return null;
+              },
             ),
           ],
         ),
