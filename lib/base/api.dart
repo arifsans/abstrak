@@ -14,6 +14,7 @@ class ApiConnection {
     required String path,
     Map<String, String>? headers,
     Map<String, dynamic>? body,
+    Map<String, dynamic>? queryParams,
   }) async {
     const _baseUrl = "https://api.captive.my.id/api/v1/";
     if (path.startsWith('/')) {
@@ -23,6 +24,11 @@ class ApiConnection {
     var url = _baseUrl + path;
 
     Uri uri = Uri.parse(url);
+    
+    // Add query parameters if provided
+    if (queryParams != null && queryParams.isNotEmpty) {
+      uri = uri.replace(queryParameters: queryParams.map((key, value) => MapEntry(key, value.toString())));
+    }
 
     Response? response;
 

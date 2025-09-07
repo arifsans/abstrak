@@ -10,7 +10,11 @@ class ArtwerkRepo {
   }) async {
     var res = await ApiConnection().apiCall(
       method: ApiMethod.GET,
-      path: userId == null ? 'artwerk?page=${page ?? 1}' : 'artwerk?page=${page ?? 1}&user_id=${userId}',
+      path: 'artwerk',
+      queryParams: {
+        'page': page ?? 1,
+        if (userId != null) 'user_id': userId,
+      },
     );
 
     if (res != null) {

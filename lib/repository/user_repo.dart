@@ -4,6 +4,7 @@ import 'package:abstrak/base/api.dart';
 import 'package:abstrak/helper/convert_file_to_cast.dart';
 import 'package:abstrak/model/update_avatar_model.dart';
 import 'package:abstrak/model/user_model.dart';
+import 'package:abstrak/model/users_model.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -60,6 +61,33 @@ class UserRepo {
       }
     } catch (e) {
       print('Error updating avatar: $e');
+    }
+
+    return null;
+  }
+
+  Future<UsersModel?> getUserByName({required String name}) async {
+    try {
+      var prefs = await SharedPreferences.getInstance();
+      String accessToken = prefs.getString('token') ?? '';
+
+      var res = await ApiConnection().apiCall(
+        method: ApiMethod.POST,
+        path: 'user/users-by-name',
+        headers: {
+          'Authorization': 'Bearer $accessToken',
+        },
+        body: {
+          'name': name,
+        },
+      );
+
+      if (res != null) {
+        var data = res.body;
+        return UsersModel.fromJson(jsonDecode(data));
+      }
+    } catch (e) {
+      print('Error getting user by name: $e');
     }
 
     return null;

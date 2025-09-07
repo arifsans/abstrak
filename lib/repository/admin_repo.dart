@@ -7,14 +7,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AdminRepo {
   Future<ArtwerksModel?> getArtwerks({
     int? page,
+    int? status,
+    int? userId,
   }) async {
     var prefs = await SharedPreferences.getInstance();
     String accessToken = prefs.getString('token') ?? '';
     var res = await ApiConnection().apiCall(
       method: ApiMethod.GET,
-      path: 'admin/artwerks?page=${page ?? 1}',
+      path: 'admin/artwerks',
       headers: {
         'Authorization': 'Bearer $accessToken',
+      },
+      queryParams: {
+        'page': page ?? 1,
+        if (status != null) 'status': status,
+        if (userId != null) 'user_id': userId,
       },
     );
 

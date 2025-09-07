@@ -1,14 +1,19 @@
-class UserModel {
+class UsersModel {
   bool? status;
   String? message;
-  Data? data;
+  List<Data>? data;
 
-  UserModel({this.status, this.message, this.data});
+  UsersModel({this.status, this.message, this.data});
 
-  UserModel.fromJson(Map<String, dynamic> json) {
+  UsersModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    if (json['data'] != null) {
+      data = <Data>[];
+      json['data'].forEach((v) {
+        data!.add(new Data.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -16,7 +21,7 @@ class UserModel {
     data['status'] = this.status;
     data['message'] = this.message;
     if (this.data != null) {
-      data['data'] = this.data!.toJson();
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -28,7 +33,6 @@ class Data {
   String? email;
   String? phone;
   String? avatar;
-  String? fcmToken;
   String? roles;
   String? createdAt;
   String? updatedAt;
@@ -40,7 +44,6 @@ class Data {
       this.email,
       this.phone,
       this.avatar,
-      this.fcmToken,
       this.roles,
       this.createdAt,
       this.updatedAt,
@@ -52,7 +55,6 @@ class Data {
     email = json['email'];
     phone = json['phone'];
     avatar = json['avatar'];
-    fcmToken = json['fcm_token'];
     roles = json['roles'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -66,7 +68,6 @@ class Data {
     data['email'] = this.email;
     data['phone'] = this.phone;
     data['avatar'] = this.avatar;
-    data['fcm_token'] = this.fcmToken;
     data['roles'] = this.roles;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;

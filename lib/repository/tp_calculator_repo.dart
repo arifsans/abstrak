@@ -9,7 +9,10 @@ class TPCalculatorRepo {
   }) async {
     var res = await ApiConnection().apiCall(
       method: ApiMethod.GET,
-      path: 'tp_calculator?username=$username',
+      path: 'tp_calculator',
+      queryParams: {
+        'username': username,
+      },
     );
 
     if (res != null) {
