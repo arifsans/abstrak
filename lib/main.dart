@@ -1,6 +1,8 @@
 import 'package:abstrak/navigation_page.dart';
 import 'package:abstrak/notifier/auth_notifier.dart';
+import 'package:abstrak/notifier/user_notifier.dart';
 import 'package:abstrak/screen/about.dart';
+import 'package:abstrak/screen/admin.dart';
 import 'package:abstrak/screen/artwerk.dart';
 import 'package:abstrak/screen/homepage.dart';
 import 'package:abstrak/screen/privacy_policy.dart';
@@ -22,7 +24,8 @@ void main() {
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _sectionNavigatorKey = GlobalKey<NavigatorState>();
 
-  final AuthNotifier authNotifier = AuthNotifier();
+final AuthNotifier authNotifier = AuthNotifier();
+final UserNotifier userNotifier = UserNotifier();
 
 // GoRouter configuration
 final _router = GoRouter(
@@ -109,6 +112,17 @@ final _router = GoRouter(
       name: "privacy-policy",
       path: "/privacy-policy",
       builder: (context, state) => PrivacyPolicy(),
+    ),
+    GoRoute(
+      name: "admin",
+      path: "/admin",
+      builder: (context, state) => const Admin(),
+      redirect: (context, state) {
+        if (userNotifier.user.value?.data?.roles != 'admin') {
+          return '/';
+        }
+        return null;
+      },
     ),
   ],
 );
@@ -257,7 +271,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   void initState() {
     authNotifier.checkAuth();

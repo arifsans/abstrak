@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_tilt/flutter_tilt.dart';
 
 class AnimationCard extends StatefulWidget {
-  const AnimationCard({super.key, required this.imageUrl, required this.authorName, required this.imageDescription});
+  const AnimationCard({super.key, required this.imageUrl, required this.authorName, required this.imageName});
 
   final String imageUrl;
   final String authorName;
-  final String imageDescription;
+  final String imageName;
 
   @override
   State<AnimationCard> createState() => _AnimationCardState();
@@ -122,25 +122,17 @@ class _AnimationCardState extends State<AnimationCard> with SingleTickerProvider
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           Text(
-                            widget.imageDescription,
+                            widget.imageName,
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 20.0,
-                            ),
-                          ),
-                          Text(
-                            widget.authorName,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 40.0,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           SizedBox(height: 12),
                           Align(
                             alignment: Alignment.centerRight,
                             child: Text(
-                              'ARTWERK',
+                              widget.authorName,
                               style: TextStyle(
                                 color: Colors.white60,
                                 fontSize: 14.0,

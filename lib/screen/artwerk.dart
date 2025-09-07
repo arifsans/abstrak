@@ -1,7 +1,7 @@
+import 'package:abstrak/model/artwerks_model.dart';
 import 'package:abstrak/notifier/artwerk_notifier.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:abstrak/widgets/animation_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class ArtWerk extends StatefulWidget {
@@ -31,15 +31,15 @@ class _ArtWerkState extends State<ArtWerk> {
       child: ValueListenableBuilder(
         valueListenable: _artWerk.data,
         builder: (context, value, child) {
-          var data = value?.data ?? [];
-          final List<String> leftColumnImages = [];
-          final List<String> rightColumnImages = [];
+          var data = value?.data?.result ?? [];
+          final List<Result> leftColumnImages = [];
+          final List<Result> rightColumnImages = [];
 
           for (int i = 0; i < data.length; i++) {
             if (i % 2 == 0) {
-              leftColumnImages.add(data[i].image ?? '');
+              leftColumnImages.add(data[i]);
             } else {
-              rightColumnImages.add(data[i].image ?? '');
+              rightColumnImages.add(data[i]);
             }
           }
 
@@ -54,36 +54,15 @@ class _ArtWerkState extends State<ArtWerk> {
               Expanded(
                 child: Column(
                   children: leftColumnImages.map(
-                    (url) {
+                    (res) {
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: CachedNetworkImage(
-                            imageUrl: url,
-                            fit: BoxFit.cover,
-                            progressIndicatorBuilder: (context, url, progress) {
-                              return SizedBox(
-                                height: MediaQuery.sizeOf(context).height * .1,
-                                width: MediaQuery.sizeOf(context).width * .2,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SpinKitFoldingCube(
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(height: 12),
-                                    LinearProgressIndicator(
-                                      value: 0.5,
-                                      backgroundColor: Colors.grey.withOpacity(
-                                        .2,
-                                      ),
-                                      color: Colors.white,
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
+                          child: AnimationCard(
+                            imageUrl: res.image ?? '',
+                            authorName: res.creatorName ?? '',
+                            imageName: res.name ?? '',
                           ),
                         ),
                       );
@@ -97,36 +76,15 @@ class _ArtWerkState extends State<ArtWerk> {
               Expanded(
                 child: Column(
                   children: rightColumnImages.map(
-                    (url) {
+                    (res) {
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 8.0),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(12),
-                          child: CachedNetworkImage(
-                            imageUrl: url,
-                            fit: BoxFit.cover,
-                            progressIndicatorBuilder: (context, url, progress) {
-                              return SizedBox(
-                                height: MediaQuery.sizeOf(context).height * .1,
-                                width: MediaQuery.sizeOf(context).width * .2,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    SpinKitFoldingCube(
-                                      color: Colors.white,
-                                    ),
-                                    SizedBox(height: 12),
-                                    LinearProgressIndicator(
-                                      value: 0.5,
-                                      backgroundColor: Colors.grey.withOpacity(
-                                        .2,
-                                      ),
-                                      color: Colors.white,
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
+                          child: AnimationCard(
+                            imageUrl: res.image ?? '',
+                            authorName: res.creatorName ?? '',
+                            imageName: res.name ?? '',
                           ),
                         ),
                       );

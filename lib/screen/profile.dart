@@ -1,6 +1,5 @@
 import 'package:abstrak/helper/date_formatter.dart';
 import 'package:abstrak/main.dart';
-import 'package:abstrak/notifier/user_notifier.dart';
 import 'package:abstrak/widgets/x_button.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +14,11 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  final UserNotifier _userNotifier = UserNotifier();
 
   @override
   void initState() {
     super.initState();
-    _userNotifier.getUser();
+    userNotifier.getUser();
   }
 
   @override
@@ -69,7 +67,7 @@ class _ProfileState extends State<Profile> {
                             color: Colors.black,
                           ),
                           child: ValueListenableBuilder(
-                            valueListenable: _userNotifier.user,
+                            valueListenable: userNotifier.user,
                             builder: (context, user, child) {
                               print('AVATAR = ${user?.data?.avatar}');
                               if ((user?.data?.avatar ?? '').isNotEmpty) {
@@ -98,7 +96,7 @@ class _ProfileState extends State<Profile> {
 
                     // Welcome Message
                     ValueListenableBuilder(
-                      valueListenable: _userNotifier.user,
+                      valueListenable: userNotifier.user,
                       builder: (context, value, child) {
                         return Column(
                           children: [
@@ -154,7 +152,7 @@ class _ProfileState extends State<Profile> {
                     ),
                     const SizedBox(height: 16),
                     ValueListenableBuilder(
-                      valueListenable: _userNotifier.user,
+                      valueListenable: userNotifier.user,
                       builder: (context, value, child) {
                         return _buildInfoRow('RANK',
                             (value?.data?.roles ?? 'USER').toUpperCase());
@@ -162,7 +160,7 @@ class _ProfileState extends State<Profile> {
                     ),
                     const SizedBox(height: 12),
                     ValueListenableBuilder(
-                      valueListenable: _userNotifier.user,
+                      valueListenable: userNotifier.user,
                       builder: (context, value, child) {
                         String phone = value?.data?.phone ?? 'Unknown';
                         if (phone.startsWith('0')) {
@@ -173,7 +171,7 @@ class _ProfileState extends State<Profile> {
                     ),
                     const SizedBox(height: 12),
                     ValueListenableBuilder(
-                      valueListenable: _userNotifier.user,
+                      valueListenable: userNotifier.user,
                       builder: (context, value, child) {
                         return _buildInfoRow(
                             'JOINED',
@@ -204,6 +202,24 @@ class _ProfileState extends State<Profile> {
                 runSpacing: 16,
                 alignment: WrapAlignment.center,
                 children: [
+                  ValueListenableBuilder(
+                    valueListenable: userNotifier.user,
+                    builder: (context, value, child) {
+                      if (value?.data?.roles != 'admin') {
+                        return const SizedBox.shrink();
+                      }
+                      return XButton(
+                        text: 'ADMIN',
+                        textStyle: customTextTheme.titleSmall?.copyWith(
+                          fontFamily: 'Kenzo',
+                        ),
+                        borderColor: Colors.orangeAccent,
+                        onPressed: () {
+                          context.goNamed('admin');
+                        },
+                      );
+                    },
+                  ),
                   XButton(
                     text: 'EDIT PROFILE',
                     textStyle: customTextTheme.titleSmall?.copyWith(
@@ -403,8 +419,8 @@ class _ProfileState extends State<Profile> {
     if (result != null) {
       // Handle the selected file
       PlatformFile file = result.files.first;
-      
-      var response = await _userNotifier.updateUserAvatar(file);
+
+      var response = await userNotifier.updateUserAvatar(file);
       if (response != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -412,7 +428,7 @@ class _ProfileState extends State<Profile> {
             backgroundColor: Color(0xFF00bcd5),
           ),
         );
-        _userNotifier.getUser();
+        userNotifier.getUser();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
