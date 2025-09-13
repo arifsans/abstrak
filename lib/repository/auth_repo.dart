@@ -24,6 +24,10 @@ class AuthRepo {
         },
       );
 
+      if ((res?.statusCode ?? 500) > 300) {
+        return null;
+      }
+
       if (res != null) {
         var data = res.body;
         return UserModel.fromJson(jsonDecode(data));
