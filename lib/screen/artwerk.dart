@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 import 'package:abstrak/main.dart';
+import 'package:abstrak/model/artwerks_model.dart';
 import 'package:abstrak/notifier/artwerk_notifier.dart';
 import 'package:abstrak/widgets/animation_card.dart';
+import 'package:abstrak/widgets/artwork_detail_dialog.dart';
 import 'package:abstrak/widgets/upload_artwerk_component.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -78,7 +80,7 @@ class _ArtWerkState extends State<ArtWerk> {
         padding: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
             ? const EdgeInsets.all(0)
             : EdgeInsets.symmetric(
-                horizontal: MediaQuery.sizeOf(context).width * .3,
+                horizontal: MediaQuery.sizeOf(context).width * .1,
               ),
         child: ValueListenableBuilder(
           valueListenable: _artWerk.data,
@@ -151,6 +153,7 @@ class _ArtWerkState extends State<ArtWerk> {
                                   imageUrl: data[leftIndex].image ?? '',
                                   authorName: data[leftIndex].creatorName ?? '',
                                   imageName: data[leftIndex].name ?? '',
+                                  onTap: () => _showArtwerkDetail(data[leftIndex]),
                                 ),
                               )
                             : const SizedBox(),
@@ -165,6 +168,7 @@ class _ArtWerkState extends State<ArtWerk> {
                                   imageUrl: data[rightIndex].image ?? '',
                                   authorName: data[rightIndex].creatorName ?? '',
                                   imageName: data[rightIndex].name ?? '',
+                                  onTap: () => _showArtwerkDetail(data[rightIndex]),
                                 ),
                               )
                             : const SizedBox(),
@@ -196,6 +200,15 @@ class _ArtWerkState extends State<ArtWerk> {
       floatingActionButtonLocation: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
           ? FloatingActionButtonLocation.centerFloat
           : FloatingActionButtonLocation.endFloat,
+    );
+  }
+
+  void _showArtwerkDetail(Result artwerk) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ArtwerkDetailDialog(artwerk: artwerk);
+      },
     );
   }
 

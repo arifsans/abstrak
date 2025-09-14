@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tilt/flutter_tilt.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 
 class AnimationCard extends StatefulWidget {
-  const AnimationCard({super.key, required this.imageUrl, required this.authorName, required this.imageName});
+  const AnimationCard({
+    super.key, 
+    required this.imageUrl, 
+    required this.authorName, 
+    required this.imageName,
+    this.onTap,
+  });
 
   final String imageUrl;
   final String authorName;
   final String imageName;
+  final VoidCallback? onTap;
 
   @override
   State<AnimationCard> createState() => _AnimationCardState();
@@ -55,31 +63,33 @@ class _AnimationCardState extends State<AnimationCard> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    return Listener(
-      onPointerDown: (_) {
-        if (isHover) return;
-        scaleAnimationController.forward();
-      },
-      onPointerUp: (_) {
-        if (isHover) return;
-        scaleAnimationController.reverse();
-      },
-      onPointerCancel: (_) {
-        if (isHover) return;
-        scaleAnimationController.reverse();
-      },
-      child: MouseRegion(
-        cursor: SystemMouseCursors.click,
-        onEnter: (_) {
-          isHover = true;
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: Listener(
+        onPointerDown: (_) {
+          if (isHover) return;
           scaleAnimationController.forward();
         },
-        onExit: (_) {
-          isHover = true;
+        onPointerUp: (_) {
+          if (isHover) return;
           scaleAnimationController.reverse();
         },
-        // Tilt here
-        child: Tilt(
+        onPointerCancel: (_) {
+          if (isHover) return;
+          scaleAnimationController.reverse();
+        },
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          onEnter: (_) {
+            isHover = true;
+            scaleAnimationController.forward();
+          },
+          onExit: (_) {
+            isHover = true;
+            scaleAnimationController.reverse();
+          },
+          // Tilt here
+          child: Tilt(
           borderRadius: BorderRadius.circular(24),
           tiltConfig: const TiltConfig(
             angle: 6.0,
@@ -121,14 +131,17 @@ class _AnimationCardState extends State<AnimationCard> with SingleTickerProvider
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Text(
-                            widget.imageName,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 20.0,
-                            ),
-                          ),
-                          SizedBox(height: 12),
+                          if (!ResponsiveBreakpoints.of(context).smallerThan(DESKTOP))
+                              Text(
+                                widget.imageName,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20.0,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            if (!ResponsiveBreakpoints.of(context).smallerThan(DESKTOP))
+                              SizedBox(height: 12),
                           Align(
                             alignment: Alignment.centerRight,
                             child: Text(
@@ -149,6 +162,7 @@ class _AnimationCardState extends State<AnimationCard> with SingleTickerProvider
             ],
           ),
           child: const SizedBox(),
+        ),
         ),
       ),
     );
