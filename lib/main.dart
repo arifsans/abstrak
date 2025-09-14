@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:dynamic_path_url_strategy/dynamic_path_url_strategy.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   setPathUrlStrategy();
@@ -80,8 +81,9 @@ final _router = GoRouter(
               name: "profile",
               path: "/profile",
               builder: (context, state) => const Profile(),
-              redirect: (context, state) {
-                if (authNotifier.auth.value == null) {
+              redirect: (context, state) async {
+                final SharedPreferences prefs = await SharedPreferences.getInstance();
+                if (prefs.getString('token') == null || prefs.getString('token')!.isEmpty) {
                   return '/sign-in';
                 }
                 return null;
@@ -123,9 +125,13 @@ final _router = GoRouter(
       name: "admin",
       path: "/admin",
       builder: (context, state) => const Admin(),
-      redirect: (context, state) {
-        if (userNotifier.user.value?.data?.roles != 'admin') {
-          return '/';
+      redirect: (context, state) async {
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.getString('token') == null || prefs.getString('token')!.isEmpty) {
+          return '/sign-in';
+        }
+        if (prefs.getString('roles') != 'admin') {
+          return '/profile';
         }
         return null;
       },

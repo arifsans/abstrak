@@ -32,4 +32,34 @@ class AdminRepo {
 
     return null;
   }
+
+  Future<bool> updateArtwerkStatus({
+    required String artworkId,
+    required String status, // '1' for accept, '2' for reject
+  }) async {
+    var prefs = await SharedPreferences.getInstance();
+    String accessToken = prefs.getString('token') ?? '';
+    
+    var res = await ApiConnection().apiCall(
+      method: ApiMethod.POST,
+      path: 'admin/artwerks/update',
+      headers: {
+        'Authorization': 'Bearer $accessToken',
+      },
+      body: {
+        'artwerk_id': artworkId,
+        'status': status,
+      },
+    );
+
+    return res != null && res.statusCode == 200;
+  }
+
+  Future<bool> acceptArtwerk(String artworkId) async {
+    return await updateArtwerkStatus(artworkId: artworkId, status: '1');
+  }
+
+  Future<bool> rejectArtwerk(String artworkId) async {
+    return await updateArtwerkStatus(artworkId: artworkId, status: '2');
+  }
 }

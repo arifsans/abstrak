@@ -160,7 +160,7 @@ class TermsCondition extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border.all(color: const Color(0xFF00bcd5)),
                   borderRadius: BorderRadius.circular(8),
-                  color: Colors.black.withOpacity(0.3),
+                  color: Colors.black.withValues(alpha: 0.3),
                 ),
                 child: Column(
                   children: [
@@ -222,9 +222,9 @@ class TermsCondition extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              border: Border.all(color: Colors.white.withOpacity(0.3)),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.3)),
               borderRadius: BorderRadius.circular(8),
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withValues(alpha: 0.2),
             ),
             child: Text(
               content,

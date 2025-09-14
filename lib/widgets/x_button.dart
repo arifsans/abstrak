@@ -45,7 +45,7 @@ class _XButtonState extends State<XButton> {
           boxShadow: _isPressed
               ? [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.6),
+                    color: Colors.grey.withValues(alpha: 0.6),
                     spreadRadius: 10,
                     blurRadius: 50,
                   ),
@@ -55,21 +55,21 @@ class _XButtonState extends State<XButton> {
         child: TextButton(
           onPressed: widget.onPressed,
           style: ButtonStyle(
-            padding: MaterialStateProperty.all<EdgeInsets>(
+            padding: WidgetStateProperty.all<EdgeInsets>(
               widget.paddingButton != null
                   ? widget.paddingButton!
                   : const EdgeInsets.fromLTRB(20, 12, 20, 10),
             ),
-            backgroundColor: MaterialStateProperty.resolveWith<Color?>(
-              (Set<MaterialState> states) {
-                if (states.contains(MaterialState.pressed)) {
+            backgroundColor: WidgetStateProperty.resolveWith<Color?>(
+              (Set<WidgetState> states) {
+                if (states.contains(WidgetState.pressed)) {
                   return Colors.black;
                 }
                 return Colors.black;
               },
             ),
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            foregroundColor: WidgetStateProperty.all<Color>(Colors.white),
+            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(25),
                 side: BorderSide(color: widget.borderColor),

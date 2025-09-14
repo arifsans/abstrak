@@ -1,9 +1,10 @@
 import 'dart:typed_data';
-import 'package:abstrak/model/artwerks_model.dart';
+import 'package:abstrak/main.dart';
 import 'package:abstrak/notifier/artwerk_notifier.dart';
 import 'package:abstrak/widgets/animation_card.dart';
 import 'package:abstrak/widgets/upload_artwerk_component.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class ArtWerk extends StatefulWidget {
@@ -15,11 +16,58 @@ class ArtWerk extends StatefulWidget {
 
 class _ArtWerkState extends State<ArtWerk> {
   final ArtwerkNotifier _artWerk = ArtwerkNotifier();
+  final ScrollController _scrollController = ScrollController();
+  int _currentPage = 1;
+  bool _isLoadingMore = false;
 
   @override
   void initState() {
     _artWerk.getArtwerk();
+    _scrollController.addListener(_onScroll);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+      // Load more when user is 200px from bottom
+      // Use a debounced approach to prevent multiple calls
+      if (!_isLoadingMore && !_artWerk.isLoading.value) {
+        _loadMoreData();
+      }
+    }
+  }
+
+  Future<void> _loadMoreData() async {
+    final data = _artWerk.data.value?.data;
+    if (data?.hasMore == true && !_isLoadingMore && !_artWerk.isLoading.value) {
+      setState(() {
+        _isLoadingMore = true;
+      });
+      
+      try {
+        _currentPage = data?.currentPage ?? 1;
+        
+        // Add a small delay to prevent rapid fire requests
+        await Future.delayed(const Duration(milliseconds: 100));
+        
+        await _artWerk.getArtwerk(page: _currentPage + 1);
+      } catch (e) {
+        // Handle error gracefully
+        debugPrint('Error loading more data: $e');
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoadingMore = false;
+          });
+        }
+      }
+    }
   }
 
   @override
@@ -36,16 +84,6 @@ class _ArtWerkState extends State<ArtWerk> {
           valueListenable: _artWerk.data,
           builder: (context, value, child) {
             var data = value?.data?.result ?? [];
-            final List<Result> leftColumnImages = [];
-            final List<Result> rightColumnImages = [];
-
-            for (int i = 0; i < data.length; i++) {
-              if (i % 2 == 0) {
-                leftColumnImages.add(data[i]);
-              } else {
-                rightColumnImages.add(data[i]);
-              }
-            }
 
             if (data.isEmpty) {
               return const Center(
@@ -78,62 +116,82 @@ class _ArtWerkState extends State<ArtWerk> {
               );
             }
 
-            return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Left column
-                Expanded(
-                  child: Column(
-                    children: leftColumnImages.map(
-                      (res) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: AnimationCard(
-                              imageUrl: res.image ?? '',
-                              authorName: res.creatorName ?? '',
-                              imageName: res.name ?? '',
-                            ),
-                          ),
-                        );
-                      },
-                    ).toList(),
+            return ListView.builder(
+              controller: _scrollController,
+              padding: EdgeInsets.only(
+                left: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP) ? 8 : 0,
+                right: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP) ? 8 : 0,
+                bottom: 80, // Space for FAB
+              ),
+              itemCount: (data.length / 2).ceil() + (_isLoadingMore ? 1 : 0),
+              itemBuilder: (context, index) {
+                // Loading indicator at the end
+                if (index >= (data.length / 2).ceil()) {
+                  return const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+                
+                // Calculate items for this row
+                final leftIndex = index * 2;
+                final rightIndex = leftIndex + 1;
+                
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Left column item
+                      Expanded(
+                        child: leftIndex < data.length
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: AnimationCard(
+                                  imageUrl: data[leftIndex].image ?? '',
+                                  authorName: data[leftIndex].creatorName ?? '',
+                                  imageName: data[leftIndex].name ?? '',
+                                ),
+                              )
+                            : const SizedBox(),
+                      ),
+                      const SizedBox(width: 8),
+                      // Right column item
+                      Expanded(
+                        child: rightIndex < data.length
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: AnimationCard(
+                                  imageUrl: data[rightIndex].image ?? '',
+                                  authorName: data[rightIndex].creatorName ?? '',
+                                  imageName: data[rightIndex].name ?? '',
+                                ),
+                              )
+                            : const SizedBox(),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(width: 8), // Spacing between columns
-
-                // Right column
-                Expanded(
-                  child: Column(
-                    children: rightColumnImages.map(
-                      (res) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: AnimationCard(
-                              imageUrl: res.image ?? '',
-                              authorName: res.creatorName ?? '',
-                              imageName: res.name ?? '',
-                            ),
-                          ),
-                        );
-                      },
-                    ).toList(),
-                  ),
-                ),
-              ],
+                );
+              },
             );
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _showUploadDialog,
-        icon: const Icon(Icons.add_a_photo),
-        label: const Text('Upload Artwork'),
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
+      floatingActionButton: ValueListenableBuilder(
+        valueListenable: authNotifier.auth,
+        builder: (context, value, child) {
+          if (value == null) {
+            return const SizedBox.shrink();
+          }
+          
+          return FloatingActionButton.extended(
+            onPressed: _showUploadDialog,
+            icon: const Icon(Icons.add_a_photo),
+            label: const Text('Upload Artwork'),
+            backgroundColor: Theme.of(context).primaryColor,
+            foregroundColor: Colors.white,
+          );
+        },
       ),
       floatingActionButtonLocation: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
           ? FloatingActionButtonLocation.centerFloat
@@ -207,49 +265,152 @@ class _ArtWerkState extends State<ArtWerk> {
     );
   }
 
-  void _handleArtworkUpload(String title, String description, Uint8List? imageData, String? fileName) {
+  void _handleArtworkUpload(String title, String description, Uint8List? imageData, String? fileName) async {
     // Close the dialog first
-    Navigator.of(context).pop();
+    context.pop();
     
-    // TODO: Implement the actual upload logic here
-    // This is where you would:
-    // 1. Upload the image to your server/cloud storage
-    // 2. Send the artwork data to your API
-    // 3. Add the new artwork to your backend
+    // Validate required data
+    if (imageData == null || fileName == null || title.trim().isEmpty || description.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Row(
+            children: [
+              Icon(Icons.error, color: Colors.white),
+              SizedBox(width: 8),
+              Text('Please provide all required information'),
+            ],
+          ),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ),
+      );
+      return;
+    }
     
-    // For now, show a success message
+    // Show loading indicator
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         content: Row(
           children: [
-            const Icon(Icons.check_circle, color: Colors.white),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text('Artwork "$title" uploaded successfully!'),
+            SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
             ),
+            SizedBox(width: 12),
+            Text('Uploading artwork...'),
           ],
         ),
-        backgroundColor: Colors.green,
-        duration: const Duration(seconds: 3),
-        action: SnackBarAction(
-          label: 'Refresh',
-          textColor: Colors.white,
-          onPressed: () {
-            // Refresh the artwork list
-            _artWerk.getArtwerk();
-          },
-        ),
+        backgroundColor: Colors.blue,
+        duration: Duration(seconds: 30), // Long duration for upload
       ),
     );
     
-    // Optionally refresh the artwork list automatically
-    // _artWerk.getArtwerk();
+    try {
+      // Upload the artwork
+      final success = await _artWerk.uploadArtwerk(
+        name: title.trim(),
+        description: description.trim(),
+        imageData: imageData,
+        fileName: fileName,
+      );
+      
+      // Hide loading snackbar
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      
+      if (success) {
+        // Show success message with review notice
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.check_circle, color: Colors.white),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text('Artwork "$title" submitted successfully!'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  'Your artwork is under review and will be published after admin approval.',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.white70,
+                  ),
+                ),
+              ],
+            ),
+            backgroundColor: Colors.orange,
+            duration: const Duration(seconds: 5),
+            action: SnackBarAction(
+              label: 'OK',
+              textColor: Colors.white,
+              onPressed: () {
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              },
+            ),
+          ),
+        );
+      } else {
+        // Show error message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Row(
+              children: [
+                Icon(Icons.error, color: Colors.white),
+                SizedBox(width: 8),
+                Text('Failed to upload artwork. Please try again.'),
+              ],
+            ),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+            action: SnackBarAction(
+              label: 'Retry',
+              textColor: Colors.white,
+              onPressed: () => _showUploadDialog(),
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      // Hide loading snackbar and show error
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.error, color: Colors.white),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text('Upload failed: ${e.toString()}'),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 5),
+          action: SnackBarAction(
+            label: 'Retry',
+            textColor: Colors.white,
+            onPressed: () => _showUploadDialog(),
+          ),
+        ),
+      );
+    }
     
     // Log the upload data for debugging
     debugPrint('=== Artwork Upload Data ===');
     debugPrint('Title: $title');
     debugPrint('Description: $description');
     debugPrint('File Name: $fileName');
-    debugPrint('Image Size: ${imageData?.length ?? 0} bytes');
+    debugPrint('Image Size: ${imageData.length} bytes');
   }
 }

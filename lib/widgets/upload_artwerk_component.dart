@@ -1,5 +1,5 @@
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dropzone/flutter_dropzone.dart';
 import 'package:file_picker/file_picker.dart';
 
@@ -32,14 +32,120 @@ class _UploadArtwerkComponentState extends State<UploadArtwerkComponent> {
     super.dispose();
   }
 
+  // Input validation and sanitization methods
+  String _sanitizeInput(String input) {
+    // Remove potential script tags and dangerous characters
+    String sanitized = input
+        .replaceAll(RegExp(r'<[^>]*>'), '') // Remove HTML/XML tags
+        .replaceAll('<', '')
+        .replaceAll('>', '')
+        .replaceAll('"', '')
+        .replaceAll("'", '')
+        .replaceAll('`', '')
+        .replaceAll('{', '')
+        .replaceAll('}', '')
+        .replaceAll(RegExp(r'javascript:', caseSensitive: false), '') // Remove javascript: protocol
+        .replaceAll(RegExp(r'data:', caseSensitive: false), '') // Remove data: protocol
+        .replaceAll(RegExp(r'vbscript:', caseSensitive: false), '') // Remove vbscript: protocol
+        .replaceAll(RegExp(r'on\w+\s*=', caseSensitive: false), '') // Remove event handlers like onclick=
+        .replaceAll(RegExp(r'eval\s*\(', caseSensitive: false), '') // Remove eval()
+        .replaceAll(RegExp(r'alert\s*\(', caseSensitive: false), '') // Remove alert()
+        .replaceAll(RegExp(r'confirm\s*\(', caseSensitive: false), '') // Remove confirm()
+        .replaceAll(RegExp(r'prompt\s*\(', caseSensitive: false), '') // Remove prompt()
+        .replaceAll(RegExp(r'document\.', caseSensitive: false), '') // Remove document access
+        .replaceAll(RegExp(r'window\.', caseSensitive: false), '') // Remove window access
+        .replaceAll(RegExp(r'console\.', caseSensitive: false), '') // Remove console access
+        .trim();
+    
+    return sanitized;
+  }
+
+  bool _isValidInput(String input) {
+    // Check for common script injection patterns
+    final dangerousPatterns = [
+      RegExp(r'<script', caseSensitive: false),
+      RegExp(r'javascript:', caseSensitive: false),
+      RegExp(r'data:', caseSensitive: false),
+      RegExp(r'vbscript:', caseSensitive: false),
+      RegExp(r'on\w+\s*=', caseSensitive: false),
+      RegExp(r'eval\s*\(', caseSensitive: false),
+      RegExp(r'<iframe', caseSensitive: false),
+      RegExp(r'<object', caseSensitive: false),
+      RegExp(r'<embed', caseSensitive: false),
+      RegExp(r'<link', caseSensitive: false),
+      RegExp(r'<meta', caseSensitive: false),
+      RegExp(r'<form', caseSensitive: false),
+      RegExp(r'<input', caseSensitive: false),
+      RegExp(r'<textarea', caseSensitive: false),
+      RegExp(r'<button', caseSensitive: false),
+    ];
+
+    for (final pattern in dangerousPatterns) {
+      if (pattern.hasMatch(input)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  String? _validateTitle(String value) {
+    if (value.trim().isEmpty) {
+      return 'Please enter artwerk title';
+    }
+    
+    if (!_isValidInput(value)) {
+      return 'Title contains invalid characters or potential security risks';
+    }
+    
+    if (value.length > 100) {
+      return 'Title must be less than 100 characters';
+    }
+    
+    // Check for only whitespace or special characters
+    if (RegExp(r'^[\s\W]*$').hasMatch(value)) {
+      return 'Title must contain at least one alphanumeric character';
+    }
+    
+    return null;
+  }
+
+  String? _validateDescription(String value) {
+    if (value.trim().isEmpty) {
+      return 'Please enter artwerk description';
+    }
+    
+    if (!_isValidInput(value)) {
+      return 'Description contains invalid characters or potential security risks';
+    }
+    
+    if (value.length > 500) {
+      return 'Description must be less than 500 characters';
+    }
+    
+    // Check for only whitespace or special characters
+    if (RegExp(r'^[\s\W]*$').hasMatch(value)) {
+      return 'Description must contain at least one alphanumeric character';
+    }
+    
+    return null;
+  }
+
   void _handleSubmit() {
-    if (_titleController.text.trim().isEmpty) {
-      _showSnackBar('Please enter artwerk title');
+    final title = _titleController.text.trim();
+    final description = _descriptionController.text.trim();
+    
+    // Validate title
+    final titleError = _validateTitle(title);
+    if (titleError != null) {
+      _showSnackBar(titleError);
       return;
     }
     
-    if (_descriptionController.text.trim().isEmpty) {
-      _showSnackBar('Please enter artwerk description');
+    // Validate description
+    final descriptionError = _validateDescription(description);
+    if (descriptionError != null) {
+      _showSnackBar(descriptionError);
       return;
     }
     
@@ -48,9 +154,13 @@ class _UploadArtwerkComponentState extends State<UploadArtwerkComponent> {
       return;
     }
 
+    // Sanitize inputs before processing
+    final sanitizedTitle = _sanitizeInput(title);
+    final sanitizedDescription = _sanitizeInput(description);
+
     widget.onArtwerkUploaded?.call(
-      _titleController.text.trim(),
-      _descriptionController.text.trim(),
+      sanitizedTitle,
+      sanitizedDescription,
       _imageData,
       _fileName,
     );
@@ -113,6 +223,18 @@ class _UploadArtwerkComponentState extends State<UploadArtwerkComponent> {
                 prefixIcon: Icon(Icons.title, color: Colors.white70), // Light gray icon
               ),
               maxLength: 100,
+              onChanged: (value) {
+                // Real-time validation
+                if (!_isValidInput(value)) {
+                  _showSnackBar('Invalid characters detected in title');
+                }
+              },
+              inputFormatters: [
+                FilteringTextInputFormatter.deny(RegExp(r'[<>]')), // Prevent angle brackets
+                FilteringTextInputFormatter.deny(RegExp(r'"')), // Prevent double quotes
+                FilteringTextInputFormatter.deny(RegExp(r"'")), // Prevent single quotes
+                FilteringTextInputFormatter.deny(RegExp(r'[`{}]')), // Prevent backticks and braces
+              ],
             ),
             const SizedBox(height: 16),
 
@@ -138,6 +260,18 @@ class _UploadArtwerkComponentState extends State<UploadArtwerkComponent> {
               ),
               maxLines: 3,
               maxLength: 500,
+              onChanged: (value) {
+                // Real-time validation
+                if (!_isValidInput(value)) {
+                  _showSnackBar('Invalid characters detected in description');
+                }
+              },
+              inputFormatters: [
+                FilteringTextInputFormatter.deny(RegExp(r'[<>]')), // Prevent angle brackets
+                FilteringTextInputFormatter.deny(RegExp(r'"')), // Prevent double quotes
+                FilteringTextInputFormatter.deny(RegExp(r"'")), // Prevent single quotes
+                FilteringTextInputFormatter.deny(RegExp(r'[`{}]')), // Prevent backticks and braces
+              ],
             ),
             const SizedBox(height: 24),
 
@@ -161,7 +295,7 @@ class _UploadArtwerkComponentState extends State<UploadArtwerkComponent> {
                   width: _isHighlighted ? 2 : 1,
                 ),
                 borderRadius: BorderRadius.circular(12),
-                color: _isHighlighted ? Colors.blue.withOpacity(0.2) : const Color(0xFF333333),
+                color: _isHighlighted ? Colors.blue.withValues(alpha: 0.2) : const Color(0xFF333333),
               ),
               child: _imageData != null ? _buildImagePreview() : _buildDropzone(),
             ),
@@ -232,7 +366,7 @@ class _UploadArtwerkComponentState extends State<UploadArtwerkComponent> {
                     _fileName = name;
                   });
                 } else {
-                  _showSnackBar('Please upload an image file (PNG, JPG, JPEG, GIF, WebP, BMP)');
+                  _showSnackBar('Please upload an image file (PNG, JPG, JPEG)');
                 }
               } catch (e) {
                 _showSnackBar('Error uploading file: $e');
@@ -307,7 +441,7 @@ class _UploadArtwerkComponentState extends State<UploadArtwerkComponent> {
           right: 8,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.7),
+              color: Colors.black.withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(20),
             ),
             child: IconButton(
@@ -324,7 +458,7 @@ class _UploadArtwerkComponentState extends State<UploadArtwerkComponent> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.7),
+              color: Colors.black.withValues(alpha: 0.7),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Text(
@@ -364,7 +498,7 @@ class _UploadArtwerkComponentState extends State<UploadArtwerkComponent> {
               _fileName = file.name;
             });
           } else {
-            _showSnackBar('Please upload an image file (PNG, JPG, JPEG, GIF, WebP)');
+            _showSnackBar('Please upload an image file (PNG, JPG, JPEG)');
           }
         } else {
           _showSnackBar('Error reading file data');
@@ -379,6 +513,6 @@ class _UploadArtwerkComponentState extends State<UploadArtwerkComponent> {
 
   bool _isImageFile(String fileName) {
     final extension = fileName.toLowerCase().split('.').last;
-    return ['png', 'jpg', 'jpeg', 'gif', 'webp', 'bmp'].contains(extension);
+    return ['png', 'jpg', 'jpeg'].contains(extension);
   }
 }

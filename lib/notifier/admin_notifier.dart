@@ -17,4 +17,16 @@ class AdminNotifier {
   void changeLoading(bool status) {
     isLoading.value = status;
   }
+
+  Future<bool> acceptArtwerk(String artworkId) async {
+    return await AdminRepo().acceptArtwerk(artworkId);
+  }
+
+  Future<bool> rejectArtwerk(String artworkId) async {
+    return await AdminRepo().rejectArtwerk(artworkId);
+  }
+
+  Future<void> refreshArtwerkList() async {
+    await getArtwerk();
+  }
 }

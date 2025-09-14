@@ -43,7 +43,7 @@ class _ProfileState extends State<Profile> {
                 decoration: BoxDecoration(
                   border: Border.all(color: const Color(0xFF00bcd5)),
                   borderRadius: BorderRadius.circular(12),
-                  color: Colors.black.withOpacity(0.3),
+                  color: Colors.black.withValues(alpha: 0.3),
                 ),
                 child: Column(
                   children: [

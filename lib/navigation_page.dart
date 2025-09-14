@@ -105,7 +105,7 @@ class _NavigationPageState extends State<NavigationPage>
                     (states) => Colors.white,
                   ),
                   trackColor: WidgetStateProperty.resolveWith(
-                    (states) => Colors.grey.withOpacity(.2),
+                    (states) => Colors.grey.withValues(alpha: .2),
                   ),
                   trackVisibility: WidgetStateProperty.resolveWith(
                     (states) => true,

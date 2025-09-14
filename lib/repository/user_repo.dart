@@ -25,7 +25,11 @@ class UserRepo {
 
       if (res != null) {
         var data = res.body;
-        return UserModel.fromJson(jsonDecode(data));
+        final user = UserModel.fromJson(jsonDecode(data));
+        final roles = user.data?.roles ?? 'user';
+        // Save roles to SharedPreferences
+        await prefs.setString('roles', roles);
+        return user;
       }
     } catch (e) {
       print('Error signing in: $e');
