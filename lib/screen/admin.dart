@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:abstrak/main.dart';
 import 'package:abstrak/model/artwerks_model.dart';
 import 'package:abstrak/notifier/admin_notifier.dart';
-import 'package:abstrak/notifier/user_notifier.dart';
+import 'package:abstrak/notifier/artwerk_notifier.dart';
 import 'package:abstrak/helper/date_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -16,7 +16,7 @@ class Admin extends StatefulWidget {
 
 class _AdminState extends State<Admin> {
   final AdminNotifier _admin = AdminNotifier();
-  final UserNotifier _userNotifier = UserNotifier();
+  final ArtwerkNotifier _artwerkNotifier = ArtwerkNotifier();
   final _searchController = TextEditingController();
   String? _selectedCreator;
   bool _isDropdownOpen = false;
@@ -35,14 +35,14 @@ class _AdminState extends State<Admin> {
     // Create a new timer with 500ms delay
     _debounceTimer = Timer(const Duration(milliseconds: 500), () async {
       if (query.length >= 3) {
-        await _userNotifier.getUsersByName(name: query);
+        await _artwerkNotifier.filterUserByName(name: query);
         if (mounted) {
           setState(() {
             _isDropdownOpen = true;
           });
         }
       } else {
-        _userNotifier.users.value = null;
+        _artwerkNotifier.users.value = null;
         if (mounted) {
           setState(() {
             _isDropdownOpen = false;
@@ -160,11 +160,11 @@ class _AdminState extends State<Admin> {
                             ),
                           ),
                           child: ValueListenableBuilder(
-                            valueListenable: _userNotifier.users,
+                            valueListenable: _artwerkNotifier.users,
                             builder: (context, usersData, child) {
                               final users = usersData?.data ?? [];
                               
-                              if (_userNotifier.isLoading.value) {
+                              if (_artwerkNotifier.isLoading.value) {
                                 return const Padding(
                                   padding: EdgeInsets.all(16),
                                   child: Center(
@@ -310,7 +310,7 @@ class _AdminState extends State<Admin> {
                             _searchController.clear();
                             _isDropdownOpen = false;
                           });
-                          _userNotifier.users.value = null;
+                          _artwerkNotifier.users.value = null;
                            _admin.getArtwerk();
                         },
                         icon: const Icon(

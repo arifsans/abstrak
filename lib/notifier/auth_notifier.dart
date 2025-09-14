@@ -49,9 +49,6 @@ class AuthNotifier {
         phone: phone,
         password: password,
       );
-      if (user.value != null) {
-        await signIn(email: email, password: password);
-      }
       changeLoading(false);
     } catch (e) {
       print('Error: $e');

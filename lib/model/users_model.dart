@@ -34,6 +34,8 @@ class Data {
   String? phone;
   String? avatar;
   String? roles;
+  String? verificationStatus;
+  String? verificationAt;
   String? createdAt;
   String? updatedAt;
   String? deletedAt;
@@ -45,6 +47,8 @@ class Data {
       this.phone,
       this.avatar,
       this.roles,
+      this.verificationStatus,
+      this.verificationAt,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -56,6 +60,8 @@ class Data {
     phone = json['phone'];
     avatar = json['avatar'];
     roles = json['roles'];
+    verificationStatus = json['verification_status'];
+    verificationAt = json['verification_at'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     deletedAt = json['deleted_at'];
@@ -69,6 +75,8 @@ class Data {
     data['phone'] = this.phone;
     data['avatar'] = this.avatar;
     data['roles'] = this.roles;
+    data['verification_status'] = this.verificationStatus;
+    data['verification_at'] = this.verificationAt;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['deleted_at'] = this.deletedAt;

@@ -30,6 +30,8 @@ class Data {
   String? avatar;
   String? fcmToken;
   String? roles;
+  String? verificationStatus;
+  String? verificationAt;
   String? createdAt;
   String? updatedAt;
   String? deletedAt;
@@ -42,6 +44,8 @@ class Data {
       this.avatar,
       this.fcmToken,
       this.roles,
+      this.verificationStatus,
+      this.verificationAt,
       this.createdAt,
       this.updatedAt,
       this.deletedAt});
@@ -54,6 +58,8 @@ class Data {
     avatar = json['avatar'];
     fcmToken = json['fcm_token'];
     roles = json['roles'];
+    verificationStatus = json['verification_status'];
+    verificationAt = json['verification_at'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     deletedAt = json['deleted_at'];
@@ -68,6 +74,8 @@ class Data {
     data['avatar'] = this.avatar;
     data['fcm_token'] = this.fcmToken;
     data['roles'] = this.roles;
+    data['verification_status'] = this.verificationStatus;
+    data['verification_at'] = this.verificationAt;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['deleted_at'] = this.deletedAt;

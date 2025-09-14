@@ -575,22 +575,25 @@ class _SignUpState extends State<SignUp> {
           password: _passwordController.text,
         );
 
+        _nameController.clear();
+        _emailController.clear();
+        _phoneController.clear();
+        _passwordController.clear();
+        _confirmPasswordController.clear();
+
         if (result != null) {
           if (mounted) {
             // Show success message
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  'Account created successfully! Welcome to CAPTIVE, ${_nameController.text}!',
+                  'Check Your Mailbox to Verify Your Account!',
                   style: courierText.bodyMedium,
                 ),
                 backgroundColor: const Color(0xFF00bcd5),
                 duration: const Duration(seconds: 3),
               ),
             );
-
-            // Navigate to profile page
-            context.goNamed('profile');
           }
         }
       } catch (e) {

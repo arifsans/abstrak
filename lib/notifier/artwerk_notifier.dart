@@ -2,14 +2,15 @@ import 'dart:typed_data';
 
 import 'package:abstrak/model/artwerks_model.dart' as a;
 import 'package:abstrak/model/create_artwerks_model.dart' as c;
+import 'package:abstrak/model/users_model.dart';
 import 'package:abstrak/repository/artwerk_repo.dart';
 import 'package:flutter/material.dart';
 
 class ArtwerkNotifier {
   final ValueNotifier<a.ArtwerksModel?> data = ValueNotifier(null);
-  final ValueNotifier<c.CreateArtwerksModel?> createArtwerkData =
-      ValueNotifier(null);
+  final ValueNotifier<c.CreateArtwerksModel?> createArtwerkData = ValueNotifier(null);
   final ValueNotifier<bool> isLoading = ValueNotifier(false);
+  final ValueNotifier<UsersModel?> users = ValueNotifier(null);
 
   Future<void> getArtwerk({int? page}) async {
     changeLoading(true);
@@ -79,5 +80,12 @@ class ArtwerkNotifier {
     } finally {
       changeLoading(false);
     }
+  }
+
+  Future<void> filterUserByName({required String name}) async {
+    changeLoading(true);
+    users.value = null;
+    users.value = await ArtwerkRepo().filterUserByName(name: name);
+    changeLoading(false);
   }
 }
