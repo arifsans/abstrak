@@ -5,6 +5,7 @@ import 'package:abstrak/screen/about.dart';
 import 'package:abstrak/screen/admin.dart';
 import 'package:abstrak/screen/artwerk.dart';
 import 'package:abstrak/screen/homepage.dart';
+import 'package:abstrak/screen/my_artwerks.dart';
 import 'package:abstrak/screen/privacy_policy.dart';
 import 'package:abstrak/screen/profile.dart';
 import 'package:abstrak/screen/sign_up.dart';
@@ -131,6 +132,21 @@ final _router = GoRouter(
           return '/sign-in';
         }
         if (prefs.getString('roles') != 'admin') {
+          return '/profile';
+        }
+        return null;
+      },
+    ),
+    GoRoute(
+      name: "my-artwerks",
+      path: "/my-artwerks",
+      builder: (context, state) => MyArtwerks(),
+      redirect: (context, state) async {
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.getString('token') == null || prefs.getString('token')!.isEmpty) {
+          return '/sign-in';
+        }
+        if (prefs.getString('user_id') == null || prefs.getString('user_id')!.isEmpty) {
           return '/profile';
         }
         return null;

@@ -221,6 +221,16 @@ class _ProfileState extends State<Profile> {
                     },
                   ),
                   XButton(
+                    text: 'MY ARTWERKS',
+                    textStyle: customTextTheme.titleSmall?.copyWith(
+                      fontFamily: 'Kenzo',
+                    ),
+                    borderColor: const Color.fromARGB(255, 3, 199, 19),
+                    onPressed: () {
+                      context.goNamed('my-artwerks');
+                    },
+                  ),
+                  XButton(
                     text: 'EDIT PROFILE',
                     textStyle: customTextTheme.titleSmall?.copyWith(
                       fontFamily: 'Kenzo',

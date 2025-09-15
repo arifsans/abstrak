@@ -29,6 +29,10 @@ class UserRepo {
         final roles = user.data?.roles ?? 'user';
         // Save roles to SharedPreferences
         await prefs.setString('roles', roles);
+        // Save user ID to SharedPreferences
+        if (user.data?.id != null || (user.data?.id ?? '').isNotEmpty) {
+          await prefs.setString('user_id', user.data?.id ?? '');
+        }
         return user;
       }
     } catch (e) {

@@ -12,12 +12,12 @@ class ArtwerkNotifier {
   final ValueNotifier<bool> isLoading = ValueNotifier(false);
   final ValueNotifier<UsersModel?> users = ValueNotifier(null);
 
-  Future<void> getArtwerk({int? page}) async {
+  Future<void> getArtwerk({int? page, int? userId, int? status}) async {
     changeLoading(true);
     if ((page ?? 1) == 1) {
       data.value = null;
     }
-    final result = await ArtwerkRepo().getArtwerks(page: page ?? 1);
+    final result = await ArtwerkRepo().getArtwerks(page: page ?? 1, userId: userId, status: status);
     if (result != null) {
       if ((page ?? 1) == 1 || data.value == null) {
         // First page or no existing data, replace everything

@@ -1,12 +1,10 @@
-import 'dart:typed_data';
 import 'package:abstrak/main.dart';
 import 'package:abstrak/model/artwerks_model.dart';
 import 'package:abstrak/notifier/artwerk_notifier.dart';
 import 'package:abstrak/widgets/animation_card.dart';
 import 'package:abstrak/widgets/artwork_detail_dialog.dart';
-import 'package:abstrak/widgets/upload_artwerk_component.dart';
+import 'package:abstrak/helper/dialog_helpers.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
 class ArtWerk extends StatefulWidget {
@@ -24,7 +22,7 @@ class _ArtWerkState extends State<ArtWerk> {
 
   @override
   void initState() {
-    _artWerk.getArtwerk();
+    _artWerk.getArtwerk(status: 1);
     _scrollController.addListener(_onScroll);
     super.initState();
   }
@@ -58,7 +56,7 @@ class _ArtWerkState extends State<ArtWerk> {
         // Add a small delay to prevent rapid fire requests
         await Future.delayed(const Duration(milliseconds: 100));
         
-        await _artWerk.getArtwerk(page: _currentPage + 1);
+        await _artWerk.getArtwerk(page: _currentPage + 1, status: 1);
       } catch (e) {
         // Handle error gracefully
         debugPrint('Error loading more data: $e');
@@ -213,217 +211,13 @@ class _ArtWerkState extends State<ArtWerk> {
   }
 
   void _showUploadDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return Dialog(
-          backgroundColor: const Color(0xFF1a1a1a), // Match your app's background
-          insetPadding: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
-              ? const EdgeInsets.all(16)
-              : EdgeInsets.symmetric(
-                  horizontal: MediaQuery.sizeOf(context).width * .2,
-                  vertical: 40,
-                ),
-          child: Container(
-            constraints: const BoxConstraints(maxHeight: 700),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1a1a1a), // Dark background
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Dialog Header
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF2a2a2a), // Darker background to match your theme
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(4),
-                      topRight: Radius.circular(4),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Upload New Artwork',
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white, // Ensure white text
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () => Navigator.of(context).pop(),
-                        icon: const Icon(Icons.close, color: Colors.white70), // Subtle white icon
-                        tooltip: 'Close',
-                      ),
-                    ],
-                  ),
-                ),
-                // Upload Component
-                Flexible(
-                  child: SingleChildScrollView(
-                    child: UploadArtwerkComponent(
-                      onArtwerkUploaded: _handleArtworkUpload,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
+    DialogHelpers.showUploadDialog(
+      context,
+      artwerkNotifier: _artWerk,
+      onUploadSuccess: () {
+        // Refresh the artworks list after successful upload
+        _artWerk.getArtwerk(status: 1);
       },
     );
-  }
-
-  void _handleArtworkUpload(String title, String description, Uint8List? imageData, String? fileName) async {
-    // Close the dialog first
-    context.pop();
-    
-    // Validate required data
-    if (imageData == null || fileName == null || title.trim().isEmpty || description.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Row(
-            children: [
-              Icon(Icons.error, color: Colors.white),
-              SizedBox(width: 8),
-              Text('Please provide all required information'),
-            ],
-          ),
-          backgroundColor: Colors.red,
-          duration: Duration(seconds: 3),
-        ),
-      );
-      return;
-    }
-    
-    // Show loading indicator
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Row(
-          children: [
-            SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              ),
-            ),
-            SizedBox(width: 12),
-            Text('Uploading artwork...'),
-          ],
-        ),
-        backgroundColor: Colors.blue,
-        duration: Duration(seconds: 30), // Long duration for upload
-      ),
-    );
-    
-    try {
-      // Upload the artwork
-      final success = await _artWerk.uploadArtwerk(
-        name: title.trim(),
-        description: description.trim(),
-        imageData: imageData,
-        fileName: fileName,
-      );
-      
-      // Hide loading snackbar
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      
-      if (success) {
-        // Show success message with review notice
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    const Icon(Icons.check_circle, color: Colors.white),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text('Artwork "$title" submitted successfully!'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                const Text(
-                  'Your artwork is under review and will be published after admin approval.',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.white70,
-                  ),
-                ),
-              ],
-            ),
-            backgroundColor: Colors.orange,
-            duration: const Duration(seconds: 5),
-            action: SnackBarAction(
-              label: 'OK',
-              textColor: Colors.white,
-              onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              },
-            ),
-          ),
-        );
-      } else {
-        // Show error message
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Row(
-              children: [
-                Icon(Icons.error, color: Colors.white),
-                SizedBox(width: 8),
-                Text('Failed to upload artwork. Please try again.'),
-              ],
-            ),
-            backgroundColor: Colors.red,
-            duration: const Duration(seconds: 3),
-            action: SnackBarAction(
-              label: 'Retry',
-              textColor: Colors.white,
-              onPressed: () => _showUploadDialog(),
-            ),
-          ),
-        );
-      }
-    } catch (e) {
-      // Hide loading snackbar and show error
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.error, color: Colors.white),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text('Upload failed: ${e.toString()}'),
-              ),
-            ],
-          ),
-          backgroundColor: Colors.red,
-          duration: const Duration(seconds: 5),
-          action: SnackBarAction(
-            label: 'Retry',
-            textColor: Colors.white,
-            onPressed: () => _showUploadDialog(),
-          ),
-        ),
-      );
-    }
-    
-    // Log the upload data for debugging
-    debugPrint('=== Artwork Upload Data ===');
-    debugPrint('Title: $title');
-    debugPrint('Description: $description');
-    debugPrint('File Name: $fileName');
-    debugPrint('Image Size: ${imageData.length} bytes');
   }
 }

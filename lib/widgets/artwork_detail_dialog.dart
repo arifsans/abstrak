@@ -131,7 +131,9 @@ class ArtwerkDetailDialog extends StatelessWidget {
                       ),
                       _buildInfoRow(
                         'Created Date',
-                        DateFormatterHelper.formatDateWithTime(artwerk.createdAt!),
+                        DateFormatterHelper.formatDateWithTime(
+                          artwerk.createdAt!,
+                        ),
                       ),
 
                       const SizedBox(height: 24),
@@ -139,16 +141,50 @@ class ArtwerkDetailDialog extends StatelessWidget {
                       // Artist Information Section
                       _buildSectionTitle('Artist Information'),
                       const SizedBox(height: 12),
-                      _buildInfoRow(
-                        'Name',
-                        artwerk.creatorName ?? 'N/A',
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 30,
+                            backgroundColor: Colors.grey[800],
+                            backgroundImage:
+                                ((artwerk.creatorAvatar ?? '').isNotEmpty)
+                                    ? NetworkImage(artwerk.creatorAvatar ?? '')
+                                    : null,
+                            child: ((artwerk.creatorAvatar ?? '').isEmpty)
+                                ? const Icon(
+                                    Icons.person,
+                                    color: Colors.grey,
+                                    size: 30,
+                                  )
+                                : null,
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                _buildInfoRow(
+                                  spacing: 50,
+                                  'Name',
+                                  artwerk.creatorName ?? 'N/A',
+                                ),
+                                _buildInfoRow(
+                                  spacing: 50,
+                                  'Email',
+                                  artwerk.creatorEmail ?? 'N/A',
+                                ),
+                                if (artwerk.creatorPhone != null &&
+                                    artwerk.creatorPhone!.isNotEmpty)
+                                  _buildInfoRow(
+                                    spacing: 50,
+                                    'Phone',
+                                    artwerk.creatorPhone!,
+                                  ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      _buildInfoRow(
-                        'Email',
-                        artwerk.creatorEmail ?? 'N/A',
-                      ),
-                      if (artwerk.creatorPhone != null && artwerk.creatorPhone!.isNotEmpty)
-                        _buildInfoRow('Phone', artwerk.creatorPhone!),
                     ],
                   ),
                 ),
@@ -195,14 +231,14 @@ class ArtwerkDetailDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
+  Widget _buildInfoRow(String label, String value, {double? spacing}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            width: 140,
+            width: spacing ?? 140,
             child: Text(
               '$label:',
               style: const TextStyle(

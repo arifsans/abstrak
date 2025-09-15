@@ -13,6 +13,7 @@ class ArtwerkRepo {
   Future<ArtwerksModel?> getArtwerks({
     int? page,
     int? userId,
+    int? status,
   }) async {
     var res = await ApiConnection().apiCall(
       method: ApiMethod.GET,
@@ -20,6 +21,7 @@ class ArtwerkRepo {
       queryParams: {
         'page': page ?? 1,
         if (userId != null) 'user_id': userId,
+        if (status != null) 'status': status,
       },
     );
 
