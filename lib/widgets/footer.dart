@@ -20,6 +20,10 @@ class FooterSite extends StatelessWidget {
       route: 'artwerk',
     ),
     FooterObject(
+      text: 'MANIFESTO',
+      route: 'manifesto',
+    ),
+    FooterObject(
       text: 'TP CALCULATOR',
       route: 'tp-calculator',
     ),

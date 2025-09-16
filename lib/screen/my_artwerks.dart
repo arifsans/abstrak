@@ -21,11 +21,39 @@ class _MyArtwerksState extends State<MyArtwerks> {
   bool _isLoadingMore = false;
   late String userId;
   late SharedPreferences prefs;
+  String? _selectedStatus; // null means all, '0' = pending, '1' = approved, '2' = rejected
 
   Future<void> initializeData() async {
     prefs = await SharedPreferences.getInstance();
     userId = prefs.getString('user_id') ?? '';
     _artWerk.getArtwerk(userId: userId.isEmpty ? null : int.tryParse(userId));
+  }
+
+  void _filterByStatus(String? status) {
+    // Only proceed if we have a valid userId
+    if (userId.isEmpty) {
+      debugPrint('Cannot filter - no userId available');
+      return;
+    }
+    
+    setState(() {
+      _selectedStatus = status;
+      _currentPage = 1;
+    });
+    
+    // Convert status string to int for API call
+    int? statusInt;
+    if (status != null) {
+      statusInt = int.tryParse(status);
+    }
+    
+    debugPrint('Filtering artworks for userId: $userId, status: $statusInt');
+    
+    _artWerk.getArtwerk(
+      status: statusInt, 
+      userId: int.tryParse(userId)!, // Force non-null since we checked above
+      page: 1,
+    );
   }
 
   @override
@@ -53,6 +81,12 @@ class _MyArtwerksState extends State<MyArtwerks> {
   }
 
   Future<void> _loadMoreData() async {
+    // Only proceed if we have a valid userId
+    if (userId.isEmpty) {
+      debugPrint('Cannot load more data - no userId available');
+      return;
+    }
+    
     final data = _artWerk.data.value?.data;
     if (data?.hasMore == true && !_isLoadingMore && !_artWerk.isLoading.value) {
       setState(() {
@@ -65,7 +99,17 @@ class _MyArtwerksState extends State<MyArtwerks> {
         // Add a small delay to prevent rapid fire requests
         await Future.delayed(const Duration(milliseconds: 100));
 
-        await _artWerk.getArtwerk(page: _currentPage + 1, userId: userId.isEmpty ? null : int.tryParse(userId));
+        // Convert status string to int for API call
+        int? statusInt;
+        if (_selectedStatus != null) {
+          statusInt = int.tryParse(_selectedStatus!);
+        }
+
+        await _artWerk.getArtwerk(
+          page: _currentPage + 1, 
+          userId: int.tryParse(userId)!, // Force non-null since we checked above
+          status: statusInt,
+        );
       } catch (e) {
         // Handle error gracefully
         debugPrint('Error loading more data: $e');
@@ -96,75 +140,109 @@ class _MyArtwerksState extends State<MyArtwerks> {
         centerTitle: true,
       ),
       backgroundColor: const Color(0xFF1a1a1a),
-      body: Padding(
-        padding: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
-            ? const EdgeInsets.all(0)
-            : EdgeInsets.symmetric(
-                horizontal: MediaQuery.sizeOf(context).width * .1,
+      body: Column(
+        children: [
+          // Filter chips
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: [
+                  Text(
+                    'Filter: ',
+                    style: customTextTheme.bodyMedium?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  _buildFilterChip('All', null),
+                  const SizedBox(width: 8),
+                  _buildFilterChip('Pending', '0'),
+                  const SizedBox(width: 8),
+                  _buildFilterChip('Approved', '1'),
+                  const SizedBox(width: 8),
+                  _buildFilterChip('Rejected', '2'),
+                ],
               ),
-        child: ValueListenableBuilder(
-          valueListenable: _artWerk.data,
-          builder: (context, value, child) {
-            var data = value?.data?.result ?? [];
+            ),
+          ),
+          // Main content
+          Expanded(
+            child: Padding(
+              padding: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
+                  ? const EdgeInsets.all(0)
+                  : EdgeInsets.symmetric(
+                      horizontal: MediaQuery.sizeOf(context).width * .1,
+                    ),
+              child: ValueListenableBuilder(
+                valueListenable: _artWerk.data,
+                builder: (context, value, child) {
+                  var data = value?.data?.result ?? [];
 
-            if (data.isEmpty) {
-              return const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.image_outlined,
-                      size: 64,
-                      color: Colors.grey,
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      'No artworks yet',
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey,
+                  if (data.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.image_outlined,
+                            size: 64,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            _getEmptyStateTitle(),
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            _getEmptyStateSubtitle(),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'There are no artworks available. Upload to get started!',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }
+                    );
+                  }
 
-            return ListView.builder(
-              controller: _scrollController,
-              padding: EdgeInsets.only(
-                left: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
-                    ? 8
-                    : 0,
-                right: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
-                    ? 8
-                    : 0,
-                bottom: 80, // Space for FAB
-              ),
-              itemCount: data.length + (_isLoadingMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                // Loading indicator at the end
-                if (index >= data.length) {
-                  return const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Center(child: CircularProgressIndicator()),
+                  return ListView.builder(
+                    controller: _scrollController,
+                    padding: EdgeInsets.only(
+                      left: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
+                          ? 8
+                          : 0,
+                      right: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
+                          ? 8
+                          : 0,
+                      bottom: 80, // Space for FAB
+                    ),
+                    itemCount: data.length + (_isLoadingMore ? 1 : 0),
+                    itemBuilder: (context, index) {
+                      // Loading indicator at the end
+                      if (index >= data.length) {
+                        return const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      }
+
+                      final artwerk = data[index];
+                      return _buildArtwerkListItem(artwerk);
+                    },
                   );
-                }
-
-                final artwerk = data[index];
-                return _buildArtwerkListItem(artwerk);
-              },
-            );
-          },
-        ),
+                },
+              ),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _showUploadDialog,
@@ -178,6 +256,67 @@ class _MyArtwerksState extends State<MyArtwerks> {
               ? FloatingActionButtonLocation.centerFloat
               : FloatingActionButtonLocation.endFloat,
     );
+  }
+
+  String _getEmptyStateTitle() {
+    switch (_selectedStatus) {
+      case '0':
+        return 'No pending artworks';
+      case '1':
+        return 'No approved artworks';
+      case '2':
+        return 'No rejected artworks';
+      default:
+        return 'No artworks yet';
+    }
+  }
+
+  String _getEmptyStateSubtitle() {
+    switch (_selectedStatus) {
+      case '0':
+        return 'You don\'t have any artworks waiting for approval. Upload new artwork to get started!';
+      case '1':
+        return 'You don\'t have any approved artworks yet. Keep creating and uploading your amazing art!';
+      case '2':
+        return 'You don\'t have any rejected artworks. That\'s great! Keep up the excellent work!';
+      default:
+        return 'There are no artworks available. Upload to get started!';
+    }
+  }
+
+  Widget _buildFilterChip(String label, String? value) {
+    final isSelected = _selectedStatus == value;
+    
+    return FilterChip(
+      label: Text(label),
+      selected: isSelected,
+      onSelected: (bool selected) {
+        _filterByStatus(selected ? value : null);
+      },
+      backgroundColor: const Color(0xFF2a2a2a),
+      selectedColor: _getChipColor(value),
+      labelStyle: customTextTheme.bodySmall?.copyWith(
+        color: isSelected ? Colors.black : Colors.white,
+        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+      ),
+      side: BorderSide(
+        color: isSelected ? _getChipColor(value) : Colors.white.withValues(alpha: 0.3),
+        width: 1,
+      ),
+    );
+  }
+
+  Color _getChipColor(String? status) {
+    switch (status) {
+      case '1':
+        return Colors.greenAccent;
+      case '2':
+        return Colors.redAccent;
+      case '0':
+        return Colors.orangeAccent;
+      default:
+        return const Color(0xFF00bcd5);
+    }
   }
 
   Widget _buildArtwerkListItem(Result artwerk) {
@@ -584,50 +723,54 @@ class _MyArtwerksState extends State<MyArtwerks> {
             artwerk.name ?? 'Artwork Details',
             style: customTextTheme.titleLarge?.copyWith(color: Colors.white),
           ),
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Image
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: artwerk.image != null && artwerk.image!.isNotEmpty
-                      ? Image.network(
-                          artwerk.image!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              width: double.infinity,
-                              height: 200,
-                              color: Colors.grey[700],
-                              child: const Icon(
-                                Icons.image_not_supported,
-                                color: Colors.white54,
-                                size: 48,
-                              ),
-                            );
-                          },
-                        )
-                      : Container(
-                          color: Colors.grey[700],
-                          child: const Icon(
-                            Icons.image_not_supported,
-                            color: Colors.white54,
-                            size: 48,
+          content: SizedBox(
+            width: MediaQuery.sizeOf(context).width * 0.5,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Image
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: artwerk.image != null && artwerk.image!.isNotEmpty
+                        ? Image.network(
+                            artwerk.image!,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: double.infinity,
+                                color: Colors.grey[700],
+                                child: const Icon(
+                                  Icons.image_not_supported,
+                                  color: Colors.white54,
+                                  size: 48,
+                                ),
+                              );
+                            },
+                          )
+                        : Container(
+                            width: double.infinity,
+                            color: Colors.grey[700],
+                            child: const Icon(
+                              Icons.image_not_supported,
+                              color: Colors.white54,
+                              size: 48,
+                            ),
                           ),
-                        ),
-                ),
-                const SizedBox(height: 16),
-                
-                // Details
-                _buildDetailRow('Name', artwerk.name ?? 'Untitled'),
-                _buildDetailRow('Description', artwerk.description ?? 'No description'),
-                _buildDetailRow('Creator', artwerk.creatorName ?? 'Unknown'),
-                _buildDetailRow('Created At', DateFormatterHelper.formatDate(artwerk.createdAt ?? '')),
-                _buildDetailRow('Updated At', DateFormatterHelper.formatDate(artwerk.updatedAt ?? '')),
-                _buildDetailRow('Status', _getStatusText(artwerk.status)),
-              ],
+                  ),
+                  const SizedBox(height: 16),
+                  
+                  // Details
+                  _buildDetailRow('Name', artwerk.name ?? 'Untitled'),
+                  _buildDetailRow('Description', artwerk.description ?? 'No description'),
+                  _buildDetailRow('Creator', artwerk.creatorName ?? 'Unknown'),
+                  _buildDetailRow('Created At', DateFormatterHelper.formatDate(artwerk.createdAt ?? '')),
+                  _buildDetailRow('Updated At', DateFormatterHelper.formatDate(artwerk.updatedAt ?? '')),
+                  _buildDetailRow('Status', _getStatusText(artwerk.status)),
+                ],
+              ),
             ),
           ),
           actions: [
@@ -810,12 +953,39 @@ class _MyArtwerksState extends State<MyArtwerks> {
   }
 
   void _showUploadDialog() {
+    // Only allow upload if user is logged in
+    if (userId.isEmpty) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('You must be logged in to upload artworks'),
+            backgroundColor: Colors.redAccent,
+          ),
+        );
+      }
+      return;
+    }
+
+    debugPrint('Before upload dialog - userId: "$userId"');
+
     DialogHelpers.showUploadDialog(
       context,
       artwerkNotifier: _artWerk,
-      onUploadSuccess: () {
-        // Refresh the artworks list after successful upload
-        _artWerk.getArtwerk(status: 1, userId: userId.isEmpty ? null : int.tryParse(userId));
+      onUploadSuccess: () async {
+        final freshPrefs = await SharedPreferences.getInstance();
+        final freshUserId = freshPrefs.getString('user_id') ?? '';
+
+        // Reset pagination and refresh the artworks list after successful upload
+        if (mounted) {
+          setState(() {
+            _currentPage = 1;
+          });
+        }
+
+        _artWerk.getArtwerk(
+          userId: int.tryParse(freshUserId),
+          page: 1,
+        );
       },
     );
   }

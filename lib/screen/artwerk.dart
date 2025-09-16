@@ -116,65 +116,72 @@ class _ArtWerkState extends State<ArtWerk> {
               );
             }
 
-            return ListView.builder(
-              controller: _scrollController,
-              padding: EdgeInsets.only(
-                left: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP) ? 8 : 0,
-                right: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP) ? 8 : 0,
-                bottom: 80, // Space for FAB
+            return ScrollbarTheme(
+              data: const ScrollbarThemeData(
+                thumbVisibility: WidgetStatePropertyAll(false),
+                trackVisibility: WidgetStatePropertyAll(false),
               ),
-              itemCount: (data.length / 2).ceil() + (_isLoadingMore ? 1 : 0),
-              itemBuilder: (context, index) {
-                // Loading indicator at the end
-                if (index >= (data.length / 2).ceil()) {
-                  return const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Center(child: CircularProgressIndicator()),
+              child: ListView.builder(
+                controller: _scrollController,
+                primary: false,
+                padding: EdgeInsets.only(
+                  left: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP) ? 8 : 0,
+                  right: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP) ? 8 : 0,
+                  bottom: 80, // Space for FAB
+                ),
+                itemCount: (data.length / 2).ceil() + (_isLoadingMore ? 1 : 0),
+                itemBuilder: (context, index) {
+                  // Loading indicator at the end
+                  if (index >= (data.length / 2).ceil()) {
+                    return const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  }
+                  
+                  // Calculate items for this row
+                  final leftIndex = index * 2;
+                  final rightIndex = leftIndex + 1;
+                  
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Left column item
+                        Expanded(
+                          child: leftIndex < data.length
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: AnimationCard(
+                                    imageUrl: data[leftIndex].image ?? '',
+                                    authorName: data[leftIndex].creatorName ?? '',
+                                    imageName: data[leftIndex].name ?? '',
+                                    onTap: () => _showArtwerkDetail(data[leftIndex]),
+                                  ),
+                                )
+                              : const SizedBox(),
+                        ),
+                        const SizedBox(width: 8),
+                        // Right column item
+                        Expanded(
+                          child: rightIndex < data.length
+                              ? ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: AnimationCard(
+                                    imageUrl: data[rightIndex].image ?? '',
+                                    authorName: data[rightIndex].creatorName ?? '',
+                                    imageName: data[rightIndex].name ?? '',
+                                    onTap: () => _showArtwerkDetail(data[rightIndex]),
+                                  ),
+                                )
+                              : const SizedBox(),
+                        ),
+                      ],
+                    ),
                   );
-                }
-                
-                // Calculate items for this row
-                final leftIndex = index * 2;
-                final rightIndex = leftIndex + 1;
-                
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Left column item
-                      Expanded(
-                        child: leftIndex < data.length
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: AnimationCard(
-                                  imageUrl: data[leftIndex].image ?? '',
-                                  authorName: data[leftIndex].creatorName ?? '',
-                                  imageName: data[leftIndex].name ?? '',
-                                  onTap: () => _showArtwerkDetail(data[leftIndex]),
-                                ),
-                              )
-                            : const SizedBox(),
-                      ),
-                      const SizedBox(width: 8),
-                      // Right column item
-                      Expanded(
-                        child: rightIndex < data.length
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(12),
-                                child: AnimationCard(
-                                  imageUrl: data[rightIndex].image ?? '',
-                                  authorName: data[rightIndex].creatorName ?? '',
-                                  imageName: data[rightIndex].name ?? '',
-                                  onTap: () => _showArtwerkDetail(data[rightIndex]),
-                                ),
-                              )
-                            : const SizedBox(),
-                      ),
-                    ],
-                  ),
-                );
-              },
+                },
+              ),
             );
           },
         ),

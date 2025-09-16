@@ -1,9 +1,7 @@
 import 'package:abstrak/main.dart';
 import 'package:abstrak/widgets/footer.dart';
 import 'package:abstrak/widgets/warp_indicator.dart';
-import 'package:collection/collection.dart';
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
-import 'package:fab_circular_menu_plus/fab_circular_menu_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -20,8 +18,6 @@ class NavigationPage extends StatefulWidget {
 
 class _NavigationPageState extends State<NavigationPage>
     with TickerProviderStateMixin {
-  final GlobalKey<FabCircularMenuPlusState> fabKey = GlobalKey();
-
   late AnimationController _controller;
   late ScrollController _scrollController;
   late AnimationController _swordController;
@@ -54,36 +50,129 @@ class _NavigationPageState extends State<NavigationPage>
     super.dispose();
   }
 
+  void _showBottomNavigationSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        margin: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1a1a1a),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: 0.1),
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.3),
+              blurRadius: 20,
+              offset: const Offset(0, -5),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              margin: const EdgeInsets.only(top: 12),
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.white.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Navigation',
+              style: customTextTheme.headlineSmall,
+            ),
+            const SizedBox(height: 20),
+            ...FooterSite().footers.map(
+              (element) => Container(
+                width: double.infinity,
+                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.goNamed(element.route);
+                      _scrollController.jumpTo(0);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 20,
+                      ),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.1),
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          _getIconForRoute(element.route),
+                          const SizedBox(width: 16),
+                          Text(
+                            element.text,
+                            style: customTextTheme.bodyLarge,
+                          ),
+                          const Spacer(),
+                          Icon(
+                            Icons.arrow_forward_ios,
+                            color: Colors.white.withValues(alpha: 0.5),
+                            size: 16,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _getIconForRoute(String route) {
+    switch (route) {
+      case 'home':
+        return Icon(Icons.home_outlined, color: Colors.white, size: 24);
+      case 'about':
+        return Icon(Icons.info_outline, color: Colors.white, size: 24);
+      case 'artwerk':
+        return Icon(Icons.palette_outlined, color: Colors.white, size: 24);
+      case 'manifesto':
+        return Icon(Icons.description_outlined, color: Colors.white, size: 24);
+      case 'tp-calculator':
+        return Icon(Icons.calculate_outlined, color: Colors.white, size: 24);
+      default:
+        return Icon(Icons.circle_outlined, color: Colors.white, size: 24);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFF1a1a1a),
-      floatingActionButton:
-          ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
-              ? FabCircularMenuPlus(
-                  key: fabKey,
-                  fabColor: Colors.white,
-                  ringColor: Colors.black,
-                  ringDiameterLimitFactor: 1,
-                  children: FooterSite()
-                      .footers
-                      .mapIndexed(
-                        (index, element) => GestureDetector(
-                          onTap: () {
-                            if (fabKey.currentState?.isOpen == true) {
-                              fabKey.currentState?.close();
-                            }
-                            context.goNamed(element.route);
-                            _scrollController.jumpTo(0);
-                          },
-                          child: Text(
-                            element.text,
-                          ),
-                        ),
-                      )
-                      .toList(),
-                )
-              : null,
+      floatingActionButton: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
+          ? FloatingActionButton(
+              onPressed: () {
+                _showBottomNavigationSheet(context);
+              },
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              child: Icon(Icons.menu_rounded),
+            )
+          : null,
       body: SafeArea(
         child: WarpIndicator(
           controller: _refreshController,
@@ -313,7 +402,9 @@ class _NavigationPageState extends State<NavigationPage>
                 },
                 iconSize: MediaQuery.sizeOf(context).width * .05,
                 icon: Padding(
-                  padding: value == null ? const EdgeInsets.symmetric(horizontal: 8) : EdgeInsets.zero,
+                  padding: value == null
+                      ? const EdgeInsets.symmetric(horizontal: 8)
+                      : EdgeInsets.zero,
                   child: value == null
                       ? Row(
                           children: [

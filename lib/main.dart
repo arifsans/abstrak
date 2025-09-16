@@ -5,6 +5,7 @@ import 'package:abstrak/screen/about.dart';
 import 'package:abstrak/screen/admin.dart';
 import 'package:abstrak/screen/artwerk.dart';
 import 'package:abstrak/screen/homepage.dart';
+import 'package:abstrak/screen/manifesto.dart';
 import 'package:abstrak/screen/my_artwerks.dart';
 import 'package:abstrak/screen/privacy_policy.dart';
 import 'package:abstrak/screen/profile.dart';
@@ -73,6 +74,15 @@ final _router = GoRouter(
               name: "tp-calculator",
               path: "/tp-calculator",
               builder: (context, state) => const TpCalculator(),
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: "manifesto",
+              path: "/manifesto",
+              builder: (context, state) => const Manifesto(),
             ),
           ],
         ),

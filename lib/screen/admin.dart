@@ -593,50 +593,54 @@ class _AdminState extends State<Admin> {
             artwerk.name ?? 'Artwerk Details',
             style: courierText.titleLarge?.copyWith(color: Colors.white),
           ),
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Image
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: artwerk.image != null && artwerk.image!.isNotEmpty
-                      ? Image.network(
-                          artwerk.image!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              width: double.infinity,
-                              height: 200,
-                              color: Colors.grey[700],
-                              child: const Icon(
-                                Icons.image_not_supported,
-                                color: Colors.white54,
-                                size: 48,
-                              ),
-                            );
-                          },
-                        )
-                      : Container(
-                          color: Colors.grey[700],
-                          child: const Icon(
-                            Icons.image_not_supported,
-                            color: Colors.white54,
-                            size: 48,
+          content: SizedBox(
+            width: MediaQuery.sizeOf(context).width * 0.5,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Image
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: artwerk.image != null && artwerk.image!.isNotEmpty
+                        ? Image.network(
+                            artwerk.image!,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                width: double.infinity,
+                                color: Colors.grey[700],
+                                child: const Icon(
+                                  Icons.image_not_supported,
+                                  color: Colors.white54,
+                                  size: 48,
+                                ),
+                              );
+                            },
+                          )
+                        : Container(
+                            width: double.infinity,
+                            color: Colors.grey[700],
+                            child: const Icon(
+                              Icons.image_not_supported,
+                              color: Colors.white54,
+                              size: 48,
+                            ),
                           ),
-                        ),
-                ),
-                const SizedBox(height: 16),
-                
-                // Details
-                _buildDetailRow('Name', artwerk.name ?? 'Untitled'),
-                _buildDetailRow('Description', artwerk.description ?? 'No description'),
-                _buildDetailRow('Creator', artwerk.creatorName ?? 'Unknown'),
-                _buildDetailRow('Creator Email', artwerk.creatorEmail ?? 'N/A'),
-                _buildDetailRow('Created At', DateFormatterHelper.formatDate(artwerk.createdAt ?? '')),
-                _buildDetailRow('Status', _getStatusText(artwerk.status)),
-              ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Details
+                  _buildDetailRow('Name', artwerk.name ?? 'Untitled'),
+                  _buildDetailRow('Description', artwerk.description ?? 'No description'),
+                  _buildDetailRow('Creator', artwerk.creatorName ?? 'Unknown'),
+                  _buildDetailRow('Creator Email', artwerk.creatorEmail ?? 'N/A'),
+                  _buildDetailRow('Created At', DateFormatterHelper.formatDate(artwerk.createdAt ?? '')),
+                  _buildDetailRow('Status', _getStatusText(artwerk.status)),
+                ],
+              ),
             ),
           ),
           actions: [
