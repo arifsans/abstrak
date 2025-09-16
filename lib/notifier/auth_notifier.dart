@@ -1,3 +1,4 @@
+import 'package:abstrak/model/api_exception.dart';
 import 'package:abstrak/model/auth_model.dart';
 import 'package:abstrak/model/user_model.dart';
 import 'package:abstrak/repository/auth_repo.dart';
@@ -50,10 +51,16 @@ class AuthNotifier {
         password: password,
       );
       changeLoading(false);
+    } on SignUpException {
+      changeLoading(false);
+      user.value = null;
+      rethrow; // Re-throw to be handled by the UI
     } catch (e) {
       print('Error: $e');
       changeLoading(false);
       user.value = null;
+      // Convert generic errors to SignUpException
+      throw SignUpException.unknown(e.toString());
     }
     return user.value;
   }

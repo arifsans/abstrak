@@ -1,4 +1,5 @@
 import 'package:abstrak/main.dart';
+import 'package:abstrak/model/api_exception.dart';
 import 'package:abstrak/widgets/x_button.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -181,7 +182,9 @@ class _SignUpState extends State<SignUp> {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your email';
                       }
-                      if (!value.contains('@') || !value.contains('.')) {
+                      // Better email validation
+                      final emailRegex = RegExp(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$');
+                      if (!emailRegex.hasMatch(value)) {
                         return 'Please enter a valid email address';
                       }
                       return null;
@@ -492,13 +495,28 @@ class _SignUpState extends State<SignUp> {
                   ValueListenableBuilder(
                     valueListenable: authNotifier.isLoading,
                     builder: (context, isLoading, child) {
-                      return isLoading
-                          ? const Center(
-                              child: CircularProgressIndicator(
-                                color: Color(0xFF00bcd5),
+                      return Column(
+                        children: [
+                          if (isLoading) ...[
+                            const Center(
+                              child: Column(
+                                children: [
+                                  CircularProgressIndicator(
+                                    color: Color(0xFF00bcd5),
+                                  ),
+                                  SizedBox(height: 16),
+                                  Text(
+                                    'Creating your account...',
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            )
-                          : XButton(
+                            ),
+                          ] else ...[
+                            XButton(
                               text: 'CREATE ACCOUNT',
                               textStyle: customTextTheme.titleMedium?.copyWith(
                                 fontFamily: 'Kenzo',
@@ -510,7 +528,10 @@ class _SignUpState extends State<SignUp> {
                                 horizontal: 24,
                               ),
                               onPressed: _handleSignUp,
-                            );
+                            ),
+                          ],
+                        ],
+                      );
                     },
                   ),
 
@@ -569,19 +590,23 @@ class _SignUpState extends State<SignUp> {
 
       try {
         final result = await authNotifier.signUp(
-          name: _nameController.text,
-          email: _emailController.text,
-          phone: _phoneController.text,
+          name: _nameController.text.trim(),
+          email: _emailController.text.trim(),
+          phone: _phoneController.text.trim(),
           password: _passwordController.text,
         );
 
-        _nameController.clear();
-        _emailController.clear();
-        _phoneController.clear();
-        _passwordController.clear();
-        _confirmPasswordController.clear();
-
         if (result != null) {
+          // Clear form only on success
+          _nameController.clear();
+          _emailController.clear();
+          _phoneController.clear();
+          _passwordController.clear();
+          _confirmPasswordController.clear();
+          setState(() {
+            _acceptTerms = false;
+          });
+
           if (mounted) {
             // Show success message
             ScaffoldMessenger.of(context).showSnackBar(
@@ -596,20 +621,85 @@ class _SignUpState extends State<SignUp> {
             );
           }
         }
+      } on SignUpException catch (e) {
+        if (mounted) {
+          // Handle specific field validation errors
+          if (e.errorCode == 'INVALID_EMAIL') {
+            // Focus on email field and show error
+            FocusScope.of(context).requestFocus(FocusNode());
+            // Re-validate form to show specific field error
+            _formKey.currentState?.validate();
+          } else if (e.errorCode == 'INVALID_PHONE') {
+            // Focus on phone field
+            FocusScope.of(context).requestFocus(FocusNode());
+            _formKey.currentState?.validate();
+          }
+          
+          // Show specific error message with action button for certain errors
+          final snackBar = SnackBar(
+            content: Text(
+              e.message,
+              style: courierText.bodyMedium,
+            ),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: e.errorCode == 'NETWORK_ERROR' ? 7 : 5),
+            action: _getSnackBarAction(e),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                'Registration failed: ${e.toString()}',
+                'An unexpected error occurred: ${e.toString()}',
                 style: courierText.bodyMedium,
               ),
               backgroundColor: Colors.red,
               duration: const Duration(seconds: 3),
+              action: SnackBarAction(
+                label: 'Retry',
+                textColor: Colors.white,
+                onPressed: () => _handleSignUp(),
+              ),
             ),
           );
         }
       }
+    }
+  }
+
+  SnackBarAction? _getSnackBarAction(SignUpException exception) {
+    switch (exception.errorCode) {
+      case 'EMAIL_EXISTS':
+        return SnackBarAction(
+          label: 'Sign In',
+          textColor: Colors.white,
+          onPressed: () => context.goNamed('sign-in'),
+        );
+      case 'NETWORK_ERROR':
+        return SnackBarAction(
+          label: 'Retry',
+          textColor: Colors.white,
+          onPressed: () => _handleSignUp(),
+        );
+      case 'SERVER_ERROR':
+        return SnackBarAction(
+          label: 'Retry',
+          textColor: Colors.white,
+          onPressed: () => _handleSignUp(),
+        );
+      case 'WEAK_PASSWORD':
+        return SnackBarAction(
+          label: 'Fix',
+          textColor: Colors.white,
+          onPressed: () {
+            // Focus on password field to help user fix it
+            FocusScope.of(context).requestFocus(FocusNode());
+          },
+        );
+      default:
+        return null;
     }
   }
 }
