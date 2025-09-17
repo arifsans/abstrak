@@ -165,7 +165,7 @@ class _AdminState extends State<Admin> {
                             builder: (context, usersData, child) {
                               final users = usersData.data?.data ?? [];
                               
-                              if (_artwerkNotifier.isLoading.value) {
+                              if (_artwerkNotifier.users.value.status == ApiStatus.loading) {
                                 return const Padding(
                                   padding: EdgeInsets.all(16),
                                   child: Center(
@@ -329,7 +329,7 @@ class _AdminState extends State<Admin> {
                 child: ValueListenableBuilder(
                   valueListenable: _admin.data,
                   builder: (context, value, child) {
-                    var data = value?.data?.result ?? [];
+                    var data = value.data?.data?.result ?? [];
 
                     if (data.isEmpty) {
                       return const Center(

@@ -1,3 +1,4 @@
+import 'package:abstrak/base/api_state.dart';
 import 'package:abstrak/main.dart';
 import 'package:abstrak/notifier/tp_calculator_notifier.dart';
 import 'package:flutter/material.dart';
@@ -64,9 +65,9 @@ class _TpCalculatorState extends State<TpCalculator> {
             ),
             const SizedBox(height: 24),
             ValueListenableBuilder(
-              valueListenable: _tpData.isLoading,
+              valueListenable: _tpData.data,
               builder: (context, value, child) {
-                if (value == false) {
+                if (value.status != ApiStatus.loading) {
                   return TextButton(
                     onPressed: () {
                       if (_usernameC?.text.isNotEmpty ?? false) {
@@ -93,12 +94,12 @@ class _TpCalculatorState extends State<TpCalculator> {
               valueListenable: _tpData.data,
               builder: (context, value, child) {
                 final dFormatter = DateFormat('dd MMMM yyyy');
-                final calc = value?.data?.calculations ?? [];
-                final adtMessage = value?.data?.additionalMessage ?? '';
-                if (value == null) {
+                final calc = value.data?.data?.calculations ?? [];
+                final adtMessage = value.data?.data?.additionalMessage ?? '';
+                if (value.data == null) {
                   return Container();
                 }
-                if (value.status == false) {
+                if (value.data?.status == false) {
                   return Container(
                     height: MediaQuery.sizeOf(context).height * .6,
                     width: MediaQuery.sizeOf(context).width * .8,
@@ -113,7 +114,7 @@ class _TpCalculatorState extends State<TpCalculator> {
                       children: [
                         Builder(
                           builder: (context) {
-                            final message = (value.message ?? '').toLowerCase();
+                            final message = (value.data?.message ?? '').toLowerCase();
 
                             if (message.contains('ccid')) {
                               return TypeWriter.text(
@@ -134,7 +135,7 @@ class _TpCalculatorState extends State<TpCalculator> {
                               );
                             } else {
                               return TypeWriter.text(
-                                value.message ?? '',
+                                value.data?.message ?? '',
                                 duration: Duration(
                                   milliseconds: 30,
                                 ),
@@ -161,7 +162,7 @@ class _TpCalculatorState extends State<TpCalculator> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       TypeWriter.text(
-                        (value.message ?? '').toString().toUpperCase(),
+                        (value.data?.message ?? '').toString().toUpperCase(),
                         style: courierText.bodyMedium,
                         duration: Duration(
                           milliseconds: 30,

@@ -1,3 +1,4 @@
+import 'package:abstrak/base/api_state.dart';
 import 'package:abstrak/main.dart';
 import 'package:abstrak/model/artwerks_model.dart';
 import 'package:abstrak/notifier/artwerk_notifier.dart';
@@ -70,11 +71,10 @@ class _MyArtwerksState extends State<MyArtwerks> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
       // Load more when user is 200px from bottom
       // Use a debounced approach to prevent multiple calls
-      if (!_isLoadingMore && !_artWerk.isLoading.value) {
+      if (!_isLoadingMore && _artWerk.data.value.status != ApiStatus.loading) {
         _loadMoreData();
       }
     }
@@ -88,7 +88,7 @@ class _MyArtwerksState extends State<MyArtwerks> {
     }
     
     final data = _artWerk.data.value.data?.data;
-    if (data?.hasMore == true && !_isLoadingMore && !_artWerk.isLoading.value) {
+    if (data?.hasMore == true && !_isLoadingMore && _artWerk.data.value.status != ApiStatus.loading) {
       setState(() {
         _isLoadingMore = true;
       });

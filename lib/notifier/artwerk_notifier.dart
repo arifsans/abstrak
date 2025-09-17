@@ -11,15 +11,14 @@ class ArtwerkNotifier {
   final ValueNotifier<ApiState<a.ArtwerksModel?>> data = ValueNotifier(ApiState.initial());
   final ValueNotifier<ApiState<c.CreateArtwerksModel?>> createArtwerkData = ValueNotifier(ApiState.initial());
   final ValueNotifier<ApiState<UsersModel?>> users = ValueNotifier(ApiState.initial());
-  final ValueNotifier<bool> isLoading = ValueNotifier(false);
 
   Future<void> getArtwerk({int? page, int? userId, int? status}) async {
-    changeLoading(true);
     data.value = ApiState.loading();
-    
+
     try {
-      final result = await ArtwerkRepo().getArtwerks(page: page ?? 1, userId: userId, status: status);
-      
+      final result = await ArtwerkRepo()
+          .getArtwerks(page: page ?? 1, userId: userId, status: status);
+
       if (result != null) {
         // For page-based navigation, always replace the data
         data.value = ApiState.success(result);
@@ -28,16 +27,7 @@ class ArtwerkNotifier {
       }
     } catch (e) {
       data.value = ApiState.error('Error fetching artworks: $e');
-    } finally {
-      changeLoading(false);
     }
-  }
-
-  /// Updates the global loading state
-  /// Note: This is separate from ApiState loading states and is used primarily
-  /// for pagination logic to prevent multiple simultaneous requests
-  void changeLoading(bool status) {
-    isLoading.value = status;
   }
 
   Future<bool> uploadArtwerk({
@@ -46,9 +36,8 @@ class ArtwerkNotifier {
     required Uint8List imageData,
     required String fileName,
   }) async {
-    changeLoading(true);
     createArtwerkData.value = ApiState.loading();
-    
+
     try {
       final result = await ArtwerkRepo().createArtwerk(
         name: name,
@@ -56,7 +45,7 @@ class ArtwerkNotifier {
         imageData: imageData,
         fileName: fileName,
       );
-      
+
       if (result != null && result.status == true) {
         createArtwerkData.value = ApiState.success(result);
         // Refresh the artwork list to show the new upload
@@ -70,15 +59,12 @@ class ArtwerkNotifier {
       debugPrint('Error uploading artwork: $e');
       createArtwerkData.value = ApiState.error('Error uploading artwork: $e');
       return false;
-    } finally {
-      changeLoading(false);
     }
   }
 
   Future<void> filterUserByName({required String name}) async {
-    changeLoading(true);
     users.value = ApiState.loading();
-    
+
     try {
       final result = await ArtwerkRepo().filterUserByName(name: name);
       if (result != null) {
@@ -88,8 +74,6 @@ class ArtwerkNotifier {
       }
     } catch (e) {
       users.value = ApiState.error('Error fetching users: $e');
-    } finally {
-      changeLoading(false);
     }
   }
 }
