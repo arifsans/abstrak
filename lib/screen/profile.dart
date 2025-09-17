@@ -1,3 +1,4 @@
+import 'package:abstrak/base/api_state.dart';
 import 'package:abstrak/helper/date_formatter.dart';
 import 'package:abstrak/main.dart';
 import 'package:abstrak/widgets/x_button.dart';
@@ -14,6 +15,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  static const Color primaryCyan = Color(0xFF00bcd5);
 
   @override
   void initState() {
@@ -41,7 +43,7 @@ class _ProfileState extends State<Profile> {
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  border: Border.all(color: const Color(0xFF00bcd5)),
+                  border: Border.all(color: primaryCyan),
                   borderRadius: BorderRadius.circular(12),
                   color: Colors.black.withValues(alpha: 0.3),
                 ),
@@ -53,7 +55,7 @@ class _ProfileState extends State<Profile> {
                       child: Badge(
                         padding: const EdgeInsets.all(2),
                         alignment: Alignment.topRight,
-                        backgroundColor: const Color(0xFF00bcd5),
+                        backgroundColor: primaryCyan,
                         label: Icon(Icons.edit),
                         child: Container(
                           width: 100,
@@ -69,11 +71,27 @@ class _ProfileState extends State<Profile> {
                           child: ValueListenableBuilder(
                             valueListenable: userNotifier.user,
                             builder: (context, user, child) {
-                              print('AVATAR = ${user?.data?.avatar}');
-                              if ((user?.data?.avatar ?? '').isNotEmpty) {
+                              final data = user.data?.data;
+                              if (user.status == ApiStatus.loading) {
+                                return const Center(
+                                  child: CircularProgressIndicator(
+                                    color: Color(0xFF00bcd5),
+                                  ),
+                                );
+                              }
+
+                              if (user.status == ApiStatus.error) {
+                                return const Icon(
+                                  Icons.error,
+                                  size: 50,
+                                  color: Colors.red,
+                                );
+                              }
+
+                              if ((data?.avatar ?? '').isNotEmpty) {
                                 return ClipOval(
                                   child: Image.network(
-                                    user?.data?.avatar ?? '',
+                                    data?.avatar ?? '',
                                     filterQuality: FilterQuality.high,
                                     width: 100,
                                     height: 100,
@@ -98,10 +116,11 @@ class _ProfileState extends State<Profile> {
                     ValueListenableBuilder(
                       valueListenable: userNotifier.user,
                       builder: (context, value, child) {
+                        final data = value.data?.data;
                         return Column(
                           children: [
                             Text(
-                              (value?.data?.name ?? 'User').toUpperCase(),
+                              (data?.name ?? 'User').toUpperCase(),
                               style: customTextTheme.displayMedium?.copyWith(
                                 fontSize:
                                     ResponsiveBreakpoints.of(context).isDesktop
@@ -111,7 +130,7 @@ class _ProfileState extends State<Profile> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              (value?.data?.email ?? 'User').toUpperCase(),
+                              (data?.email ?? 'User').toUpperCase(),
                               style: courierText.bodyMedium,
                             ),
                           ],
@@ -154,29 +173,28 @@ class _ProfileState extends State<Profile> {
                     ValueListenableBuilder(
                       valueListenable: userNotifier.user,
                       builder: (context, value, child) {
-                        return _buildInfoRow('RANK',
-                            (value?.data?.roles ?? 'USER').toUpperCase());
+                        final data = value.data?.data;
+                        return _buildInfoRow(
+                            'RANK', (data?.roles ?? 'USER').toUpperCase());
                       },
                     ),
                     const SizedBox(height: 12),
                     ValueListenableBuilder(
                       valueListenable: userNotifier.user,
                       builder: (context, value, child) {
-                        String phone = value?.data?.phone ?? 'Unknown';
-                        if (phone.startsWith('0')) {
-                          phone = phone.replaceFirst('0', '');
-                        }
-                        return _buildInfoRow('PHONE', '+62' + phone);
+                        final data = value.data?.data;
+                        return _buildInfoRow('PHONE', _formatPhoneNumber(data?.phone ?? 'Unknown'));
                       },
                     ),
                     const SizedBox(height: 12),
                     ValueListenableBuilder(
                       valueListenable: userNotifier.user,
                       builder: (context, value, child) {
+                        final data = value.data?.data;
                         return _buildInfoRow(
                             'JOINED',
                             DateFormatterHelper.formatDate(
-                                value?.data?.createdAt ?? ''));
+                                data?.createdAt ?? ''));
                       },
                     ),
                     const SizedBox(height: 12),
@@ -205,7 +223,8 @@ class _ProfileState extends State<Profile> {
                   ValueListenableBuilder(
                     valueListenable: userNotifier.user,
                     builder: (context, value, child) {
-                      if (value?.data?.roles != 'admin') {
+                      final data = value.data?.data;
+                      if (data?.roles != 'admin') {
                         return const SizedBox.shrink();
                       }
                       return XButton(
@@ -332,6 +351,14 @@ class _ProfileState extends State<Profile> {
     );
   }
 
+  String _formatPhoneNumber(String phone) {
+    if (phone == 'Unknown') return phone;
+    if (phone.startsWith('0')) {
+      phone = phone.replaceFirst('0', '');
+    }
+    return '+62$phone';
+  }
+
   Widget _buildActivityItem(String activity, String time) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
@@ -421,32 +448,54 @@ class _ProfileState extends State<Profile> {
   }
 
   void _handleChangeAvatar() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['jpg', 'png', 'jpeg'],
-    );
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'png', 'jpeg'],
+      );
 
-    if (result != null) {
-      // Handle the selected file
-      PlatformFile file = result.files.first;
+      if (result != null) {
+        // Handle the selected file
+        PlatformFile file = result.files.first;
 
-      var response = await userNotifier.updateUserAvatar(file);
-      if (response != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Avatar updated successfully!'),
-            backgroundColor: Color(0xFF00bcd5),
-          ),
-        );
-        userNotifier.getUser();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Failed to update avatar. Please try again.'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        await userNotifier.updateUserAvatar(file);
+        final updateAvatarState = userNotifier.updateAvatar.value;
+        
+        if (!mounted) return; // Check if widget is still mounted
+        
+        switch (updateAvatarState.status) {
+          case ApiStatus.success:
+            // Refresh user data to show new avatar
+            await userNotifier.getUser();
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Avatar updated successfully!'),
+                backgroundColor: Color(0xFF00bcd5),
+              ),
+            );
+            break;
+          case ApiStatus.error:
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(updateAvatarState.error ?? 'Failed to update avatar. Please try again.'),
+                backgroundColor: Colors.red,
+              ),
+            );
+            break;
+          case ApiStatus.loading:
+          case ApiStatus.initial:
+            // Handle loading and initial states in UI
+            break;
+        }
       }
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error selecting file: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 }

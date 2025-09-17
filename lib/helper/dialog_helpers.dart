@@ -90,12 +90,15 @@ class DialogHelpers {
     String? fileName,
     VoidCallback? onUploadSuccess,
   ) async {
+    // Store the parent context before popping the dialog
+    final parentContext = Navigator.of(context, rootNavigator: true).context;
+    
     // Close the dialog first
     context.pop();
     
     // Validate required data
     if (imageData == null || fileName == null || title.trim().isEmpty || description.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(parentContext).showSnackBar(
         const SnackBar(
           content: Row(
             children: [
@@ -112,7 +115,7 @@ class DialogHelpers {
     }
     
     // Show loading indicator
-    ScaffoldMessenger.of(context).showSnackBar(
+    ScaffoldMessenger.of(parentContext).showSnackBar(
       const SnackBar(
         content: Row(
           children: [
@@ -143,11 +146,11 @@ class DialogHelpers {
       );
       
       // Hide loading snackbar
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(parentContext).hideCurrentSnackBar();
       
       if (success) {
         // Show success message with review notice
-        ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(parentContext).showSnackBar(
           SnackBar(
             content: Column(
               mainAxisSize: MainAxisSize.min,
@@ -178,7 +181,7 @@ class DialogHelpers {
               label: 'OK',
               textColor: Colors.white,
               onPressed: () {
-                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                ScaffoldMessenger.of(parentContext).hideCurrentSnackBar();
               },
             ),
           ),
@@ -188,7 +191,7 @@ class DialogHelpers {
         onUploadSuccess?.call();
       } else {
         // Show error message
-        ScaffoldMessenger.of(context).showSnackBar(
+        ScaffoldMessenger.of(parentContext).showSnackBar(
           SnackBar(
             content: const Row(
               children: [
@@ -202,16 +205,16 @@ class DialogHelpers {
             action: SnackBarAction(
               label: 'Retry',
               textColor: Colors.white,
-              onPressed: () => showUploadDialog(context, artwerkNotifier: artWerk, onUploadSuccess: onUploadSuccess),
+              onPressed: () => showUploadDialog(parentContext, artwerkNotifier: artWerk, onUploadSuccess: onUploadSuccess),
             ),
           ),
         );
       }
     } catch (e) {
       // Hide loading snackbar and show error
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(parentContext).hideCurrentSnackBar();
       
-      ScaffoldMessenger.of(context).showSnackBar(
+      ScaffoldMessenger.of(parentContext).showSnackBar(
         SnackBar(
           content: Row(
             children: [
@@ -227,7 +230,7 @@ class DialogHelpers {
           action: SnackBarAction(
             label: 'Retry',
             textColor: Colors.white,
-            onPressed: () => showUploadDialog(context, artwerkNotifier: artWerk, onUploadSuccess: onUploadSuccess),
+            onPressed: () => showUploadDialog(parentContext, artwerkNotifier: artWerk, onUploadSuccess: onUploadSuccess),
           ),
         ),
       );

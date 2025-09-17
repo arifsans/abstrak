@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:abstrak/base/api_state.dart';
 import 'package:abstrak/main.dart';
 import 'package:abstrak/model/artwerks_model.dart';
 import 'package:abstrak/notifier/admin_notifier.dart';
@@ -42,7 +43,7 @@ class _AdminState extends State<Admin> {
           });
         }
       } else {
-        _artwerkNotifier.users.value = null;
+        _artwerkNotifier.users.value = ApiState.initial();
         if (mounted) {
           setState(() {
             _isDropdownOpen = false;
@@ -162,7 +163,7 @@ class _AdminState extends State<Admin> {
                           child: ValueListenableBuilder(
                             valueListenable: _artwerkNotifier.users,
                             builder: (context, usersData, child) {
-                              final users = usersData?.data ?? [];
+                              final users = usersData.data?.data ?? [];
                               
                               if (_artwerkNotifier.isLoading.value) {
                                 return const Padding(
@@ -310,7 +311,7 @@ class _AdminState extends State<Admin> {
                             _searchController.clear();
                             _isDropdownOpen = false;
                           });
-                          _artwerkNotifier.users.value = null;
+                          _artwerkNotifier.users.value = ApiState.initial();
                            _admin.getArtwerk();
                         },
                         icon: const Icon(

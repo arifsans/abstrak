@@ -1,3 +1,4 @@
+import 'package:abstrak/base/api_state.dart';
 import 'package:abstrak/main.dart';
 import 'package:abstrak/model/api_exception.dart';
 import 'package:abstrak/widgets/x_button.dart';
@@ -26,13 +27,61 @@ class _SignUpState extends State<SignUp> {
   bool _acceptTerms = false;
 
   @override
+  void initState() {
+    super.initState();
+    // Listen to user state changes
+    authNotifier.user.addListener(_handleUserStateChange);
+  }
+
+  @override
   void dispose() {
+    authNotifier.user.removeListener(_handleUserStateChange);
     _nameController.dispose();
     _emailController.dispose();
     _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
+  }
+
+  void _handleUserStateChange() {
+    if (!mounted) return;
+    
+    final userState = authNotifier.user.value;
+    
+    switch (userState.status) {
+      case ApiStatus.success:
+        if (userState.data != null) {
+          // Clear form on success
+          _nameController.clear();
+          _emailController.clear();
+          _phoneController.clear();
+          _passwordController.clear();
+          _confirmPasswordController.clear();
+          setState(() {
+            _acceptTerms = false;
+          });
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Check Your Mailbox to Verify Your Account!',
+                style: courierText.bodyMedium,
+              ),
+              backgroundColor: const Color(0xFF00bcd5),
+              duration: const Duration(seconds: 3),
+            ),
+          );
+        }
+        break;
+      case ApiStatus.error:
+        // Error handling is done in the _handleSignUp method via exceptions
+        break;
+      case ApiStatus.loading:
+      case ApiStatus.initial:
+        // Handle loading and initial states in UI
+        break;
+    }
   }
 
   @override
@@ -493,8 +542,9 @@ class _SignUpState extends State<SignUp> {
 
                   // SignUp Button
                   ValueListenableBuilder(
-                    valueListenable: authNotifier.isLoading,
-                    builder: (context, isLoading, child) {
+                    valueListenable: authNotifier.user,
+                    builder: (context, userState, child) {
+                      final isLoading = userState.status == ApiStatus.loading;
                       return Column(
                         children: [
                           if (isLoading) ...[
@@ -589,38 +639,13 @@ class _SignUpState extends State<SignUp> {
       }
 
       try {
-        final result = await authNotifier.signUp(
+        // The user state listener (_handleUserStateChange) will handle successful responses
+        await authNotifier.signUp(
           name: _nameController.text.trim(),
           email: _emailController.text.trim(),
           phone: _phoneController.text.trim(),
           password: _passwordController.text,
         );
-
-        if (result != null) {
-          // Clear form only on success
-          _nameController.clear();
-          _emailController.clear();
-          _phoneController.clear();
-          _passwordController.clear();
-          _confirmPasswordController.clear();
-          setState(() {
-            _acceptTerms = false;
-          });
-
-          if (mounted) {
-            // Show success message
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  'Check Your Mailbox to Verify Your Account!',
-                  style: courierText.bodyMedium,
-                ),
-                backgroundColor: const Color(0xFF00bcd5),
-                duration: const Duration(seconds: 3),
-              ),
-            );
-          }
-        }
       } on SignUpException catch (e) {
         if (mounted) {
           // Handle specific field validation errors

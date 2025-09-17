@@ -1,3 +1,4 @@
+import 'package:abstrak/base/api_state.dart';
 import 'package:abstrak/main.dart';
 import 'package:abstrak/widgets/footer.dart';
 import 'package:abstrak/widgets/warp_indicator.dart';
@@ -394,7 +395,7 @@ class _NavigationPageState extends State<NavigationPage>
             builder: (context, value, child) {
               return IconButton(
                 onPressed: () {
-                  if (value != null) {
+                  if (value.status == ApiStatus.success) {
                     context.goNamed('profile');
                     return;
                   }
@@ -402,10 +403,10 @@ class _NavigationPageState extends State<NavigationPage>
                 },
                 iconSize: MediaQuery.sizeOf(context).width * .05,
                 icon: Padding(
-                  padding: value == null
+                  padding: value.status != ApiStatus.success
                       ? const EdgeInsets.symmetric(horizontal: 8)
                       : EdgeInsets.zero,
-                  child: value == null
+                  child: value.status != ApiStatus.success
                       ? Row(
                           children: [
                             Text(
@@ -495,14 +496,14 @@ class _NavigationPageState extends State<NavigationPage>
                 builder: (context, value, child) {
                   return IconButton(
                     onPressed: () {
-                      if (value != null) {
+                      if (value.status == ApiStatus.success) {
                         context.goNamed('profile');
                         return;
                       }
                       context.goNamed('sign-in');
                     },
                     iconSize: MediaQuery.sizeOf(context).width * .05,
-                    icon: value == null
+                    icon: value.status != ApiStatus.success
                         ? Icon(
                             Icons.login,
                             color: Colors.white,

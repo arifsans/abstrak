@@ -47,7 +47,7 @@ class _MyArtwerksState extends State<MyArtwerks> {
       statusInt = int.tryParse(status);
     }
     
-    debugPrint('Filtering artworks for userId: $userId, status: $statusInt');
+    debugPrint('Filtering artwerks for userId: $userId, status: $statusInt');
     
     _artWerk.getArtwerk(
       status: statusInt, 
@@ -87,7 +87,7 @@ class _MyArtwerksState extends State<MyArtwerks> {
       return;
     }
     
-    final data = _artWerk.data.value?.data;
+    final data = _artWerk.data.value.data?.data;
     if (data?.hasMore == true && !_isLoadingMore && !_artWerk.isLoading.value) {
       setState(() {
         _isLoadingMore = true;
@@ -179,7 +179,7 @@ class _MyArtwerksState extends State<MyArtwerks> {
               child: ValueListenableBuilder(
                 valueListenable: _artWerk.data,
                 builder: (context, value, child) {
-                  var data = value?.data?.result ?? [];
+                  var data = value.data?.data?.result ?? [];
 
                   if (data.isEmpty) {
                     return Center(
@@ -247,7 +247,7 @@ class _MyArtwerksState extends State<MyArtwerks> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _showUploadDialog,
         icon: const Icon(Icons.add_a_photo),
-        label: const Text('Upload Artwork'),
+        label: const Text('Upload Artwerk'),
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
       ),
@@ -261,26 +261,26 @@ class _MyArtwerksState extends State<MyArtwerks> {
   String _getEmptyStateTitle() {
     switch (_selectedStatus) {
       case '0':
-        return 'No pending artworks';
+        return 'No pending artwerks';
       case '1':
-        return 'No approved artworks';
+        return 'No approved artwerks';
       case '2':
-        return 'No rejected artworks';
+        return 'No rejected artwerks';
       default:
-        return 'No artworks yet';
+        return 'No artwerks yet';
     }
   }
 
   String _getEmptyStateSubtitle() {
     switch (_selectedStatus) {
       case '0':
-        return 'You don\'t have any artworks waiting for approval. Upload new artwork to get started!';
+        return 'You don\'t have any artwerks waiting for approval. Upload new artwerk to get started!';
       case '1':
-        return 'You don\'t have any approved artworks yet. Keep creating and uploading your amazing art!';
+        return 'You don\'t have any approved artwerks yet. Keep creating and uploading your amazing art!';
       case '2':
-        return 'You don\'t have any rejected artworks. That\'s great! Keep up the excellent work!';
+        return 'You don\'t have any rejected artwerks. That\'s great! Keep up the excellent work!';
       default:
-        return 'There are no artworks available. Upload to get started!';
+        return 'There are no artwerks available. Upload to get started!';
     }
   }
 
@@ -581,7 +581,7 @@ class _MyArtwerksState extends State<MyArtwerks> {
             borderRadius: BorderRadius.circular(16),
           ),
           title: Text(
-            'Edit Artwork',
+            'Edit Artwerk',
             style: customTextTheme.titleLarge?.copyWith(color: Colors.white),
           ),
           content: SizedBox(
@@ -636,7 +636,7 @@ class _MyArtwerksState extends State<MyArtwerks> {
                     controller: nameController,
                     style: customTextTheme.bodyMedium?.copyWith(color: Colors.white),
                     decoration: InputDecoration(
-                      hintText: 'Enter artwork title',
+                      hintText: 'Enter artwerk title',
                       hintStyle: customTextTheme.bodyMedium?.copyWith(color: Colors.grey),
                       filled: true,
                       fillColor: Colors.grey[800],
@@ -662,7 +662,7 @@ class _MyArtwerksState extends State<MyArtwerks> {
                     style: customTextTheme.bodyMedium?.copyWith(color: Colors.white),
                     maxLines: 3,
                     decoration: InputDecoration(
-                      hintText: 'Enter artwork description',
+                      hintText: 'Enter artwerk description',
                       hintStyle: customTextTheme.bodyMedium?.copyWith(color: Colors.grey),
                       filled: true,
                       fillColor: Colors.grey[800],
@@ -720,7 +720,7 @@ class _MyArtwerksState extends State<MyArtwerks> {
             borderRadius: BorderRadius.circular(16),
           ),
           title: Text(
-            artwerk.name ?? 'Artwork Details',
+            artwerk.name ?? 'Artwerk Details',
             style: customTextTheme.titleLarge?.copyWith(color: Colors.white),
           ),
           content: SizedBox(
@@ -799,7 +799,7 @@ class _MyArtwerksState extends State<MyArtwerks> {
             borderRadius: BorderRadius.circular(16),
           ),
           title: Text(
-            'Delete Artwork',
+            'Delete Artwerk',
             style: customTextTheme.titleLarge?.copyWith(color: Colors.white),
           ),
           content: Column(
@@ -807,7 +807,7 @@ class _MyArtwerksState extends State<MyArtwerks> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Are you sure you want to delete this artwork?',
+                'Are you sure you want to delete this artwerk?',
                 style: customTextTheme.bodyMedium?.copyWith(color: Colors.white),
               ),
               const SizedBox(height: 16),
@@ -958,7 +958,7 @@ class _MyArtwerksState extends State<MyArtwerks> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('You must be logged in to upload artworks'),
+            content: Text('You must be logged in to upload artwerks'),
             backgroundColor: Colors.redAccent,
           ),
         );

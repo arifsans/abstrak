@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:abstrak/base/api_state.dart';
 import 'package:abstrak/main.dart';
 import 'package:abstrak/model/auth_model.dart';
 import 'package:http/http.dart' as http;
@@ -54,7 +55,7 @@ class ApiConnection {
         await prefs.remove('token');
         await prefs.remove('refreshToken');
         await prefs.remove('expiredToken');
-        authNotifier.auth.value = null;
+        authNotifier.auth.value = ApiState.initial();
       }
     }
 

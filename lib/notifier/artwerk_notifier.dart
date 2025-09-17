@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:abstrak/base/api_state.dart';
 import 'package:abstrak/model/artwerks_model.dart' as a;
 import 'package:abstrak/model/create_artwerks_model.dart' as c;
 import 'package:abstrak/model/users_model.dart';
@@ -7,46 +8,34 @@ import 'package:abstrak/repository/artwerk_repo.dart';
 import 'package:flutter/material.dart';
 
 class ArtwerkNotifier {
-  final ValueNotifier<a.ArtwerksModel?> data = ValueNotifier(null);
-  final ValueNotifier<c.CreateArtwerksModel?> createArtwerkData = ValueNotifier(null);
+  final ValueNotifier<ApiState<a.ArtwerksModel?>> data = ValueNotifier(ApiState.initial());
+  final ValueNotifier<ApiState<c.CreateArtwerksModel?>> createArtwerkData = ValueNotifier(ApiState.initial());
+  final ValueNotifier<ApiState<UsersModel?>> users = ValueNotifier(ApiState.initial());
   final ValueNotifier<bool> isLoading = ValueNotifier(false);
-  final ValueNotifier<UsersModel?> users = ValueNotifier(null);
 
   Future<void> getArtwerk({int? page, int? userId, int? status}) async {
     changeLoading(true);
-    if ((page ?? 1) == 1) {
-      data.value = null;
-    }
-    final result = await ArtwerkRepo().getArtwerks(page: page ?? 1, userId: userId, status: status);
-    if (result != null) {
-      if ((page ?? 1) == 1 || data.value == null) {
-        // First page or no existing data, replace everything
-        data.value = result;
+    data.value = ApiState.loading();
+    
+    try {
+      final result = await ArtwerkRepo().getArtwerks(page: page ?? 1, userId: userId, status: status);
+      
+      if (result != null) {
+        // For page-based navigation, always replace the data
+        data.value = ApiState.success(result);
       } else {
-        // Subsequent pages, append to existing results
-        final existingResults = data.value?.data?.result ?? [];
-        final newResults = result.data?.result ?? [];
-
-        // Create updated data with combined results
-        data.value = a.ArtwerksModel(
-          status: result.status,
-          message: result.message,
-          data: a.Data(
-            result: [...existingResults, ...newResults],
-            currentPage: result.data?.currentPage,
-            perPage: result.data?.perPage,
-            total: result.data?.total,
-            lastPage: result.data?.lastPage,
-            isFirst: result.data?.isFirst,
-            isLast: result.data?.isLast,
-            hasMore: result.data?.hasMore,
-          ),
-        );
+        data.value = ApiState.error('Failed to fetch artworks');
       }
+    } catch (e) {
+      data.value = ApiState.error('Error fetching artworks: $e');
+    } finally {
+      changeLoading(false);
     }
-    changeLoading(false);
   }
 
+  /// Updates the global loading state
+  /// Note: This is separate from ApiState loading states and is used primarily
+  /// for pagination logic to prevent multiple simultaneous requests
   void changeLoading(bool status) {
     isLoading.value = status;
   }
@@ -58,6 +47,8 @@ class ArtwerkNotifier {
     required String fileName,
   }) async {
     changeLoading(true);
+    createArtwerkData.value = ApiState.loading();
+    
     try {
       final result = await ArtwerkRepo().createArtwerk(
         name: name,
@@ -67,15 +58,17 @@ class ArtwerkNotifier {
       );
       
       if (result != null && result.status == true) {
-        createArtwerkData.value = result;
+        createArtwerkData.value = ApiState.success(result);
         // Refresh the artwork list to show the new upload
         await getArtwerk(page: 1);
         return true;
       } else {
+        createArtwerkData.value = ApiState.error('Failed to upload artwork');
         return false;
       }
     } catch (e) {
       debugPrint('Error uploading artwork: $e');
+      createArtwerkData.value = ApiState.error('Error uploading artwork: $e');
       return false;
     } finally {
       changeLoading(false);
@@ -84,8 +77,19 @@ class ArtwerkNotifier {
 
   Future<void> filterUserByName({required String name}) async {
     changeLoading(true);
-    users.value = null;
-    users.value = await ArtwerkRepo().filterUserByName(name: name);
-    changeLoading(false);
+    users.value = ApiState.loading();
+    
+    try {
+      final result = await ArtwerkRepo().filterUserByName(name: name);
+      if (result != null) {
+        users.value = ApiState.success(result);
+      } else {
+        users.value = ApiState.error('Failed to fetch users');
+      }
+    } catch (e) {
+      users.value = ApiState.error('Error fetching users: $e');
+    } finally {
+      changeLoading(false);
+    }
   }
 }

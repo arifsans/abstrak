@@ -1,3 +1,4 @@
+import 'package:abstrak/base/api_state.dart';
 import 'package:abstrak/main.dart';
 import 'package:abstrak/widgets/x_button.dart';
 import 'package:flutter/material.dart';
@@ -18,10 +19,50 @@ class _SignInState extends State<SignIn> {
   bool _isPasswordVisible = false;
 
   @override
+  void initState() {
+    super.initState();
+    // Listen to auth state changes
+    authNotifier.auth.addListener(_handleAuthStateChange);
+  }
+
+  @override
   void dispose() {
+    authNotifier.auth.removeListener(_handleAuthStateChange);
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  void _handleAuthStateChange() {
+    if (!mounted) return;
+    
+    final authState = authNotifier.auth.value;
+    
+    switch (authState.status) {
+      case ApiStatus.success:
+        if (authState.data != null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Welcome back! Your highness 👑'),
+              backgroundColor: Color(0xFF00bcd5),
+            ),
+          );
+          context.goNamed('profile');
+        }
+        break;
+      case ApiStatus.error:
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(authState.error ?? 'Sign in failed. Please check your credentials.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        break;
+      case ApiStatus.loading:
+      case ApiStatus.initial:
+        // Handle loading and initial states in UI
+        break;
+    }
   }
 
   @override
@@ -187,13 +228,17 @@ class _SignInState extends State<SignIn> {
                     }
                     return null;
                   },
+                  onFieldSubmitted: (value) {
+                    _handleSignIn();
+                  },
                 ),
                 const SizedBox(height: 32),
 
                 // Sign In Button
                 ValueListenableBuilder(
-                  valueListenable: authNotifier.isLoading,
-                  builder: (context, isLoading, child) {
+                  valueListenable: authNotifier.auth,
+                  builder: (context, authState, child) {
+                    final isLoading = authState.status == ApiStatus.loading;
                     return isLoading
                         ? const Center(
                             child: CircularProgressIndicator(
@@ -277,31 +322,11 @@ class _SignInState extends State<SignIn> {
 
   void _handleSignIn() async {
     if (_formKey.currentState!.validate()) {
-      var result = await authNotifier.signIn(
+      // The auth state listener (_handleAuthStateChange) will handle the response
+      await authNotifier.signIn(
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
-      if (result != null) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Welcome back! Your highness 👑'),
-              backgroundColor: const Color(0xFF00bcd5),
-            ),
-          );
-
-          context.goNamed('profile');
-        }
-      } else {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Sign in failed. Please check your credentials.'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      }
     }
   }
 }
