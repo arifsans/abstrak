@@ -51,7 +51,6 @@ dependencies:
   flutter_dropzone: ^4.2.1
   typewritertext:
   intl: 
-  fab_circular_menu_plus: ^0.0.2
   flutter_tilt: ^3.2.3
   shared_preferences: ^2.5.3
   file_picker: ^10.3.2
