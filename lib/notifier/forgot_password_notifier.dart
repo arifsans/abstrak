@@ -19,7 +19,7 @@ class ForgotPasswordNotifier {
       ForgotPasswordModel? result = await _repository.sendResetEmail(email: email);
       
       if (result != null) {
-        if (result.success) {
+        if (result.status) {
           // Set success state
           forgotPassword.value = ApiState.success(result);
         } else {

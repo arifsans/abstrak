@@ -29,7 +29,7 @@ class Data {
   String? phone;
   String? avatar;
   String? fcmToken;
-  String? roles;
+  int? roleId;
   String? verificationStatus;
   String? verificationAt;
   String? createdAt;
@@ -43,7 +43,7 @@ class Data {
       this.phone,
       this.avatar,
       this.fcmToken,
-      this.roles,
+      this.roleId,
       this.verificationStatus,
       this.verificationAt,
       this.createdAt,
@@ -57,7 +57,7 @@ class Data {
     phone = json['phone'];
     avatar = json['avatar'];
     fcmToken = json['fcm_token'];
-    roles = json['roles'];
+    roleId = int.tryParse(json['role_id']?.toString() ?? '1') ?? 1;
     verificationStatus = json['verification_status'];
     verificationAt = json['verification_at'];
     createdAt = json['created_at'];
@@ -73,7 +73,7 @@ class Data {
     data['phone'] = this.phone;
     data['avatar'] = this.avatar;
     data['fcm_token'] = this.fcmToken;
-    data['roles'] = this.roles;
+    data['role_id'] = this.roleId;
     data['verification_status'] = this.verificationStatus;
     data['verification_at'] = this.verificationAt;
     data['created_at'] = this.createdAt;

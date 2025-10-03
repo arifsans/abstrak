@@ -149,7 +149,7 @@ final _router = GoRouter(
         if (prefs.getString('token') == null || prefs.getString('token')!.isEmpty) {
           return '/sign-in';
         }
-        if (prefs.getString('roles') != 'admin') {
+        if ((prefs.getInt('role_id') ?? 1) < 3) {
           return '/profile';
         }
         return null;

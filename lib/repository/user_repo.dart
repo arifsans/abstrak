@@ -26,9 +26,9 @@ class UserRepo {
       if (res != null) {
         var data = res.body;
         final user = UserModel.fromJson(jsonDecode(data));
-        final roles = user.data?.roles ?? 'user';
+        final roleId = user.data?.roleId ?? 1;
         // Save roles to SharedPreferences
-        await prefs.setString('roles', roles);
+        await prefs.setInt('role_id', roleId);
         // Save user ID to SharedPreferences
         if (user.data?.id != null || (user.data?.id ?? '').isNotEmpty) {
           await prefs.setString('user_id', user.data?.id ?? '');

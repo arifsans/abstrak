@@ -1,17 +1,17 @@
 class ForgotPasswordModel {
-  final bool success;
+  final bool status;
   final String message;
   final String? token; // Optional token for future use
 
   ForgotPasswordModel({
-    required this.success,
+    required this.status,
     required this.message,
     this.token,
   });
 
   factory ForgotPasswordModel.fromJson(Map<String, dynamic> json) {
     return ForgotPasswordModel(
-      success: json['success'] ?? false,
+      status: json['status'] ?? false,
       message: json['message'] ?? '',
       token: json['token'],
     );
@@ -19,7 +19,7 @@ class ForgotPasswordModel {
 
   Map<String, dynamic> toJson() {
     return {
-      'success': success,
+      'status': status,
       'message': message,
       if (token != null) 'token': token,
     };
@@ -27,6 +27,6 @@ class ForgotPasswordModel {
 
   @override
   String toString() {
-    return 'ForgotPasswordModel(success: $success, message: $message, token: $token)';
+    return 'ForgotPasswordModel(status: $status, message: $message, token: $token)';
   }
 }

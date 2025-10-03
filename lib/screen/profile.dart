@@ -173,9 +173,19 @@ class _ProfileState extends State<Profile> {
                     ValueListenableBuilder(
                       valueListenable: userNotifier.user,
                       builder: (context, value, child) {
-                        final data = value.data?.data;
-                        return _buildInfoRow(
-                            'RANK', (data?.roles ?? 'USER').toUpperCase());
+                        final roleId = value.data?.data?.roleId ?? 1;
+                        switch (roleId) {
+                          case 1:
+                            return _buildInfoRow('RANK', 'USER');
+                          case 2:
+                            return _buildInfoRow('RANK', 'ARTIST');
+                          case 3:
+                            return _buildInfoRow('RANK', 'ADMIN');
+                          case 4:
+                            return _buildInfoRow('RANK', 'OWNER');
+                          default:
+                            return _buildInfoRow('RANK', 'USER');
+                        }
                       },
                     ),
                     const SizedBox(height: 12),
@@ -224,7 +234,7 @@ class _ProfileState extends State<Profile> {
                     valueListenable: userNotifier.user,
                     builder: (context, value, child) {
                       final data = value.data?.data;
-                      if (data?.roles != 'admin') {
+                      if ((data?.roleId ?? 0) < 3) {
                         return const SizedBox.shrink();
                       }
                       return XButton(

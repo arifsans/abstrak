@@ -50,7 +50,7 @@ class _ArtWerkState extends State<ArtWerk> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.1),
+        color: Colors.black.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -273,7 +273,7 @@ class _ArtWerkState extends State<ArtWerk> {
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: Colors.black.withValues(alpha: 0.1),
                           blurRadius: 8,
                           offset: const Offset(0, 2),
                         ),
@@ -355,7 +355,7 @@ class _ArtWerkState extends State<ArtWerk> {
                   if (isLoadingPagination)
                     Positioned.fill(
                       child: Container(
-                        color: Colors.black.withOpacity(0.3),
+                        color: Colors.black.withValues(alpha:  0.3),
                         child: const Center(
                           child: CircularProgressIndicator(),
                         ),

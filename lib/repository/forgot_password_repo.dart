@@ -23,17 +23,17 @@ class ForgotPasswordRepo {
           return ForgotPasswordModel.fromJson(jsonDecode(data));
         } else if (res.statusCode == 404) {
           return ForgotPasswordModel(
-            success: false,
+            status: false,
             message: 'No account found with this email address. Please check your email or create a new account.',
           );
         } else if (res.statusCode == 429) {
           return ForgotPasswordModel(
-            success: false,
+            status: false,
             message: 'Too many requests. Please wait before trying again.',
           );
         } else if (res.statusCode >= 500) {
           return ForgotPasswordModel(
-            success: false,
+            status: false,
             message: 'Server error. Please try again later or contact support.',
           );
         } else {
@@ -42,31 +42,31 @@ class ForgotPasswordRepo {
             final errorData = jsonDecode(res.body);
             final message = errorData['message'] ?? 'Unable to process your request. Please try again.';
             return ForgotPasswordModel(
-              success: false,
+              status: false,
               message: message,
             );
           } catch (e) {
             return ForgotPasswordModel(
-              success: false,
+              status: false,
               message: 'Unable to process your request. Please try again.',
             );
           }
         }
       } else {
         return ForgotPasswordModel(
-          success: false,
+          status: false,
           message: 'Network error. Please check your connection and try again.',
         );
       }
     } on SocketException {
       return ForgotPasswordModel(
-        success: false,
+        status: false,
         message: 'No internet connection. Please check your network and try again.',
       );
     } catch (e) {
       print('Error sending reset email: $e');
       return ForgotPasswordModel(
-        success: false,
+        status: false,
         message: 'An unexpected error occurred. Please try again.',
       );
     }

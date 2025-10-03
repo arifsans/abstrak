@@ -317,7 +317,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       horizontal: 24,
                     ),
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      context.pop();
                       context.goNamed('sign-in');
                     },
                   ),
