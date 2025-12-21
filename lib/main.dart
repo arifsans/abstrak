@@ -1,9 +1,11 @@
 import 'package:abstrak/navigation_page.dart';
 import 'package:abstrak/notifier/auth_notifier.dart';
+import 'package:abstrak/notifier/forgot_password_notifier.dart';
 import 'package:abstrak/notifier/user_notifier.dart';
 import 'package:abstrak/screen/about.dart';
 import 'package:abstrak/screen/admin.dart';
 import 'package:abstrak/screen/artwerk.dart';
+import 'package:abstrak/screen/forgot_password.dart';
 import 'package:abstrak/screen/homepage.dart';
 import 'package:abstrak/screen/manifesto.dart';
 import 'package:abstrak/screen/my_artwerks.dart';
@@ -29,6 +31,7 @@ final _sectionNavigatorKey = GlobalKey<NavigatorState>();
 
 final AuthNotifier authNotifier = AuthNotifier();
 final UserNotifier userNotifier = UserNotifier();
+final ForgotPasswordNotifier forgotPasswordNotifier = ForgotPasswordNotifier();
 
 // GoRouter configuration
 final _router = GoRouter(
@@ -125,12 +128,12 @@ final _router = GoRouter(
     GoRoute(
       name: "terms-of-service",
       path: "/terms-of-service",
-      builder: (context, state) => TermsCondition(),
+      builder: (context, state) => const TermsCondition(),
     ),
     GoRoute(
       name: "privacy-policy",
       path: "/privacy-policy",
-      builder: (context, state) => PrivacyPolicy(),
+      builder: (context, state) => const PrivacyPolicy(),
     ),
     // GoRoute(
     //   name: "admin",

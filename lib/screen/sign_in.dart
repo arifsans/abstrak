@@ -266,13 +266,7 @@ class _SignInState extends State<SignIn> {
                 Center(
                   child: TextButton(
                     onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text(
-                              'Forgot password functionality coming soon!'),
-                          backgroundColor: Color(0xFF00bcd5),
-                        ),
-                      );
+                      context.goNamed('forgot-password');
                     },
                     child: Text(
                       'Forgot Password?',
