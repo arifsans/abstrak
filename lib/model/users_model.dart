@@ -33,7 +33,7 @@ class Data {
   String? email;
   String? phone;
   String? avatar;
-  String? roles;
+  String? roleId;
   String? verificationStatus;
   String? verificationAt;
   String? createdAt;
@@ -46,7 +46,7 @@ class Data {
       this.email,
       this.phone,
       this.avatar,
-      this.roles,
+      this.roleId,
       this.verificationStatus,
       this.verificationAt,
       this.createdAt,
@@ -59,7 +59,7 @@ class Data {
     email = json['email'];
     phone = json['phone'];
     avatar = json['avatar'];
-    roles = json['roles'];
+    roleId = json['role_id'];
     verificationStatus = json['verification_status'];
     verificationAt = json['verification_at'];
     createdAt = json['created_at'];
@@ -74,7 +74,7 @@ class Data {
     data['email'] = this.email;
     data['phone'] = this.phone;
     data['avatar'] = this.avatar;
-    data['roles'] = this.roles;
+    data['role_id'] = this.roleId;
     data['verification_status'] = this.verificationStatus;
     data['verification_at'] = this.verificationAt;
     data['created_at'] = this.createdAt;

@@ -389,52 +389,52 @@ class _NavigationPageState extends State<NavigationPage>
               'assets/images/ic_facebook.png',
             ),
           ),
-          const SizedBox(width: 12),
-          ValueListenableBuilder(
-            valueListenable: authNotifier.auth,
-            builder: (context, value, child) {
-              return IconButton(
-                onPressed: () {
-                  if (value.status == ApiStatus.success) {
-                    context.goNamed('profile');
-                    return;
-                  }
-                  context.goNamed('sign-in');
-                },
-                iconSize: MediaQuery.sizeOf(context).width * .05,
-                icon: Padding(
-                  padding: value.status != ApiStatus.success
-                      ? const EdgeInsets.symmetric(horizontal: 8)
-                      : EdgeInsets.zero,
-                  child: value.status != ApiStatus.success
-                      ? Row(
-                          children: [
-                            Text(
-                              'Sign In',
-                              style: TextStyle(
-                                fontFamily: 'Kenzo',
-                                color: Colors.white,
-                                fontSize:
-                                    MediaQuery.sizeOf(context).width * .015,
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Icon(
-                              Icons.login,
-                              color: Colors.white,
-                              size: MediaQuery.sizeOf(context).width * .015,
-                            ),
-                          ],
-                        )
-                      : Icon(
-                          Icons.account_circle_rounded,
-                          color: Colors.white,
-                          size: MediaQuery.sizeOf(context).width * .015,
-                        ),
-                ),
-              );
-            },
-          ),
+          // const SizedBox(width: 12),
+          // ValueListenableBuilder(
+          //   valueListenable: authNotifier.auth,
+          //   builder: (context, value, child) {
+          //     return IconButton(
+          //       onPressed: () {
+          //         if (value.status == ApiStatus.success) {
+          //           context.goNamed('profile');
+          //           return;
+          //         }
+          //         context.goNamed('sign-in');
+          //       },
+          //       iconSize: MediaQuery.sizeOf(context).width * .05,
+          //       icon: Padding(
+          //         padding: value.status != ApiStatus.success
+          //             ? const EdgeInsets.symmetric(horizontal: 8)
+          //             : EdgeInsets.zero,
+          //         child: value.status != ApiStatus.success
+          //             ? Row(
+          //                 children: [
+          //                   Text(
+          //                     'Sign In',
+          //                     style: TextStyle(
+          //                       fontFamily: 'Kenzo',
+          //                       color: Colors.white,
+          //                       fontSize:
+          //                           MediaQuery.sizeOf(context).width * .015,
+          //                     ),
+          //                   ),
+          //                   const SizedBox(width: 4),
+          //                   Icon(
+          //                     Icons.login,
+          //                     color: Colors.white,
+          //                     size: MediaQuery.sizeOf(context).width * .015,
+          //                   ),
+          //                 ],
+          //               )
+          //             : Icon(
+          //                 Icons.account_circle_rounded,
+          //                 color: Colors.white,
+          //                 size: MediaQuery.sizeOf(context).width * .015,
+          //               ),
+          //       ),
+          //     );
+          //   },
+          // ),
         ],
       );
     } else {
@@ -490,31 +490,31 @@ class _NavigationPageState extends State<NavigationPage>
                   'assets/images/ic_facebook.png',
                 ),
               ),
-              const SizedBox(width: 12),
-              ValueListenableBuilder(
-                valueListenable: authNotifier.auth,
-                builder: (context, value, child) {
-                  return IconButton(
-                    onPressed: () {
-                      if (value.status == ApiStatus.success) {
-                        context.goNamed('profile');
-                        return;
-                      }
-                      context.goNamed('sign-in');
-                    },
-                    iconSize: MediaQuery.sizeOf(context).width * .05,
-                    icon: value.status != ApiStatus.success
-                        ? Icon(
-                            Icons.login,
-                            color: Colors.white,
-                          )
-                        : Icon(
-                            Icons.account_circle_rounded,
-                            color: Colors.white,
-                          ),
-                  );
-                },
-              ),
+              // const SizedBox(width: 12),
+              // ValueListenableBuilder(
+              //   valueListenable: authNotifier.auth,
+              //   builder: (context, value, child) {
+              //     return IconButton(
+              //       onPressed: () {
+              //         if (value.status == ApiStatus.success) {
+              //           context.goNamed('profile');
+              //           return;
+              //         }
+              //         context.goNamed('sign-in');
+              //       },
+              //       iconSize: MediaQuery.sizeOf(context).width * .05,
+              //       icon: value.status != ApiStatus.success
+              //           ? Icon(
+              //               Icons.login,
+              //               color: Colors.white,
+              //             )
+              //           : Icon(
+              //               Icons.account_circle_rounded,
+              //               color: Colors.white,
+              //             ),
+              //     );
+              //   },
+              // ),
             ],
           ),
         ],

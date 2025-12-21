@@ -1,5 +1,6 @@
 import 'package:abstrak/base/api_state.dart';
 import 'package:abstrak/helper/date_formatter.dart';
+import 'package:abstrak/helper/roles_helper.dart';
 import 'package:abstrak/main.dart';
 import 'package:abstrak/widgets/x_button.dart';
 import 'package:file_picker/file_picker.dart';
@@ -174,8 +175,7 @@ class _ProfileState extends State<Profile> {
                       valueListenable: userNotifier.user,
                       builder: (context, value, child) {
                         final data = value.data?.data;
-                        return _buildInfoRow(
-                            'RANK', (data?.roles ?? 'USER').toUpperCase());
+                        return _buildInfoRow('RANK', RolesHelper.getRoleName(data?.roleId ?? '1'));
                       },
                     ),
                     const SizedBox(height: 12),
@@ -224,7 +224,7 @@ class _ProfileState extends State<Profile> {
                     valueListenable: userNotifier.user,
                     builder: (context, value, child) {
                       final data = value.data?.data;
-                      if (data?.roles != 'admin') {
+                      if ((data?.roleId ?? '1') == '1') {
                         return const SizedBox.shrink();
                       }
                       return XButton(

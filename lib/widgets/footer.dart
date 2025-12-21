@@ -15,10 +15,10 @@ class FooterSite extends StatelessWidget {
       text: 'ABOUT',
       route: 'about',
     ),
-    FooterObject(
-      text: 'ARTWERK',
-      route: 'artwerk',
-    ),
+    // FooterObject(
+    //   text: 'ARTWERK',
+    //   route: 'artwerk',
+    // ),
     FooterObject(
       text: 'MANIFESTO',
       route: 'manifesto',

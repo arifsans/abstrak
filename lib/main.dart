@@ -50,15 +50,15 @@ final _router = GoRouter(
             ),
           ],
         ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              name: "artwerk",
-              path: "/artwerk",
-              builder: (context, state) => const ArtWerk(),
-            ),
-          ],
-        ),
+        // StatefulShellBranch(
+        //   routes: [
+        //     GoRoute(
+        //       name: "artwerk",
+        //       path: "/artwerk",
+        //       builder: (context, state) => const ArtWerk(),
+        //     ),
+        //   ],
+        // ),
         StatefulShellBranch(
           routes: [
             GoRoute(
@@ -105,23 +105,23 @@ final _router = GoRouter(
       ],
     ),
     // Standalone route for sign-in (not part of the shell)
-    GoRoute(
-      name: "sign-in",
-      path: "/sign-in",
-      builder: (context, state) => Scaffold(
-        backgroundColor: const Color(0xFF1a1a1a),
-        body: const SignIn(),
-      ),
-    ),
+    // GoRoute(
+    //   name: "sign-in",
+    //   path: "/sign-in",
+    //   builder: (context, state) => Scaffold(
+    //     backgroundColor: const Color(0xFF1a1a1a),
+    //     body: const SignIn(),
+    //   ),
+    // ),
     // Standalone route for register (not part of the shell)
-    GoRoute(
-      name: "sign-up",
-      path: "/sign-up",
-      builder: (context, state) => Scaffold(
-        backgroundColor: const Color(0xFF1a1a1a),
-        body: const SignUp(),
-      ),
-    ),
+    // GoRoute(
+    //   name: "sign-up",
+    //   path: "/sign-up",
+    //   builder: (context, state) => Scaffold(
+    //     backgroundColor: const Color(0xFF1a1a1a),
+    //     body: const SignUp(),
+    //   ),
+    // ),
     GoRoute(
       name: "terms-of-service",
       path: "/terms-of-service",
@@ -132,36 +132,36 @@ final _router = GoRouter(
       path: "/privacy-policy",
       builder: (context, state) => PrivacyPolicy(),
     ),
-    GoRoute(
-      name: "admin",
-      path: "/admin",
-      builder: (context, state) => const Admin(),
-      redirect: (context, state) async {
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.getString('token') == null || prefs.getString('token')!.isEmpty) {
-          return '/sign-in';
-        }
-        if (prefs.getString('roles') != 'admin') {
-          return '/profile';
-        }
-        return null;
-      },
-    ),
-    GoRoute(
-      name: "my-artwerks",
-      path: "/my-artwerks",
-      builder: (context, state) => MyArtwerks(),
-      redirect: (context, state) async {
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
-        if (prefs.getString('token') == null || prefs.getString('token')!.isEmpty) {
-          return '/sign-in';
-        }
-        if (prefs.getString('user_id') == null || prefs.getString('user_id')!.isEmpty) {
-          return '/profile';
-        }
-        return null;
-      },
-    ),
+    // GoRoute(
+    //   name: "admin",
+    //   path: "/admin",
+    //   builder: (context, state) => const Admin(),
+    //   redirect: (context, state) async {
+    //     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    //     if (prefs.getString('token') == null || prefs.getString('token')!.isEmpty) {
+    //       return '/sign-in';
+    //     }
+    //     if (int.parse((prefs.getString('role_id') ?? '1')) < 3) {
+    //       return '/profile';
+    //     }
+    //     return null;
+    //   },
+    // ),
+    // GoRoute(
+    //   name: "my-artwerks",
+    //   path: "/my-artwerks",
+    //   builder: (context, state) => MyArtwerks(),
+    //   redirect: (context, state) async {
+    //     final SharedPreferences prefs = await SharedPreferences.getInstance();
+    //     if (prefs.getString('token') == null || prefs.getString('token')!.isEmpty) {
+    //       return '/sign-in';
+    //     }
+    //     if (prefs.getString('user_id') == null || prefs.getString('user_id')!.isEmpty) {
+    //       return '/profile';
+    //     }
+    //     return null;
+    //   },
+    // ),
   ],
 );
 

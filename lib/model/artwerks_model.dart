@@ -88,6 +88,17 @@ class Result {
   String? creatorEmail;
   String? creatorPhone;
   String? creatorAvatar;
+  
+  // Interaction counts and user status
+  int? likesCount;
+  int? sharesCount;
+  int? viewsCount;
+  int? seenCount;
+  int? commentsCount;
+  bool? isLiked;
+  bool? isShared;
+  bool? isViewed;
+  bool? isSeen;
 
   Result(
       {this.id,
@@ -102,7 +113,16 @@ class Result {
       this.creatorName,
       this.creatorEmail,
       this.creatorPhone,
-      this.creatorAvatar});
+      this.creatorAvatar,
+      this.likesCount,
+      this.sharesCount,
+      this.viewsCount,
+      this.seenCount,
+      this.commentsCount,
+      this.isLiked,
+      this.isShared,
+      this.isViewed,
+      this.isSeen});
 
   Result.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -118,6 +138,15 @@ class Result {
     creatorEmail = json['creator_email'];
     creatorPhone = json['creator_phone'];
     creatorAvatar = json['creator_avatar'];
+    likesCount = json['likes_count'];
+    sharesCount = json['shares_count'];
+    viewsCount = json['views_count'];
+    seenCount = json['seen_count'];
+    commentsCount = json['comments_count'];
+    isLiked = json['is_liked'];
+    isShared = json['is_shared'];
+    isViewed = json['is_viewed'];
+    isSeen = json['is_seen'];
   }
 
   Map<String, dynamic> toJson() {
@@ -135,6 +164,15 @@ class Result {
     data['creator_email'] = this.creatorEmail;
     data['creator_phone'] = this.creatorPhone;
     data['creator_avatar'] = this.creatorAvatar;
+    data['likes_count'] = this.likesCount;
+    data['shares_count'] = this.sharesCount;
+    data['views_count'] = this.viewsCount;
+    data['seen_count'] = this.seenCount;
+    data['comments_count'] = this.commentsCount;
+    data['is_liked'] = this.isLiked;
+    data['is_shared'] = this.isShared;
+    data['is_viewed'] = this.isViewed;
+    data['is_seen'] = this.isSeen;
     return data;
   }
 }

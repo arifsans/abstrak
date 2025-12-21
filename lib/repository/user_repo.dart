@@ -26,9 +26,9 @@ class UserRepo {
       if (res != null) {
         var data = res.body;
         final user = UserModel.fromJson(jsonDecode(data));
-        final roles = user.data?.roles ?? 'user';
-        // Save roles to SharedPreferences
-        await prefs.setString('roles', roles);
+        final roleId = user.data?.roleId ?? '1';
+        // Save role ID to SharedPreferences
+        await prefs.setString('role_id', roleId);
         // Save user ID to SharedPreferences
         if (user.data?.id != null || (user.data?.id ?? '').isNotEmpty) {
           await prefs.setString('user_id', user.data?.id ?? '');
@@ -63,9 +63,20 @@ class UserRepo {
         },
       );
 
+      if ((res?.statusCode ?? 400) > 300) {
+        print('Error updating avatar: ${res?.body}');
+        return null;
+      }
+
       if (res != null) {
         var data = res.body;
-        return UpdateAvatarModel.fromJson(jsonDecode(data));
+        final newData = UpdateAvatarModel.fromJson(jsonDecode(data));
+        if (newData.status == true) {
+          return newData;
+        } else {
+          print('Error updating avatar: ${newData.message}');
+          return null;
+        }
       }
     } catch (e) {
       print('Error updating avatar: $e');

@@ -3,7 +3,7 @@ import 'package:abstrak/main.dart';
 import 'package:abstrak/model/artwerks_model.dart';
 import 'package:abstrak/notifier/artwerk_notifier.dart';
 import 'package:abstrak/widgets/animation_card.dart';
-import 'package:abstrak/widgets/artwork_detail_dialog.dart';
+import 'package:abstrak/widgets/enhanced_artwork_detail_dialog.dart';
 import 'package:abstrak/widgets/custom_staggered_grid.dart';
 import 'package:abstrak/helper/dialog_helpers.dart';
 import 'package:flutter/material.dart';
@@ -379,7 +379,7 @@ class _ArtWerkState extends State<ArtWerk> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return ArtwerkDetailDialog(artwerk: artwerk);
+        return EnhancedArtwerkDetailDialog(artwerk: artwerk);
       },
     );
   }
