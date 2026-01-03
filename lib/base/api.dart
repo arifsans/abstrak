@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum ApiMethod { GET, POST, MULTIPART }
+enum ApiMethod { GET, POST, MULTIPART, PUT, DELETE }
 
 class ApiConnection {
   Future<Response?> apiCall({
@@ -17,7 +17,7 @@ class ApiConnection {
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParams,
   }) async {
-    const _baseUrl = "https://api.captive.my.id/api/v1/";
+    const _baseUrl = "http://127.0.0.1:8004/api/v1/";
     if (path.startsWith('/')) {
       path = path.replaceFirst('/', '');
     }
@@ -59,19 +59,28 @@ class ApiConnection {
       }
     }
 
+    headers ??= {};
+    headers.addAll({'Content-Type': 'application/json'});
+
     if (method == ApiMethod.GET) {
       response = await http.get(uri, headers: headers);
     }
 
     if (method == ApiMethod.POST) {
-      response = await http.post(uri, body: body, headers: headers);
+      response = await http.post(uri, body: jsonEncode(body), headers: headers);
+    }
+
+    if (method == ApiMethod.PUT) {
+      response = await http.put(uri, body: jsonEncode(body), headers: headers);
+    }
+
+    if (method == ApiMethod.DELETE) {
+      response = await http.delete(uri, headers: headers);
     }
 
     if (method == ApiMethod.MULTIPART) {
       var request = http.MultipartRequest('POST', uri);
-      if (headers != null) {
-        request.headers.addAll(headers);
-      }
+      request.headers.addAll(headers);
       if (body != null) {
         body.forEach((key, value) {
           if (value is http.MultipartFile) {

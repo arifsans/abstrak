@@ -208,7 +208,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       ),
                       TextButton(
                         onPressed: () {
-                          context.goNamed('sign-in');
+                          context.pushReplacementNamed('sign-in');
                         },
                         child: Text(
                           'Sign In',

@@ -52,8 +52,10 @@ class _NavigationPageState extends State<NavigationPage>
   }
 
   void _showBottomNavigationSheet(BuildContext context) {
+    final String parentLocation = GoRouterState.of(context).uri.toString();
     showModalBottomSheet(
       context: context,
+      isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
         margin: const EdgeInsets.all(16),
@@ -90,51 +92,82 @@ class _NavigationPageState extends State<NavigationPage>
               style: customTextTheme.headlineSmall,
             ),
             const SizedBox(height: 20),
-            ...FooterSite().footers.map(
-              (element) => Container(
-                width: double.infinity,
-                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(12),
-                    onTap: () {
-                      Navigator.pop(context);
-                      context.goNamed(element.route);
-                      _scrollController.jumpTo(0);
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 16,
-                        horizontal: 20,
-                      ),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.1),
-                          width: 1,
+            ValueListenableBuilder(
+              valueListenable: userNotifier.user,
+              builder: (context, value, child) {
+                var footers = [...FooterSite().footers];
+                if (value.status == ApiStatus.success && value.data?.data?.roleId != null) {
+                  try {
+                    if (int.parse(value.data!.data!.roleId!) >= 3) {
+                      footers.add(
+                        FooterObject(
+                          text: 'CATALOGS',
+                          route: 'catalogs',
                         ),
-                      ),
-                      child: Row(
-                        children: [
-                          _getIconForRoute(element.route),
-                          const SizedBox(width: 16),
-                          Text(
-                            element.text,
-                            style: customTextTheme.bodyLarge,
+                      );
+                    }
+                  } catch (e) {
+                    // Ignore parsing error
+                  }
+                }
+                return Column(
+                  children: footers
+                      .map(
+                        (element) => Container(
+                          width: double.infinity,
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 20,
+                            vertical: 4,
                           ),
-                          const Spacer(),
-                          Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.white.withValues(alpha: 0.5),
-                            size: 16,
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(12),
+                              onTap: () {
+                                if (parentLocation.endsWith(element.route) || parentLocation == '/${element.route}') {
+                                  context.pop();
+                                  return;
+                                }
+                                context.pop();
+                                context.goNamed(element.route);
+                                _scrollController.jumpTo(0);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16,
+                                  horizontal: 20,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.1),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    _getIconForRoute(element.route),
+                                    const SizedBox(width: 16),
+                                    Text(
+                                      element.text,
+                                      style: customTextTheme.bodyLarge,
+                                    ),
+                                    const Spacer(),
+                                    Icon(
+                                      Icons.arrow_forward_ios,
+                                      color: Colors.white.withValues(alpha: 0.5),
+                                      size: 16,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+                        ),
+                      )
+                      .toList(),
+                );
+              },
             ),
             const SizedBox(height: 20),
           ],
@@ -155,6 +188,8 @@ class _NavigationPageState extends State<NavigationPage>
         return Icon(Icons.description_outlined, color: Colors.white, size: 24);
       case 'tp-calculator':
         return Icon(Icons.calculate_outlined, color: Colors.white, size: 24);
+      case 'catalogs':
+        return Icon(Icons.inventory_2_outlined, color: Colors.white, size: 24);
       default:
         return Icon(Icons.circle_outlined, color: Colors.white, size: 24);
     }
@@ -164,16 +199,17 @@ class _NavigationPageState extends State<NavigationPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFF1a1a1a),
-      floatingActionButton: ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
-          ? FloatingActionButton(
-              onPressed: () {
-                _showBottomNavigationSheet(context);
-              },
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.black,
-              child: Icon(Icons.menu_rounded),
-            )
-          : null,
+      floatingActionButton:
+          ResponsiveBreakpoints.of(context).smallerThan(DESKTOP)
+              ? FloatingActionButton(
+                  onPressed: () {
+                    _showBottomNavigationSheet(context);
+                  },
+                  backgroundColor: Colors.white,
+                  foregroundColor: Colors.black,
+                  child: Icon(Icons.menu_rounded),
+                )
+              : null,
       body: SafeArea(
         child: WarpIndicator(
           controller: _refreshController,
@@ -253,6 +289,10 @@ class _NavigationPageState extends State<NavigationPage>
                       padding: const EdgeInsets.all(16.0),
                       child: FooterSite(
                         onPressed: (route) {
+                          final currentLocation = GoRouterState.of(context).uri.toString();
+                          if (currentLocation.endsWith(route) || currentLocation == '/$route') {
+                            return;
+                          }
                           context.goNamed(route);
                           _scrollController.jumpTo(0);
                         },
@@ -389,52 +429,56 @@ class _NavigationPageState extends State<NavigationPage>
               'assets/images/ic_facebook.png',
             ),
           ),
-          // const SizedBox(width: 12),
-          // ValueListenableBuilder(
-          //   valueListenable: authNotifier.auth,
-          //   builder: (context, value, child) {
-          //     return IconButton(
-          //       onPressed: () {
-          //         if (value.status == ApiStatus.success) {
-          //           context.goNamed('profile');
-          //           return;
-          //         }
-          //         context.goNamed('sign-in');
-          //       },
-          //       iconSize: MediaQuery.sizeOf(context).width * .05,
-          //       icon: Padding(
-          //         padding: value.status != ApiStatus.success
-          //             ? const EdgeInsets.symmetric(horizontal: 8)
-          //             : EdgeInsets.zero,
-          //         child: value.status != ApiStatus.success
-          //             ? Row(
-          //                 children: [
-          //                   Text(
-          //                     'Sign In',
-          //                     style: TextStyle(
-          //                       fontFamily: 'Kenzo',
-          //                       color: Colors.white,
-          //                       fontSize:
-          //                           MediaQuery.sizeOf(context).width * .015,
-          //                     ),
-          //                   ),
-          //                   const SizedBox(width: 4),
-          //                   Icon(
-          //                     Icons.login,
-          //                     color: Colors.white,
-          //                     size: MediaQuery.sizeOf(context).width * .015,
-          //                   ),
-          //                 ],
-          //               )
-          //             : Icon(
-          //                 Icons.account_circle_rounded,
-          //                 color: Colors.white,
-          //                 size: MediaQuery.sizeOf(context).width * .015,
-          //               ),
-          //       ),
-          //     );
-          //   },
-          // ),
+          const SizedBox(width: 12),
+          ValueListenableBuilder(
+            valueListenable: authNotifier.auth,
+            builder: (context, value, child) {
+              return IconButton(
+                onPressed: () {
+                  if (value.status == ApiStatus.success) {
+                    final currentLocation = GoRouterState.of(context).uri.toString();
+                    if (currentLocation.endsWith('profile') || currentLocation == '/profile') {
+                      return;
+                    }
+                    context.goNamed('profile');
+                    return;
+                  }
+                  context.goNamed('sign-in');
+                },
+                iconSize: MediaQuery.sizeOf(context).width * .05,
+                icon: Padding(
+                  padding: value.status != ApiStatus.success
+                      ? const EdgeInsets.symmetric(horizontal: 8)
+                      : EdgeInsets.zero,
+                  child: value.status != ApiStatus.success
+                      ? Row(
+                          children: [
+                            Text(
+                              'Sign In',
+                              style: TextStyle(
+                                fontFamily: 'Kenzo',
+                                color: Colors.white,
+                                fontSize:
+                                    MediaQuery.sizeOf(context).width * .015,
+                              ),
+                            ),
+                            const SizedBox(width: 4),
+                            Icon(
+                              Icons.login,
+                              color: Colors.white,
+                              size: MediaQuery.sizeOf(context).width * .015,
+                            ),
+                          ],
+                        )
+                      : Icon(
+                          Icons.account_circle_rounded,
+                          color: Colors.white,
+                          size: MediaQuery.sizeOf(context).width * .015,
+                        ),
+                ),
+              );
+            },
+          ),
         ],
       );
     } else {
@@ -490,31 +534,35 @@ class _NavigationPageState extends State<NavigationPage>
                   'assets/images/ic_facebook.png',
                 ),
               ),
-              // const SizedBox(width: 12),
-              // ValueListenableBuilder(
-              //   valueListenable: authNotifier.auth,
-              //   builder: (context, value, child) {
-              //     return IconButton(
-              //       onPressed: () {
-              //         if (value.status == ApiStatus.success) {
-              //           context.goNamed('profile');
-              //           return;
-              //         }
-              //         context.goNamed('sign-in');
-              //       },
-              //       iconSize: MediaQuery.sizeOf(context).width * .05,
-              //       icon: value.status != ApiStatus.success
-              //           ? Icon(
-              //               Icons.login,
-              //               color: Colors.white,
-              //             )
-              //           : Icon(
-              //               Icons.account_circle_rounded,
-              //               color: Colors.white,
-              //             ),
-              //     );
-              //   },
-              // ),
+              const SizedBox(width: 12),
+              ValueListenableBuilder(
+                valueListenable: authNotifier.auth,
+                builder: (context, value, child) {
+                  return IconButton(
+                    onPressed: () {
+                      if (value.status == ApiStatus.success) {
+                        final currentLocation = GoRouterState.of(context).uri.toString();
+                        if (currentLocation.endsWith('profile') || currentLocation == '/profile') {
+                          return;
+                        }
+                        context.goNamed('profile');
+                        return;
+                      }
+                      context.goNamed('sign-in');
+                    },
+                    iconSize: MediaQuery.sizeOf(context).width * .05,
+                    icon: value.status != ApiStatus.success
+                        ? Icon(
+                            Icons.login,
+                            color: Colors.white,
+                          )
+                        : Icon(
+                            Icons.account_circle_rounded,
+                            color: Colors.white,
+                          ),
+                  );
+                },
+              ),
             ],
           ),
         ],

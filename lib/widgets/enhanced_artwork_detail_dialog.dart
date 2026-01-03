@@ -284,12 +284,12 @@ class _EnhancedArtwerkDetailDialogState extends State<EnhancedArtwerkDetailDialo
           color: const Color(0xFF1a1a1a), // Match your app's primary dark color
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withValues(alpha: 0.3),
               blurRadius: 20,
               offset: const Offset(0, 5),
             ),
@@ -321,7 +321,7 @@ class _EnhancedArtwerkDetailDialogState extends State<EnhancedArtwerkDetailDialo
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
           ),
         ),
       ),
@@ -350,7 +350,7 @@ class _EnhancedArtwerkDetailDialogState extends State<EnhancedArtwerkDetailDialo
                 Text(
                   _formatTime(widget.artwerk.createdAt),
                   style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
+                    color: Colors.white.withValues(alpha: 0.7),
                     fontSize: 12,
                   ),
                 ),
@@ -361,7 +361,7 @@ class _EnhancedArtwerkDetailDialogState extends State<EnhancedArtwerkDetailDialo
             controller: _tabController,
             isScrollable: true,
             labelColor: Colors.white,
-            unselectedLabelColor: Colors.white.withOpacity(0.6),
+            unselectedLabelColor: Colors.white.withValues(alpha: 0.6),
             indicatorColor: Colors.white,
             indicatorSize: TabBarIndicatorSize.label,
             tabs: const [
@@ -429,7 +429,7 @@ class _EnhancedArtwerkDetailDialogState extends State<EnhancedArtwerkDetailDialo
               widget.artwerk.description!,
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.white.withOpacity(0.9),
+                color: Colors.white.withValues(alpha: 0.9),
                 height: 1.5,
               ),
             ),
@@ -538,7 +538,7 @@ class _EnhancedArtwerkDetailDialogState extends State<EnhancedArtwerkDetailDialo
                     Text(
                       _formatTime(comment.createdAt),
                       style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
+                        color: Colors.white.withValues(alpha: 0.7),
                         fontSize: 12,
                       ),
                     ),
@@ -566,14 +566,14 @@ class _EnhancedArtwerkDetailDialogState extends State<EnhancedArtwerkDetailDialo
                             size: 16,
                             color: comment.isLiked == true
                                 ? Colors.red
-                                : Colors.white.withOpacity(0.7),
+                                : Colors.white.withValues(alpha: 0.7),
                           ),
                           const SizedBox(width: 4),
                           Text(
                             '${comment.likesCount ?? 0}',
                             style: TextStyle(
                               fontSize: 12,
-                              color: Colors.white.withOpacity(0.7),
+                              color: Colors.white.withValues(alpha: 0.7),
                             ),
                           ),
                         ],
@@ -605,7 +605,7 @@ class _EnhancedArtwerkDetailDialogState extends State<EnhancedArtwerkDetailDialo
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         border: Border(
-          top: BorderSide(color: Colors.white.withOpacity(0.1)),
+          top: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
         ),
       ),
       child: Row(
@@ -634,7 +634,7 @@ class _EnhancedArtwerkDetailDialogState extends State<EnhancedArtwerkDetailDialo
             icon: Icons.visibility,
             label: '${_interactionCounts['views'] ?? _interactionCounts['View'] ?? 0}',
             isActive: false,
-            activeColor: Colors.white.withOpacity(0.7),
+            activeColor: Colors.white.withValues(alpha: 0.7),
             onTap: () {}, // View count is display-only, not interactive
           ),
           const Spacer(),
@@ -668,7 +668,7 @@ class _EnhancedArtwerkDetailDialogState extends State<EnhancedArtwerkDetailDialo
               size: 20,
               color: isActive && activeColor != null 
                   ? activeColor 
-                  : Colors.white.withOpacity(0.7),
+                  : Colors.white.withValues(alpha: 0.7),
             ),
             const SizedBox(width: 4),
             Text(
@@ -677,7 +677,7 @@ class _EnhancedArtwerkDetailDialogState extends State<EnhancedArtwerkDetailDialo
                 fontSize: 14,
                 color: isActive && activeColor != null 
                     ? activeColor 
-                    : Colors.white.withOpacity(0.7),
+                    : Colors.white.withValues(alpha: 0.7),
                 fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
@@ -706,7 +706,7 @@ class _EnhancedArtwerkDetailDialogState extends State<EnhancedArtwerkDetailDialo
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             border: Border(
-              top: BorderSide(color: Colors.white.withOpacity(0.1)),
+              top: BorderSide(color: Colors.white.withValues(alpha: 0.1)),
             ),
           ),
           child: Row(
@@ -717,14 +717,14 @@ class _EnhancedArtwerkDetailDialogState extends State<EnhancedArtwerkDetailDialo
                   style: const TextStyle(color: Colors.white),
                   decoration: InputDecoration(
                     hintText: 'Add a comment...',
-                    hintStyle: TextStyle(color: Colors.white.withOpacity(0.6)),
+                    hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.6)),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(24),
-                      borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+                      borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(24),
-                      borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+                      borderSide: BorderSide(color: Colors.white.withValues(alpha: 0.3)),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(24),

@@ -599,7 +599,7 @@ class _SignUpState extends State<SignUp> {
                       ),
                       TextButton(
                         onPressed: () {
-                          context.goNamed('sign-in');
+                          context.pushReplacementNamed('sign-in');
                         },
                         child: Text(
                           'Sign In',

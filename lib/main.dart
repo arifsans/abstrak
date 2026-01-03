@@ -15,6 +15,8 @@ import 'package:abstrak/screen/sign_up.dart';
 import 'package:abstrak/screen/sign_in.dart';
 import 'package:abstrak/screen/terms_conditions.dart';
 import 'package:abstrak/screen/tp_calculator.dart';
+import 'package:abstrak/screen/catalog_screen.dart';
+import 'package:abstrak/base/api_state.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
@@ -53,15 +55,15 @@ final _router = GoRouter(
             ),
           ],
         ),
-        // StatefulShellBranch(
-        //   routes: [
-        //     GoRoute(
-        //       name: "artwerk",
-        //       path: "/artwerk",
-        //       builder: (context, state) => const ArtWerk(),
-        //     ),
-        //   ],
-        // ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
+              name: "artwerk",
+              path: "/artwerk",
+              builder: (context, state) => const ArtWerk(),
+            ),
+          ],
+        ),
         StatefulShellBranch(
           routes: [
             GoRoute(
@@ -96,8 +98,10 @@ final _router = GoRouter(
               path: "/profile",
               builder: (context, state) => const Profile(),
               redirect: (context, state) async {
-                final SharedPreferences prefs = await SharedPreferences.getInstance();
-                if (prefs.getString('token') == null || prefs.getString('token')!.isEmpty) {
+                final SharedPreferences prefs =
+                    await SharedPreferences.getInstance();
+                if (prefs.getString('token') == null ||
+                    prefs.getString('token')!.isEmpty) {
                   return '/sign-in';
                 }
                 return null;
@@ -108,23 +112,28 @@ final _router = GoRouter(
       ],
     ),
     // Standalone route for sign-in (not part of the shell)
-    // GoRoute(
-    //   name: "sign-in",
-    //   path: "/sign-in",
-    //   builder: (context, state) => Scaffold(
-    //     backgroundColor: const Color(0xFF1a1a1a),
-    //     body: const SignIn(),
-    //   ),
-    // ),
+    GoRoute(
+      name: "sign-in",
+      path: "/sign-in",
+      builder: (context, state) => Scaffold(
+        backgroundColor: const Color(0xFF1a1a1a),
+        body: const SignIn(),
+      ),
+    ),
     // Standalone route for register (not part of the shell)
-    // GoRoute(
-    //   name: "sign-up",
-    //   path: "/sign-up",
-    //   builder: (context, state) => Scaffold(
-    //     backgroundColor: const Color(0xFF1a1a1a),
-    //     body: const SignUp(),
-    //   ),
-    // ),
+    GoRoute(
+      name: "sign-up",
+      path: "/sign-up",
+      builder: (context, state) => Scaffold(
+        backgroundColor: const Color(0xFF1a1a1a),
+        body: const SignUp(),
+      ),
+    ),
+    GoRoute(
+      name: "forgot-password",
+      path: "/forgot-password",
+      builder: (context, state) => const ForgotPassword(),
+    ),
     GoRoute(
       name: "terms-of-service",
       path: "/terms-of-service",
@@ -135,36 +144,55 @@ final _router = GoRouter(
       path: "/privacy-policy",
       builder: (context, state) => const PrivacyPolicy(),
     ),
-    // GoRoute(
-    //   name: "admin",
-    //   path: "/admin",
-    //   builder: (context, state) => const Admin(),
-    //   redirect: (context, state) async {
-    //     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    //     if (prefs.getString('token') == null || prefs.getString('token')!.isEmpty) {
-    //       return '/sign-in';
-    //     }
-    //     if (int.parse((prefs.getString('role_id') ?? '1')) < 3) {
-    //       return '/profile';
-    //     }
-    //     return null;
-    //   },
-    // ),
-    // GoRoute(
-    //   name: "my-artwerks",
-    //   path: "/my-artwerks",
-    //   builder: (context, state) => MyArtwerks(),
-    //   redirect: (context, state) async {
-    //     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    //     if (prefs.getString('token') == null || prefs.getString('token')!.isEmpty) {
-    //       return '/sign-in';
-    //     }
-    //     if (prefs.getString('user_id') == null || prefs.getString('user_id')!.isEmpty) {
-    //       return '/profile';
-    //     }
-    //     return null;
-    //   },
-    // ),
+    GoRoute(
+      name: "admin",
+      path: "/admin",
+      builder: (context, state) => const Admin(),
+      redirect: (context, state) async {
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.getString('token') == null ||
+            prefs.getString('token')!.isEmpty) {
+          return '/sign-in';
+        }
+        if (int.parse((prefs.getString('role_id') ?? '1')) < 3) {
+          return '/profile';
+        }
+        return null;
+      },
+    ),
+    GoRoute(
+      name: "my-artwerks",
+      path: "/my-artwerks",
+      builder: (context, state) => MyArtwerks(),
+      redirect: (context, state) async {
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.getString('token') == null ||
+            prefs.getString('token')!.isEmpty) {
+          return '/sign-in';
+        }
+        if (prefs.getString('user_id') == null ||
+            prefs.getString('user_id')!.isEmpty) {
+          return '/profile';
+        }
+        return null;
+      },
+    ),
+    GoRoute(
+      name: "catalogs",
+      path: "/catalogs",
+      builder: (context, state) => const CatalogScreen(),
+      redirect: (context, state) async {
+        final SharedPreferences prefs = await SharedPreferences.getInstance();
+        if (prefs.getString('token') == null ||
+            prefs.getString('token')!.isEmpty) {
+          return '/sign-in';
+        }
+        if (int.parse((prefs.getString('role_id') ?? '1')) < 3) {
+          return '/profile';
+        }
+        return null;
+      },
+    ),
   ],
 );
 
@@ -315,6 +343,11 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     authNotifier.checkAuth();
+    authNotifier.auth.addListener(() {
+      if (authNotifier.auth.value.status == ApiStatus.success) {
+        userNotifier.getUser();
+      }
+    });
     super.initState();
   }
 
