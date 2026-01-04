@@ -53,15 +53,8 @@ class CatalogNotifier extends ChangeNotifier {
     return success;
   }
 
-  Future<bool> updateProduct(String id, String name, int price) async {
-    // Note: This matches the call signature in catalog_screen.dart now, or we can adjust screen.
-    // However, repo expects ProductModel. Let's create it here.
-    // We might lose category info if we don't pass it, but updating usually merges or replaces.
-    // Ideally we should pass the full object.
-    // For now, let's assume the repo handles partial updates or we only update name/price.
-    // But wait, the previous implementation in screen passed name and price. 
-    // Let's stick to passing name and price and creating a partial model.
-    final product = ProductModel(id: id, name: name, price: price);
+  Future<bool> updateProduct(String id, String name, int price, {String? categoryId}) async {
+    final product = ProductModel(id: id, name: name, price: price, categoryId: categoryId);
     bool success = await _repo.updateProduct(id, product);
     if (success) await getProducts();
     return success;
@@ -80,9 +73,61 @@ class CatalogNotifier extends ChangeNotifier {
   }
 
   Future<bool> bulkUpload(int productId, List<String> codes) async {
-    bool success = await _repo.bulkUpload(productId, codes);
-    if (success) await getStats();
+    // Deduplicate codes before uploading
+    final uniqueCodes = codes.toSet().toList();
+    bool success = await _repo.bulkUpload(productId, uniqueCodes);
+    if (success) {
+      await getStats();
+      await getInventoryItems(); // Refresh inventory list
+    }
     return success;
+  }
+
+  // --- Inventory Items with Pagination and Filter ---
+  final ValueNotifier<ApiState<List<InventoryItemModel>>> inventoryItems =
+      ValueNotifier(ApiState(status: ApiStatus.initial, data: []));
+  
+  int _inventoryCurrentPage = 1;
+  int _inventoryLastPage = 1;
+  String? _inventoryProductFilter;
+  bool get hasMoreInventoryItems => _inventoryCurrentPage < _inventoryLastPage;
+
+  void setInventoryProductFilter(String? productId) {
+    _inventoryProductFilter = productId;
+    getInventoryItems();
+  }
+
+  Future<void> getInventoryItems() async {
+    _inventoryCurrentPage = 1;
+    inventoryItems.value = ApiState(status: ApiStatus.loading, data: []);
+    
+    final result = await _repo.getInventoryItems(page: 1, productId: _inventoryProductFilter);
+    if (result != null) {
+      final items = (result['data'] as List?)
+          ?.map((json) => InventoryItemModel.fromJson(json))
+          .toList() ?? [];
+      _inventoryLastPage = result['last_page'] ?? 1;
+      inventoryItems.value = ApiState(status: ApiStatus.success, data: items);
+    } else {
+      inventoryItems.value = ApiState(status: ApiStatus.error, error: 'Failed to load inventory');
+    }
+  }
+
+  Future<void> loadMoreInventoryItems() async {
+    if (!hasMoreInventoryItems) return;
+    
+    _inventoryCurrentPage++;
+    final result = await _repo.getInventoryItems(page: _inventoryCurrentPage, productId: _inventoryProductFilter);
+    if (result != null) {
+      final newItems = (result['data'] as List?)
+          ?.map((json) => InventoryItemModel.fromJson(json))
+          .toList() ?? [];
+      final currentItems = inventoryItems.value.data ?? [];
+      inventoryItems.value = ApiState(
+        status: ApiStatus.success,
+        data: [...currentItems, ...newItems],
+      );
+    }
   }
 }
 

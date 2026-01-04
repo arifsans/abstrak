@@ -174,4 +174,25 @@ class CatalogRepo {
       return false;
     }
   }
+
+  Future<Map<String, dynamic>?> getInventoryItems({int page = 1, int perPage = 20, String? productId}) async {
+    try {
+      String path = 'inventory?page=$page&per_page=$perPage';
+      if (productId != null && productId.isNotEmpty) {
+        path += '&product_id=$productId';
+      }
+      var res = await ApiConnection().apiCall(
+        method: ApiMethod.GET,
+        path: path,
+        headers: await _getHeaders(),
+      );
+
+      if (res != null && res.statusCode == 200) {
+        return jsonDecode(res.body);
+      }
+    } catch (e) {
+      print('Error getting inventory items: $e');
+    }
+    return null;
+  }
 }

@@ -70,3 +70,45 @@ class InventoryStatsModel {
     return data;
   }
 }
+
+class InventoryItemModel {
+  String? id;
+  String? productId;
+  String? productName;
+  String? secretCode;
+  String? status;
+  String? soldAt;
+  String? createdAt;
+
+  InventoryItemModel({
+    this.id,
+    this.productId,
+    this.productName,
+    this.secretCode,
+    this.status,
+    this.soldAt,
+    this.createdAt,
+  });
+
+  InventoryItemModel.fromJson(Map<String, dynamic> json) {
+    id = json['id']?.toString();
+    productId = json['product_id']?.toString();
+    productName = json['product_name'];
+    secretCode = json['secret_code'];
+    status = json['status'];
+    soldAt = json['sold_at'];
+    createdAt = json['created_at'];
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'product_id': productId,
+      'product_name': productName,
+      'secret_code': secretCode,
+      'status': status,
+      'sold_at': soldAt,
+      'created_at': createdAt,
+    };
+  }
+}
